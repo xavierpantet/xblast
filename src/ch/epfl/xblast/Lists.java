@@ -10,6 +10,7 @@ public final class Lists {
     public static <T> List<T> mirrored(List<T> l) throws IllegalArgumentException{
         if(!l.isEmpty()){
             return l.addAll(Collections.reverse(l).subList(1, l.size()));
+            
         }else{throw new IllegalArgumentException("La liste ne peut pas être vide");}
     }
 }
