@@ -12,7 +12,7 @@ public final class Lists {
     private Lists(){}
 
     /**
-     * Retourne un miroir de la liste passée en pramètre ou IllegalArgumentException si
+     * Retourne un miroir de la liste passée en paramètre ou IllegalArgumentException si
      * celle-ci est vide
      * @param la liste à laquelle on va appliquer le miroir
      * @return un miroir de la liste en entrée
