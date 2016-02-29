@@ -151,9 +151,9 @@ public final class SubCell {
     public boolean equals(Object that){
         // Vérifie si this et that sont des instances de la même classe
         if (that!= null && (that.getClass().equals(this.getClass()))){
-            if (that instanceof Cell){
+            if (that instanceof SubCell){
                 // On vérifie si les coordonnées normalisées sont les mêmes
-                Cell c = (Cell) that;
+                SubCell c = (SubCell) that;
                 return (this.x==c.x() && this.y==c.y());
             }
 return false;
