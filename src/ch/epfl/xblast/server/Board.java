@@ -1,6 +1,7 @@
 package ch.epfl.xblast.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
@@ -10,7 +11,7 @@ import ch.epfl.xblast.Cell;
  * @author Timothée Duran (258683)
  */
 public class Board {
-    private List<Sq<Block>> blocks;
+    private final List<Sq<Block>> blocks;
     
     /**
      * Initialise les séquences avec celles passées en paramètres
@@ -78,4 +79,38 @@ public class Board {
        
        return new Board(tmpBlocks);
    }
+   
+   /**
+    * construit un plateau muré symétrique avec les blocs du quadrant nord-ouest donnés, ou lève l'exception IllegalArgumentException si la liste reçue n'est pas constituée de 6 listes de 7 éléments chacune.
+    * @param quadrantNWBlocks
+    * @return
+    */
+   
+   public static Board ofQuadrantNWBlocksWalled(List<List<Block>> quadrantNWBlocks) throws IllegalArgumentException{
+       
+       int ExpectedListSize = (Cell.ROWS-1)/2;
+       int ExpectedInnerListSize = (Cell.COLUMNS-1)/2;
+       List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
+       
+       if(quadrantNWBlocks.size()==ExpectedListSize){
+           //On construit la première ligne du jeu, remplie de mur
+           tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+           
+           
+           //BOUT DE CODE PROVISOIRE
+           for(int i=0; i<ExpectedListSize; i++){
+               if(quadrantNWBlocks.get(i).size()==ExpectedInnerListSize){
+                   
+               } else {
+                   throw new IllegalArgumentException("La liste 'quadrantNWBlocks' contient "+quadrantNWBlocks.get(i).size()+" éléments à l'index "+i+" alors que l'en en attendrait "+ExpectedInnerListSize);
+               }
+           }
+           
+       } else {
+           throw new IllegalArgumentException("La liste 'quadrantNWBlocks' contient "+quadrantNWBlocks.size()+" alors qu'on en attendrait "+ExpectedListSize);
+       }
+       return null;
+       
+   }
+   
 }
