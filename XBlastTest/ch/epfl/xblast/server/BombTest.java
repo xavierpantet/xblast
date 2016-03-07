@@ -2,6 +2,8 @@ package ch.epfl.xblast.server;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import ch.epfl.cs108.Sq;
@@ -47,17 +49,21 @@ public class BombTest {
     
     @Test
     public void explosionMethodIsCorrect(){
-        Bomb b = new Bomb(PlayerID.PLAYER_1, new Cell(2,3), 10, 3);
-        Sq<Sq<Cell>> sqFinal=b.explosionArmTowards(Direction.S);
-        for (int i = 0; i < Ticks.EXPLOSION_TICKS; i++) {
-            Sq<Cell> p = sqFinal.head();
-            for(int j=0; j<b.range(); j++){
-                System.out.print(p.head()+ ", ");
-                p = p.tail();
+        Bomb b = new Bomb(PlayerID.PLAYER_1, new Cell(6,7), 10, 3);
+        List<Sq<Sq<Cell>>> e = b.explosion();
+        
+        for(Sq<Sq<Cell>> a:e){
+            for (int i = 0; i < Ticks.EXPLOSION_TICKS; i++) {
+                Sq<Cell> p = a.head();
+                for(int j=0; j<b.range(); j++){
+                    System.out.print(p.head()+ ", ");
+                    p = p.tail();
+                }
+                System.out.println();
+                a=a.tail();
             }
-            System.out.println();
-            sqFinal=sqFinal.tail();
         }
+        assertTrue(true);
     }
 
 }
