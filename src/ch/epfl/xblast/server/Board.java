@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
+import ch.epfl.xblast.Lists;
 
 /** Classe représentant un plateau de jeu
  * @author Xavier Pantet (260473)
@@ -35,47 +36,38 @@ public class Board {
      * @return
      */
    public static Board ofRows(List<List<Block>> rows) throws IllegalArgumentException{
+
+       checkBlockMatrix(rows, Cell.ROWS, Cell.COLUMNS);
        
        List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
+
+       for (int i=0; i<Cell.ROWS; i++){
+           for (int j=0; j<Cell.COLUMNS; j++){
+               tmpBlocks.add(Sq.constant(rows.get(i).get(j)));
        
-       if(rows.size()==Cell.ROWS){
-           for (int i=0; i<Cell.ROWS; i++){
-               if(rows.get(i).size()==Cell.COLUMNS){
-                   for (int j=0; j<Cell.COLUMNS; j++){
-                       tmpBlocks.add(Sq.constant(rows.get(i).get(j)));
-                   }
-               //On retroune une erreur qui dit que la ligne n'a pas le bon nombre d'éléments
-               } else {
-                   throw new IllegalArgumentException("La ligne "+i+" n'a pas le bon nombre d'éléments");
-               }
-            
            }
-         
-       //On retourne une erreur qui dit que le tableau n'a pas le bon nombre d'éléments
-       } else {
-           throw new IllegalArgumentException("Le tableau n'a pas le bon nombre d'éléments");
        }
        
        return new Board(tmpBlocks); 
    }
    
    public static Board ofInnerBlocksWalled(List<List<Block>> innerBlocks) throws IllegalArgumentException{
+       checkBlockMatrix(innerBlocks, Cell.ROWS-2, Cell.COLUMNS-2);
        List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
        
-       if(innerBlocks.size()==Cell.ROWS-2){
+      
            for(int i=0; i<Cell.COLUMNS; i++){tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));}
            tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
            for(List<Block> line:innerBlocks){
-               if(line.size()==Cell.COLUMNS-2){
+              
                    for(Block block:line){
                        tmpBlocks.add(Sq.constant(block));
                    }
-               }
-               else{throw new IllegalArgumentException("La ligne n'a pas le bon nombre d'éléments");}
+              
            }
            tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
            for(int i=0; i<Cell.COLUMNS; i++){tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));}
-       }else{throw new IllegalArgumentException("Le tableau n'a pas le bon nombre d'éléments");}
+  
        
        return new Board(tmpBlocks);
    }
@@ -87,30 +79,74 @@ public class Board {
     */
    
    public static Board ofQuadrantNWBlocksWalled(List<List<Block>> quadrantNWBlocks) throws IllegalArgumentException{
-       
-       int ExpectedListSize = (Cell.ROWS-1)/2;
-       int ExpectedInnerListSize = (Cell.COLUMNS-1)/2;
+       checkBlockMatrix(quadrantNWBlocks, (Cell.ROWS-1)/2, (Cell.COLUMNS-1)/2);
+
        List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
        
-       if(quadrantNWBlocks.size()==ExpectedListSize){
-           //On construit la première ligne du jeu, remplie de mur
+       try{
+    
+           //ETAPE 1 : On construit la première ligne du jeu, remplie de mur
            tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
            
-           
-           //BOUT DE CODE PROVISOIRE
-           for(int i=0; i<ExpectedListSize; i++){
-               if(quadrantNWBlocks.get(i).size()==ExpectedInnerListSize){
-                   
-               } else {
-                   throw new IllegalArgumentException("La liste 'quadrantNWBlocks' contient "+quadrantNWBlocks.get(i).size()+" éléments à l'index "+i+" alors que l'en en attendrait "+ExpectedInnerListSize);
-               }
+           //ETAPE 2: On construit ligne par ligne a partir de la ligne 2 et jusqu'a la fin du plateau exemple.
+           for (int i=0; i<(Cell.ROWS-1)/2; i++){
+               //On ajoute un mur au début
+               tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
+               //On regarde si la sous-liste contient autant d'éléments qu'attendu
+               
+                   //Si c'est OK on ajoute alors la ligne en question à tmpBlocks. On créer tmp Line pour séoudre un problème du Sq.constant
+                   List<Block> tmpLine = new ArrayList<Block>();
+                   tmpLine = Lists.mirrored(quadrantNWBlocks.get(i));
+                   for(int j=0; j<tmpLine.size(); j++){
+                       tmpBlocks.add(Sq.constant(tmpLine.get(j)));
+                   }  
+              
+               //On ajoute le mur à la fin de la ligne
+               tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
+  
            }
+           //ETAPE 3: On construit maintenant la moitié inférieure du jeu. Pour eviter de tout recalculer, on sait que la moitié inférieure du jeu et le mirroir de la partir suppérieur. Alors il suffit de faire passer dans la méthode mirrored la liste tmpBlocks que on a deja calculé.
            
-       } else {
-           throw new IllegalArgumentException("La liste 'quadrantNWBlocks' contient "+quadrantNWBlocks.size()+" alors qu'on en attendrait "+ExpectedListSize);
+           tmpBlocks=Lists.mirrored(tmpBlocks);
+           
+           
+      
+       }catch(Exception e){
+           throw new IllegalArgumentException(e);
        }
-       return null;
+       return new Board(tmpBlocks);
        
+   }
+   
+   /**
+    * Retourne la séquence des blocs pour la case donnée
+    * @param c
+    * @return
+    */
+   public Sq<Block> blocksAt(Cell c){
+       //On cherche l'identifiant de la cellule
+       int CellID = c.rowMajorIndex();
+       //On retroune le sous-tableau à cet ID
+       return blocks.get(CellID);
+   }
+   
+   public Block blockAt(Cell c){
+     Sq<Block> tmpList = blocksAt(c);
+     return tmpList.head();
+   }
+   
+   private static void checkBlockMatrix(List<List<Block>> matrix, int rows, int columns) throws IllegalArgumentException{
+       
+          int matrixSize =matrix.size();
+          if (matrixSize==rows){
+              for (int i=0; i<matrixSize; i++){
+                  if (matrix.get(i).size()!=columns){
+                      throw new IllegalArgumentException("La matrice fournie contient "+matrix.get(i).size()+" colonnes à l'index "+i+" alors qu'on en attend "+columns);
+                  }
+              }
+          } else {
+              throw new IllegalArgumentException("La matrice fournie contient "+matrixSize+" lignes alors qu'on en attend "+rows);
+          }
    }
    
 }
