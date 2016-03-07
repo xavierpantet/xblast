@@ -100,20 +100,16 @@ public final class Bomb {
      */
     public List<Sq<Sq<Cell>>> explosion(){
         List<Sq<Sq<Cell>>> toReturn = new ArrayList<Sq<Sq<Cell>>>();
-        toReturn.add(explosionArmTowards(Direction.N));
-        toReturn.add(explosionArmTowards(Direction.E));
-        toReturn.add(explosionArmTowards(Direction.S));
-        toReturn.add(explosionArmTowards(Direction.W));
+        Direction[] dir=Direction.values();
+        for(int i=0; i<4; i++){
+            toReturn.add(explosionArmTowards(dir[i]));
+        }
         return toReturn;
     }
     
-    public Sq<Sq<Cell>> explosionArmTowards(Direction dir){
-        Sq<Cell> sq1 = Sq.iterate(position, c -> c.neighbor(dir)).limit(range);
-        /*Sq<Sq<Cell>> sqFinal = Sq.constant(Sq.constant(position).limit(1)).limit(1);
-        sqFinal.concat(Sq.constant(Sq.iterate(position, c -> c.neighbor(dir)).limit(1)).limit(1));
-        sqFinal.concat(Sq.constant(sq1).limit(Ticks.EXPLOSION_TICKS-4));
-        sqFinal.concat(Sq.constant(Sq.iterate(position, c -> c.neighbor(dir)).limit(1)).limit(1));
-        sqFinal.concat(Sq.constant(Sq.constant(position).limit(1)).limit(1));*/
-        return null;
+    private Sq<Sq<Cell>> explosionArmTowards(Direction dir){
+        Sq<Cell> singleParticle = Sq.iterate(position, c -> c.neighbor(dir)).limit(range);
+        Sq<Sq<Cell>> explosionArm=Sq.constant(singleParticle).limit(Ticks.EXPLOSION_TICKS);
+        return explosionArm;
     }
 }
