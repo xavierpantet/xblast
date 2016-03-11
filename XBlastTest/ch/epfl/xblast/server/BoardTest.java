@@ -75,7 +75,7 @@ public class BoardTest {
         
         Board b =  Board.ofRows(testList);
         
-        b.blockAt(c)
+        //b.blockAt(c);
         
     }
 
