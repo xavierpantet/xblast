@@ -222,7 +222,7 @@ public final class Player {
          * @return une séquence infinie de la position dirigée donnée
          */
         
-        public Sq<DirectedPosition> stopped(DirectedPosition p){
+        public static Sq<DirectedPosition> stopped(DirectedPosition p){
             return Sq.constant(p);
         }
         
@@ -234,11 +234,11 @@ public final class Player {
          * @param p
          * @return le déplacement du joueur dans la direction de son regard
          */
-        public Sq<DirectedPosition> moving(DirectedPosition p){
+        public static Sq<DirectedPosition> moving(DirectedPosition p){
             
             Sq<DirectedPosition> liste;
 
-            liste = Sq.iterate(p, c -> c.withPosition(position.neighbor(direction)));
+            liste = Sq.iterate(p, c -> c.withPosition(p.position.neighbor(p.direction)));
             
             return liste;
             
