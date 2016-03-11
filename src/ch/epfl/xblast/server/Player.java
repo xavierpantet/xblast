@@ -82,15 +82,15 @@ public final class Player {
      */
     public Sq<LifeState> statesForNextLife(){
         int nbLives=lives();
-        Sq<LifeState> toReturn = Sq.constant(new LifeState(nbLives, State.DYING)).limit(Ticks.PLAYER_DYING_TICKS);
         if(nbLives==0){
-            toReturn.concat(Sq.constant(new LifeState(nbLives, State.DEAD)));
+            return Sq.constant(new LifeState(nbLives, State.DYING)).limit(Ticks.PLAYER_DYING_TICKS)
+                    .concat(Sq.constant(new LifeState(nbLives, State.DEAD)));
         }
         else{
-            toReturn.concat(Sq.constant(new LifeState(nbLives, State.INVULNERABLE)).limit(Ticks.PLAYER_INVULNERABLE_TICKS));
-            toReturn.concat(Sq.constant(new LifeState(nbLives-1, State.VULNERABLE)));
+            return Sq.constant(new LifeState(nbLives, State.DYING)).limit(Ticks.PLAYER_DYING_TICKS)
+                    .concat(Sq.constant(new LifeState(nbLives, State.INVULNERABLE)).limit(Ticks.PLAYER_INVULNERABLE_TICKS))
+                    .concat(Sq.constant(new LifeState(nbLives-1, State.VULNERABLE)));
         }
-        return toReturn;
         
     }
     
@@ -204,14 +204,8 @@ public final class Player {
          * @param direction
          */
         public DirectedPosition(SubCell position, Direction direction) throws NullPointerException{
-           
-           if ((position==null||direction==null)){
-               throw new NullPointerException();
-               
-           } else {
-               this.position = position;
-               this.direction = direction;
-           }
+            this.position = Objects.requireNonNull(position);
+            this.direction = Objects.requireNonNull(direction);
         }
         
         
@@ -238,7 +232,7 @@ public final class Player {
             
             Sq<DirectedPosition> liste;
 
-            liste = Sq.iterate(p, c -> c.withPosition(p.position.neighbor(p.direction)));
+            liste = Sq.iterate(p, c -> c.withPosition(c.position.neighbor(c.direction)));
             
             return liste;
             
@@ -291,7 +285,7 @@ public final class Player {
         
         /**
          * Enum qui decrit les 4 états possibles d'un joueur
-         * @author timotheedu
+         * @author Timothée Duran (258683)
          *
          */
         public enum State {
@@ -306,15 +300,8 @@ public final class Player {
          * @throws NullPointerException
          */
         public LifeState(int lives, State state) throws IllegalArgumentException, NullPointerException{
-            
-            if(lives<0){
-                throw new IllegalArgumentException();
-            } else if (state==null){
-                throw new NullPointerException();
-            }
-            
-            this.lives = lives;
-            this.state = state;
+            this.lives = ArgumentChecker.requireNonNegative(lives);
+            this.state = Objects.requireNonNull(state);
             
         }
         
