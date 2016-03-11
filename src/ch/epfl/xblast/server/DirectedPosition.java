@@ -1,7 +1,6 @@
 package ch.epfl.xblast.server;
 
 import ch.epfl.cs108.Sq;
-import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.SubCell;
 
@@ -49,10 +48,11 @@ public final class DirectedPosition {
      */
     public Sq<DirectedPosition> moving(DirectedPosition p){
         
-        Sq<DirectedPosition> liste = Sq.constant(p).limit(1);
-       
+        Sq<DirectedPosition> liste;
+
+        liste = Sq.iterate(p, c -> c.withPosition(position.neighbor(direction)));
         
-        liste.iterate(new Cell(3, 6), c -> c.neighbor(direction));
+        return liste;
         
     }
     
@@ -62,6 +62,7 @@ public final class DirectedPosition {
      */
     public SubCell position(){
         
+        return position;
     }
     
     /**
@@ -70,7 +71,7 @@ public final class DirectedPosition {
      * @return
      */
     public DirectedPosition withPosition(SubCell newPosition){
-        
+        return new DirectedPosition (newPosition, this.direction);
     }
     
     /**
@@ -78,7 +79,7 @@ public final class DirectedPosition {
      * @return
      */
     public Direction direction(){
-        
+        return direction;
     }
     
     /**
@@ -87,6 +88,6 @@ public final class DirectedPosition {
      * @return
      */
     public DirectedPosition withDirection(Direction newDirection){
-        
+        return new DirectedPosition (this.position, newDirection);
     }
 }
