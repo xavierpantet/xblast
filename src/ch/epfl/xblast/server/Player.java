@@ -130,7 +130,7 @@ public final class Player {
     }
     
     /**
-     * @return le nombre de vies maximal
+     * @return le nombre de bombes maximal
      */
     public int maxBombs(){
         return maxBombs;
