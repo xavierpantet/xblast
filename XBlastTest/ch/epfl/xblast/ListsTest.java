@@ -83,5 +83,19 @@ public class ListsTest {
         if(!check.contains(l)){check.add(l);}
         assertEquals(check.size(), factorial);
     }
+    
+    @Test
+    public void permutationsWorksOnEmptyArray(){
+        List<Integer> l = new ArrayList<>(Arrays.asList());
+        List<List<Integer>> t = Lists.permutations(l);
+        assertEquals(t, new ArrayList<>(Arrays.asList(Arrays.asList())));
+    }
+    
+    @Test
+    public void permutationsWorksOnTrivialArray(){
+        List<Integer> l = new ArrayList<>(Arrays.asList(1));
+        List<List<Integer>> t = Lists.permutations(l);
+        assertEquals(t, new ArrayList<>(Arrays.asList(Arrays.asList(1))));
+    }
 
 }
