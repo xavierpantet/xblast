@@ -150,7 +150,7 @@ public final class Cell {
     }
     
     /**
-     * Redéfinition de equals. Retourn vrai <=> that est une classe dont les coordonnées normalisées sont les mêmes
+     * Redéfinition de equals. Retourne vrai <=> that est une classe dont les coordonnées normalisées sont les mêmes
      * @return si une case est égale à une autre
      */
     @Override
@@ -165,6 +165,15 @@ public final class Cell {
             return false;
         }
         return false;
+    }
+    
+    /**
+     * Retourne une valeur de hashage unique pour la case
+     * return un hashcode unique
+     */
+    @Override
+    public int hashCode(){
+        return rowMajorIndex();
     }
     
     /**

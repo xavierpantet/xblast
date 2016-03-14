@@ -101,4 +101,14 @@ public class CellTest {
         cells.add(new Cell(0,1));
         assertEquals(Cell.SPIRAL_ORDER, cells);
     }*/
+    
+    @Test
+    public void hashcodeIsCorrect(){
+        for(int i=0; i<Cell.ROWS; i++){
+            for(int j=0; j<Cell.COLUMNS; j++){
+                Cell c = new Cell(j, i);
+                assertEquals(c.rowMajorIndex(), c.hashCode());
+            }
+        }
+    }
 }

@@ -57,4 +57,10 @@ public class SubCellTest {
                 assertEquals(c, s.neighbor(d).containingCell());
         }
     }
+    
+    @Test
+    public void hashcodeIsCorrect(){
+        SubCell s = new SubCell(0, 0);
+        System.out.println(s.hashCode());
+    }
 }
