@@ -156,13 +156,21 @@ public final class SubCell {
                 SubCell c = (SubCell) that;
                 return (this.x==c.x() && this.y==c.y());
             }
-return false;
+            return false;
         }
         return false;
     
         
     }
     
+    /**
+     * Retourne un identifiant unique pour la sous-case
+     * return un hashcode unique
+     */
+    @Override
+    public int hashCode(){
+        return y*Cell.COLUMNS*COLUMNS+x;
+    }
     /**
      * redéfinit la méthode toString de Object et 
      * retourne une représentation textuelle de la sous-case, 
