@@ -2,6 +2,7 @@ package ch.epfl.xblast.server;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
@@ -56,7 +57,7 @@ public class Board {
        List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
        
       
-           for(int i=0; i<Cell.COLUMNS; i++){tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));}
+           tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
            tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
            for(List<Block> line:innerBlocks){
               
@@ -66,7 +67,7 @@ public class Board {
               
            }
            tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
-           for(int i=0; i<Cell.COLUMNS; i++){tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));}
+           tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
   
        
        return new Board(tmpBlocks);
@@ -79,38 +80,38 @@ public class Board {
     */
    
    public static Board ofQuadrantNWBlocksWalled(List<List<Block>> quadrantNWBlocks) throws IllegalArgumentException{
-       checkBlockMatrix(quadrantNWBlocks, (Cell.ROWS-1)/2, (Cell.COLUMNS-1)/2);
-
        List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
-       
-       try{
-    
-           //ETAPE 1 : On construit la première ligne du jeu, remplie de mur
-           tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
-           
-           //ETAPE 2: On construit ligne par ligne a partir de la ligne 2 et jusqu'a la fin du plateau exemple.
-           for (int i=0; i<(Cell.ROWS-1)/2; i++){
-               //On ajoute un mur au début
-               tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
-               //On regarde si la sous-liste contient autant d'éléments qu'attendu
-               
-                   //Si c'est OK on ajoute alors la ligne en question à tmpBlocks. On créer tmp Line pour séoudre un problème du Sq.constant
-                   List<Block> tmpLine = new ArrayList<Block>();
-                   tmpLine = Lists.mirrored(quadrantNWBlocks.get(i));
-                   for(int j=0; j<tmpLine.size(); j++){
-                       tmpBlocks.add(Sq.constant(tmpLine.get(j)));
-                   }  
-              
-               //On ajoute le mur à la fin de la ligne
-               tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
-  
-           }
-           //ETAPE 3: On construit maintenant la moitié inférieure du jeu. Pour eviter de tout recalculer, on sait que la moitié inférieure du jeu et le mirroir de la partir suppérieur. Alors il suffit de faire passer dans la méthode mirrored la liste tmpBlocks que on a deja calculé.
-           
-           tmpBlocks=Lists.mirrored(tmpBlocks);
-           
-           
       
+       try{
+           checkBlockMatrix(quadrantNWBlocks, (Cell.ROWS-1)/2, (Cell.COLUMNS-1)/2);
+           
+           // On ajoute la première ligne de blocs indestructibles
+           tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+           List<Sq<Block>> tmpLine = new LinkedList<>();
+               // Pour chaque ligne de la matrice d'entrée
+               for(List<Block> l : quadrantNWBlocks){
+                   
+                   // On ajoute le mur gauche
+                   tmpLine.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
+                   
+                   // Puis, on ajoute chaque élément
+                   for(Block b : l){
+                       tmpLine.add(Sq.constant(b));
+                   }
+                   
+                   // On ajoute au board la ligne obtenue en miroir
+                   tmpLine=Lists.mirrored(tmpLine);
+                   tmpBlocks.addAll(tmpLine);
+                   tmpLine.clear();
+               }
+               
+               /* A ce stade, on obient les (Cell.ROWS-1)/2 premières lignes du board
+                * Il suffit de retirer la dernière demi-ligne et de prendre le board en miroir
+                * pour obtenir le board final
+                */
+               tmpBlocks=tmpBlocks.subList(0, tmpBlocks.size()-(Cell.COLUMNS-1)/2);
+               tmpBlocks=Lists.mirrored(tmpBlocks);
+
        }catch(Exception e){
            throw new IllegalArgumentException(e);
        }
