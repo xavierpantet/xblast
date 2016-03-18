@@ -35,7 +35,7 @@ public final class GameState {
         if ((ticks<0)||(playerSize != 4)){
             throw new IllegalArgumentException();
         }
-        if ((ticks==0)||(players.get(0)==null)||(players.get(1)==null)||(players.get(2)==null)||(players.get(3)==null)){
+        if ((players.get(0)==null)||(players.get(1)==null)||(players.get(2)==null)||(players.get(3)==null)){
             throw new NullPointerException();
         }
         
@@ -78,15 +78,19 @@ public final class GameState {
             return true;
         }
         
-        int nbOfDeadPlayers = 0;
-        
+        int nbOfAlivePlayers = 0;
+    
         for (int i=0; i<4; i++){
             if (players.get(i).isAlive()){
-                nbOfDeadPlayers++;
+              
+                nbOfAlivePlayers++;
+           
+            } else {
+             
             };
         }
         
-        if (nbOfDeadPlayers>=3){
+        if (nbOfAlivePlayers<=3){
             return true;
         } else {
             return false;

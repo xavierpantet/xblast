@@ -105,7 +105,7 @@ public final class Player {
      * @return true si le joueur est encore vivant
      */
     public boolean isAlive(){
-        return (lives()>0)? true:false;
+        return (this.lives()>0)? true:false;
     }
     
     /**
