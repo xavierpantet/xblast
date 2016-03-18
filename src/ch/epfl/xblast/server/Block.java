@@ -3,7 +3,7 @@ package ch.epfl.xblast.server;
 import java.util.NoSuchElementException;
 
 /**
- * Enumération des différents types de blocs et des méthodes associées
+ * Enumération des différents types de blocs et des méthodes associées.
  * @author Xavier Pantet (260473)
  */
 public enum Block {
@@ -13,7 +13,7 @@ public enum Block {
     
     /**
      * Constructeur pour les bonus
-     * @param maybeAssociatedBonus
+     * @param le bonus associé
      */
     private Block(Bonus maybeAssociatedBonus) {
         this.maybeAssociatedBonus=maybeAssociatedBonus;

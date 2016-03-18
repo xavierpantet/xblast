@@ -16,8 +16,8 @@ public class Board {
     private final List<Sq<Block>> blocks;
     
     /**
-     * Initialise les séquences avec celles passées en paramètres
-     * Lève IllegalArgumentException si la liste ne contient pas 195 éléments
+     * Initialise les séquences avec celles passées en paramètres.
+     * Lève IllegalArgumentException si la liste ne contient pas 195 éléments.
      * @param liste des séquences pour chaque bloc
      * @throws IllegalArgumentException
      */
@@ -30,48 +30,68 @@ public class Board {
     }
    
     /**
-     * qui construit un plateau constant avec la matrice de blocs donnée, 
+     * Construit un plateau constant avec la matrice de blocs donnée, 
      * ou lève l'exception IllegalArgumentException si la liste reçue n'est pas constituée 
      * de 13 listes de 15 éléments chacune.
-     * @param rows
-     * @return
+     * @param matrice de contenu
+     * @return un plateau ofRows
      */
    public static Board ofRows(List<List<Block>> rows) throws IllegalArgumentException{
-
        checkBlockMatrix(rows, Cell.ROWS, Cell.COLUMNS);
        
        List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
 
-       for (int i=0; i<Cell.ROWS; i++){
-           for (int j=0; j<Cell.COLUMNS; j++){
-               tmpBlocks.add(Sq.constant(rows.get(i).get(j)));
-       
-           }
-       }
-       
-       return new Board(tmpBlocks); 
-   }
-   
-   public static Board ofInnerBlocksWalled(List<List<Block>> innerBlocks) throws IllegalArgumentException{
-       checkBlockMatrix(innerBlocks, Cell.ROWS-2, Cell.COLUMNS-2);
-       
-       List<Sq<Block>> tmpBlocks = new LinkedList<Sq<Block>>();
-       tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
-       for(List<Block> l : innerBlocks){
-           tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
+       for(List<Block> l : rows){
            for(Block e:l){
                tmpBlocks.add(Sq.constant(e));
            }
-           tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));  
        }
-       tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
-       return new Board(tmpBlocks);
+       return new Board(tmpBlocks); 
    }
    
    /**
-    * construit un plateau muré symétrique avec les blocs du quadrant nord-ouest donnés, ou lève l'exception IllegalArgumentException si la liste reçue n'est pas constituée de 6 listes de 7 éléments chacune.
-    * @param quadrantNWBlocks
-    * @return
+    * Construit un plateau constant avec la matrices des blocs donnée emmurée,
+    * ou lève IllegalArgumentException si la matrice n'a pas les bonnes dimension
+    * @param matrices de blocs
+    * @return un plateau ofInnerBlocksWalled
+    * @throws IllegalArgumentException
+    */
+   public static Board ofInnerBlocksWalled(List<List<Block>> innerBlocks) throws IllegalArgumentException{
+       try{
+           checkBlockMatrix(innerBlocks, Cell.ROWS-2, Cell.COLUMNS-2);
+       
+           List<Sq<Block>> tmpBlocks = new LinkedList<Sq<Block>>();
+       
+           // On ajoute le mur du haut
+           tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+           for(List<Block> l : innerBlocks){
+           
+               // On commence une ligne par un mur
+               tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
+           
+               // On ajoute les blocs
+               for(Block e:l){
+                   tmpBlocks.add(Sq.constant(e));
+               }
+           
+               // On termine par un mur
+               tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));  
+           }
+       
+           // On ajoute le mur du bas
+           tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+           return new Board(tmpBlocks);
+       }
+       catch(IllegalArgumentException e){
+           throw new IllegalArgumentException(e);
+       }
+   }
+   
+   /**
+    * Construit un plateau muré symétrique avec les blocs du quadrant nord-ouest donnés,
+    * ou lève l'exception IllegalArgumentException si la liste reçue n'est pas constituée de 6 listes de 7 éléments chacune.
+    * @param matrice de blocs
+    * @return un plateau ofQuadrantNWBlocksWalled
     */
    
    public static Board ofQuadrantNWBlocksWalled(List<List<Block>> quadrantNWBlocks) throws IllegalArgumentException{
@@ -116,21 +136,33 @@ public class Board {
    
    /**
     * Retourne la séquence des blocs pour la case donnée
-    * @param c
-    * @return
+    * @param la case
+    * @return séquence des blocs correspondante
     */
    public Sq<Block> blocksAt(Cell c){
-       //On cherche l'identifiant de la cellule
+       // On cherche l'identifiant de la cellule
        int CellID = c.rowMajorIndex();
-       //On retroune le sous-tableau à cet ID
+       // On retroune le sous-tableau à cet ID
        return blocks.get(CellID);
    }
    
+   /**
+    * Retourne le bloc à la cellule donnée
+    * @param la cellule
+    * @return le bloc correspondant
+    */
    public Block blockAt(Cell c){
      Sq<Block> tmpList = blocksAt(c);
      return tmpList.head();
    }
    
+   /**
+    * Permet de vérifier qu'une matrice est conforme.
+    * @param matrix
+    * @param rows
+    * @param columns
+    * @throws IllegalArgumentException
+    */
    private static void checkBlockMatrix(List<List<Block>> matrix, int rows, int columns) throws IllegalArgumentException{
        
           int matrixSize =matrix.size();

@@ -1,7 +1,7 @@
 package ch.epfl.xblast;
 
 /**
- * Enumération des identités possibles pour les 4 joueurs
+ * Enumération des identités possibles pour les 4 joueurs.
  * @author Xavier Pantet (260473)
  */
 public enum PlayerID {

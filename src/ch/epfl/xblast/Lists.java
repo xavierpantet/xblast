@@ -6,7 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Classe représentant une liste d'objets quelconques
+ * Classe représentant une liste d'objets quelconques.
+ * Fournit essentiellement des méthodes statiques utilitaires.
  * @author Xavier Pantet (260473)
  */
 public final class Lists {
@@ -30,8 +31,8 @@ public final class Lists {
     }
     
     /**
-     * Calcule de manière récursive l'ensemble des combinaisons possibles sur un tableau
-     * @param l
+     * Calcule de manière récursive l'ensemble des combinaisons possibles sur une liste.
+     * @param liste simple
      * @return une liste des combinaisons de la liste donnée
      */
     public static <T> List<List<T>> permutations(List<T> l){

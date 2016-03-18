@@ -23,11 +23,11 @@ public final class Player {
     
     /**
      * Constructeur principal
-     * @param id
-     * @param lifeStates
-     * @param directedPos
-     * @param maxBombs
-     * @param bombRange
+     * @param identité
+     * @param états de vie
+     * @param position dirigée
+     * @param nombre maximal de bombes
+     * @param portée des bombes
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
@@ -41,11 +41,11 @@ public final class Player {
     
     /**
      * Constructeur secondaire
-     * @param id
-     * @param lives
+     * @param identité
+     * @param nombre de vies
      * @param position
-     * @param maxBombs
-     * @param bombRange
+     * @param nombre max de bombes
+     * @param portée des bombes
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
@@ -171,7 +171,7 @@ public final class Player {
     
     /**
      * Permet de créer une séquence d'états de vie, utilisé par le constructeur
-     * @param lives
+     * @param nombre de vies
      * @return la séquence d'états de vie du joueur à son initialisation
      * @throws IllegalArgumentException
      */
@@ -197,8 +197,9 @@ public final class Player {
 
         private final SubCell position;
         private final Direction direction;
+        
         /**
-         * construit une position dirigée avec la position et la direction donnés, 
+         * Construit une position dirigée avec la position et la direction données, 
          * ou lève l'exception NullPointerException si l'un ou l'autre de ces arguments est nul
          * @param position
          * @param direction
@@ -210,9 +211,9 @@ public final class Player {
         
         
         /**
-         * retourne une séquence infinie composée uniquement de la position dirigée donnée et 
+         * Retourne une séquence infinie composée uniquement de la position dirigée donnée et 
          * représentant un joueur arrêté dans cette position
-         * @param p
+         * @param position dirigée
          * @return une séquence infinie de la position dirigée donnée
          */
         
@@ -221,11 +222,11 @@ public final class Player {
         }
         
         /**
-         * retourne une séquence infinie de positions dirigées représentant un joueur se déplaçant dans la direction dans laquelle il regarde ; 
+         * Retourne une séquence infinie de positions dirigées représentant un joueur se déplaçant dans la direction dans laquelle il regarde ; 
          * le premier élément de cette séquence est la position dirigée donnée, 
          * le second a pour position la sous-case voisine de celle du premier élément dans la direction de regard, 
          * et ainsi de suite
-         * @param p
+         * @param position dirigée actuelle
          * @return le déplacement du joueur dans la direction de son regard
          */
         public static Sq<DirectedPosition> moving(DirectedPosition p){
@@ -286,7 +287,6 @@ public final class Player {
         /**
          * Enum qui decrit les 4 états possibles d'un joueur
          * @author Timothée Duran (258683)
-         *
          */
         public enum State {
             INVULNERABLE, VULNERABLE, DYING, DEAD;
@@ -294,8 +294,8 @@ public final class Player {
         
         /**
          * Constructeur de la classe
-         * @param lives
-         * @param state
+         * @param nombre de vies
+         * @param état de vie
          * @throws IllegalArgumentException
          * @throws NullPointerException
          */
@@ -326,11 +326,7 @@ public final class Player {
          * @return si le joueur peut bouger ou non
          */
         public boolean canMove(){
-            if ((this.state==State.VULNERABLE)||(this.state==State.INVULNERABLE)){
-                return true;
-            } else {
-                return false;
-            }
+            return ((this.state==State.VULNERABLE)||(this.state==State.INVULNERABLE))? true : false;
         }
 
     }

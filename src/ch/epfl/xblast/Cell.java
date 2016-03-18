@@ -6,10 +6,11 @@ import java.util.List;
 import java.lang.Math;
 
 /**
- * Classe représentant une case du tableau de jeu
+ * Classe représentant une case du tableau de jeu.
  * @author Xavier Pantet (260473)
  */
 public final class Cell {
+    // Attributs statiques du plateau de jeu
     public final static int COLUMNS=15;
     public final static int ROWS=13;
     public final static int COUNT=COLUMNS*ROWS;
@@ -19,6 +20,11 @@ public final class Cell {
     private final int x;
     private final int y;
     
+    /**
+     * Constructeur de cellule
+     * @param x
+     * @param y
+     */
     public Cell(int x, int y){
         this.x=Math.floorMod(x, COLUMNS);
         this.y=Math.floorMod(y, ROWS);
@@ -41,7 +47,7 @@ public final class Cell {
     }
     
     /**
-     * Retourne le tableau des cellules du plateau triées dans le sens de lecture
+     * Retourne le tableau des cellules du plateau triées dans le sens de lecture.
      * @return cellules en ROW_MAJOR_ORDER
      */
     private static ArrayList<Cell> rowMajorOrder(){
@@ -56,7 +62,7 @@ public final class Cell {
     }
     
     /**
-     * Retourne le tableau des cellules du plateau triées en spirale
+     * Retourne le tableau des cellules du plateau triées en spirale.
      * @return cellules en SPIRAL_ORDER
      */
     private static ArrayList<Cell> spiralOrder(){
@@ -105,7 +111,7 @@ public final class Cell {
     }
     
     /**
-     * Retourne la case voisine dans la direction d, en tenant compte du tore
+     * Retourne la case voisine dans la direction d, en tenant compte du tore.
      * Par défaut, on retourne null
      * @param la direction dans laquelle se trouve la case voisine
      * @return la case voisine
@@ -150,8 +156,9 @@ public final class Cell {
     }
     
     /**
-     * Redéfinition de equals. Retourne vrai <=> that est une classe dont les coordonnées normalisées sont les mêmes
-     * @return si une case est égale à une autre
+     * Redéfinition de equals. Retourne vrai <=> that est une classe
+     * dont les coordonnées normalisées sont les mêmes que this
+     * @return vrai si une case est égale à une autre
      */
     @Override
     public boolean equals(Object that){

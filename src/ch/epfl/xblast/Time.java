@@ -1,7 +1,7 @@
 package ch.epfl.xblast;
 
 /**
- * Interface de données temporelles
+ * Interface de données temporelles.
  * @author Xavier Pantet (260473)
  */
 public interface Time {

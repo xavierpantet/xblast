@@ -22,10 +22,10 @@ public final class Bomb {
     
     /**
      * Créé une bombe avec les données en paramètre
-     * @param ownerId
+     * @param propriétaire
      * @param position
-     * @param fuseLengths
-     * @param range
+     * @param longueur de mèche
+     * @param portée
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
@@ -41,12 +41,12 @@ public final class Bomb {
     }
     
     /**
-     * Surcharge du premier constructeurs quasi-identique au premier.
+     * Surcharge du premier constructeur quasi-identique au premier.
      * Il initialise une séquence quand on lui en donne l'élément maximal
-     * @param ownerId
+     * @param propriétaire
      * @param position
-     * @param fuseLengths
-     * @param range
+     * @param longueur de mèche
+     * @param portée
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
@@ -100,12 +100,19 @@ public final class Bomb {
     public List<Sq<Sq<Cell>>> explosion(){
         List<Sq<Sq<Cell>>> toReturn = new ArrayList<Sq<Sq<Cell>>>();
         Direction[] dir=Direction.values();
+        
+        // On retourne le bras de l'explosion dans les 4 directions possibles
         for(int i=0; i<4; i++){
             toReturn.add(explosionArmTowards(dir[i]));
         }
         return toReturn;
     }
     
+    /**
+     * Retourne un bras d'explosion dans la direction donnée
+     * @param direction
+     * @return bras d'explosion
+     */
     private Sq<Sq<Cell>> explosionArmTowards(Direction dir){
         Sq<Cell> singleParticle = Sq.iterate(position, c -> c.neighbor(dir)).limit(range);
         Sq<Sq<Cell>> explosionArm=Sq.constant(singleParticle).limit(Ticks.EXPLOSION_TICKS);
