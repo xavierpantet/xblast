@@ -54,7 +54,7 @@ public final class GameStatePrinter {
         default: throw new Error();*/
         case FREE: return "  ";
         case INDESTRUCTIBLE_WALL: return "XX";
-        case DESTRUCTIBLE_WALL: return "--";
+        case DESTRUCTIBLE_WALL: return "xx";
         case CRUMBLING_WALL: return "~";
         case BONUS_BOMB: return "+b";
         case BONUS_RANGE: return "+r";

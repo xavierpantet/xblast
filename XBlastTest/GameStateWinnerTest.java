@@ -14,6 +14,7 @@ import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.server.Block;
 import ch.epfl.xblast.server.Board;
+import ch.epfl.xblast.server.Bomb;
 import ch.epfl.xblast.server.GameState;
 import ch.epfl.xblast.server.Player;
 import ch.epfl.xblast.server.debug.GameStatePrinter;
@@ -81,8 +82,10 @@ public class GameStateWinnerTest {
         players.add(new Player(PlayerID.PLAYER_2, 1, new Cell(13, 1), 5, 5));
         players.add(new Player(PlayerID.PLAYER_3, 1, new Cell(1, 11), 5, 5));
         players.add(new Player(PlayerID.PLAYER_4, 1, new Cell(13, 11), 5, 5));
+        List<Bomb> bombs = new LinkedList<>();
+        bombs.add(players.get(2).newBomb());
         
-        GameState g = new GameState(board, players);
+        GameState g = new GameState(0, board, players, bombs, new ArrayList<Sq<Sq<Cell>>>(), new ArrayList<Sq<Cell>>());
         GameStatePrinter.printGameState(g);
     }
 
