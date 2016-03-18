@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
+import ch.epfl.xblast.PlayerID;
 
 public final class GameState {
     
@@ -112,10 +113,10 @@ public final class GameState {
      * @author Xavier Pantet (260473)
      * @return le vainqueur
      */
-    public Optional<Player> winner(){
-        Optional<Player> winner = Optional.empty();
+    public Optional<PlayerID> winner(){
+        Optional<PlayerID> winner = Optional.empty();
         if(alivePlayers().size()==1){
-            winner = Optional.of(alivePlayers().get(0));
+            winner = Optional.of(alivePlayers().get(0).id());
         }
         return winner;
     }
@@ -160,7 +161,7 @@ public final class GameState {
      * @param explosions0
      * @return
      */
-    List<Sq<Cell>> nextBlasts(List<Sq<Cell>> blasts0, Board board0, List<Sq<Sq<Cell>>> explosions0){
+    private static List<Sq<Cell>> nextBlasts(List<Sq<Cell>> blasts0, Board board0, List<Sq<Sq<Cell>>> explosions0){
         List<Sq<Cell>> blasts1 = new ArrayList<>();
         for(Sq<Cell> s:blasts0){
             if(board0.blockAt(s.head()).isFree()){
