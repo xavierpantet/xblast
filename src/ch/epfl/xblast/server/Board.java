@@ -54,22 +54,17 @@ public class Board {
    
    public static Board ofInnerBlocksWalled(List<List<Block>> innerBlocks) throws IllegalArgumentException{
        checkBlockMatrix(innerBlocks, Cell.ROWS-2, Cell.COLUMNS-2);
-       List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
        
-      
-           tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+       List<Sq<Block>> tmpBlocks = new LinkedList<Sq<Block>>();
+       tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+       for(List<Block> l : innerBlocks){
            tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
-           for(List<Block> line:innerBlocks){
-              
-                   for(Block block:line){
-                       tmpBlocks.add(Sq.constant(block));
-                   }
-              
+           for(Block e:l){
+               tmpBlocks.add(Sq.constant(e));
            }
-           tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
-           tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
-  
-       
+           tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));  
+       }
+       tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
        return new Board(tmpBlocks);
    }
    
