@@ -1,11 +1,17 @@
 package ch.epfl.xblast.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
+import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.PlayerID;
 
 public final class GameState {
@@ -17,18 +23,20 @@ public final class GameState {
     private final List<Sq<Sq<Cell>>> explosions;
     private final List<Sq<Cell>> blasts;
     
+    private static final Random RANDOM = new Random(2016);
+    
     
     /**
-     * construit l'état du jeu pour le coup d'horloge, le plateau de jeu, les joueurs, les bombes, les explosions et les particules d'explosion (blasts) donnés ; 
+     * Construit l'état du jeu pour le coup d'horloge, le plateau de jeu, les joueurs, les bombes, les explosions et les particules d'explosion (blasts) donnés ; 
      * lève l'exception IllegalArgumentException si le coup d'horloge est (strictement) négatif ou 
      * si la liste des joueurs ne contient pas exactement 4 éléments, 
      * ou l'exception NullPointerException si l'un des cinq derniers arguments est nul
-     * @param ticks
-     * @param board
-     * @param players
-     * @param bombs
+     * @param coup d'horloge
+     * @param plateau
+     * @param joueurs
+     * @param bombes
      * @param explosions
-     * @param blasts
+     * @param particules
      */
     public GameState(int ticks, Board board, List<Player> players, List<Bomb> bombs, List<Sq<Sq<Cell>>> explosions, List<Sq<Cell>> blasts) throws IllegalArgumentException, NullPointerException{
         
@@ -50,9 +58,9 @@ public final class GameState {
     }
     
     /**
-     * construit l'état du jeu pour le plateau et les joueurs donnés, pour le coup d'horloge 0 et aucune bombe, explosion ou particule d'explosion.
-     * @param board
-     * @param players
+     * Construit l'état du jeu pour le plateau et les joueurs donnés, pour le coup d'horloge 0 et aucune bombe, explosion ou particule d'explosion.
+     * @param plateau
+     * @param joueurs
      */
     public GameState(Board board, List<Player> players){
 
@@ -61,18 +69,18 @@ public final class GameState {
     }
     
     /**
-     * retourne le coup d'horloge correspondant à l'état
-     * @return
+     * Retourne le coup d'horloge correspondant à l'état
+     * @return le coup d'horloge
      */
     public int ticks(){
         return this.ticks;
     }
     
     /**
-     * retourne vrai si et seulement si l'état correspond à une partie terminée, 
+     * Retourne vrai si et seulement si l'état correspond à une partie terminée, 
      * c-à-d si le nombre de coups d'horloge d'une partie (Ticks.TOTAL_TICKS) est écoulé, 
      * ou s'il n'y a pas plus d'un joueur vivant
-     * @return
+     * @return vrai <=> partie terminée
      */
     public boolean isGameOver(){
         if (this.ticks==Ticks.TOTAL_TICKS){
@@ -99,8 +107,8 @@ public final class GameState {
     }
 
     /**
-     * retourne le temps restant dans la partie, en secondes
-     * @return
+     * Retourne le temps restant dans la partie, en secondes
+     * @return le temps restant
      */
     public double remainingTime(){
         return (this.ticks-Ticks.TOTAL_TICKS)/Ticks.TICKS_PER_SECOND;
@@ -123,23 +131,23 @@ public final class GameState {
     
     /**
      * Retourne le plateau de jeu
-     * @return
+     * @return le plateau de jeu
      */
     public Board board(){
         return this.board;
     }
     
     /**
-     * retourne les joueurs, sous la forme d'une liste contenant toujours 4 éléments, car même les joueurs morts en font partie
-     * @return
+     * Retourne les joueurs, sous la forme d'une liste contenant toujours 4 éléments, car même les joueurs morts en font partie
+     * @return les joueurs
      */
     public List<Player> players(){
         return this.players;
     }
     
     /**
-     * retourne les joueurs vivants, c-à-d ceux ayant au moins une vie
-     * @return
+     * Retourne les joueurs vivants, c-à-d ceux ayant au moins une vie
+     * @return les joueurs vivants
      */
     public List<Player> alivePlayers(){
         
@@ -155,11 +163,35 @@ public final class GameState {
     }
     
     /**
-     * calcule les particules d'explosion pour l'état suivant étant données celles de l'état courant, le plateau de jeu courant et les explosions courantes.
-     * @param blasts0
-     * @param board0
+     * Retourne une table associative des Bombes avec les cases qu'elles occupent
+     * @author Xavier Pantet (260473)
+     * @return une association cases-bombes
+     */
+    public Map<Cell, Bomb> bombedCells(){
+        Map<Cell, Bomb> bombMap= new HashMap<>();
+        for(Bomb b:bombs){
+            bombMap.put(b.position(), b);
+        }
+        return bombMap;
+    }
+    
+    public Set<Cell> blastedCells(){
+        return null;
+    }
+    
+    public GameState next(Map<PlayerID, Optional<Direction>> speedChangeEvents, Set<PlayerID> bombDropEvents){
+        return null;
+    }
+    
+    private static Board nextBoard(Board board0, Set<Cell> consumedBonuses, Set<Cell> blastedCells1){
+        return null;
+    }
+    /**
+     * Calcule les particules d'explosion pour l'état suivant étant données celles de l'état courant, le plateau de jeu courant et les explosions courantes.
+     * @param particules0
+     * @param plateau0
      * @param explosions0
-     * @return
+     * @return les nouvelles particules
      */
     private static List<Sq<Cell>> nextBlasts(List<Sq<Cell>> blasts0, Board board0, List<Sq<Sq<Cell>>> explosions0){
         List<Sq<Cell>> blasts1 = new ArrayList<>();
