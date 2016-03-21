@@ -3,11 +3,14 @@ package ch.epfl.xblast.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+
+import java.util.Iterator;
 
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
@@ -183,7 +186,125 @@ public final class GameState {
         return null;
     }
     
+    /**
+     * Calcule l'état futur du plateau de jeu
+     * @author Xavier Pantet (260473)
+     * @param plateau0
+     * @param bonus consommés
+     * @param particules
+     * @return l'état futur du plateau de jeu
+     */
     private static Board nextBoard(Board board0, Set<Cell> consumedBonuses, Set<Cell> blastedCells1){
+        List<Sq<Block>> board1 = new ArrayList<>();
+        Block currentCell;
+        
+        // On parcourt le plateau actuel
+        for(Cell c:Cell.ROW_MAJOR_ORDER){
+            currentCell=board0.blockAt(c);
+            
+            // Si on est sur un bonus qui a été consommé
+            if(consumedBonuses.contains(currentCell)){
+                board1.add(Sq.constant(Block.FREE));
+            }
+            
+            // Si on est sur un bonus atteint par une explosion
+            else if(currentCell.isBonus() && blastedCells1.contains(currentCell)){
+                
+                // On parcourt les Ticks.BONUS_DISAPPEARING_TICKS premiers éléments de la séquence pour
+                // savoir si le bonus a déjà été touché par une particule auparavent
+                boolean foundFree=false;
+                Sq<Block> tmpBlock=board0.blocksAt(c);
+                
+                // On pourrait utiliser un while à la place du for + break,
+                // mais on devrait initialiser et gérer manuellement un compteur
+                for(int i=0; i<Ticks.BONUS_DISAPPEARING_TICKS; i++){
+                    if(tmpBlock.head()==Block.FREE){
+                        foundFree=true;
+                        break;
+                    }
+                    tmpBlock = tmpBlock.tail();
+                }
+                
+                if(!foundFree){
+                    board1.add(Sq.constant(currentCell).limit(Ticks.BONUS_DISAPPEARING_TICKS)
+                            .concat(Sq.constant(Block.FREE)));
+                }
+            }
+            
+            // Si on est sur un mur destructible atteint par une explosion
+            else if(currentCell==Block.DESTRUCTIBLE_WALL && blastedCells1.contains(currentCell)){
+                Block b;
+                
+                // On calcule le bloc qui remplacera la case
+                int prob = RANDOM.nextInt(3);
+                switch (prob){
+                    case 0: b=Block.BONUS_BOMB;
+                    break;
+                    
+                    case 1: b=Block.BONUS_RANGE;
+                    break;
+                    
+                    default: b=Block.FREE;
+                }
+                
+                board1.add(Sq.constant(Block.CRUMBLING_WALL).limit(Ticks.WALL_CRUMBLING_TICKS)
+                        .concat(Sq.constant(b)));
+            }
+            
+            // Si on a rien de spécial, on ne change rien
+            else{
+                board1.add(Sq.constant(currentCell));
+            }
+        }
+        return new Board(board1);
+    }
+    
+    /**
+     * Retourne les nouvelles bombes déposées par les joueurs, tenant compte
+     * des piorités et de leurs droits
+     * @author Xavier Pantet (260474)
+     * @param joueurs0
+     * @param dépôts de bombes
+     * @param bombes actuelles
+     * @return les nouvelles bombes
+     */
+    private static List<Bomb> newlyDroppedBombs(List<Player> players0, Set<PlayerID> bombDropEvents, List<Bomb> bombs0){
+        
+        // On copie bombs1 pour n'itérer que sur un seul tableau quand on teste si une case contient déjà une bombe ou non
+        List<Bomb> bombs1 = new LinkedList<>(bombs0);
+        int nbEvents=bombDropEvents.size();
+        
+        // Si personne ne veut déposer de bombe (assez probable), on saute directement au return
+        if(nbEvents>0){
+            
+            // On parcourt les joueurs dans l'ordre
+            for(Player p:players0){
+                
+                // S'il est vivant et qu'il veut déposer une bombe
+                if(p.isAlive() && bombDropEvents.contains(p)){
+                    
+                    // On va tester s'il n'a pas atteint son max et si la case est libre
+                    int nbBombs=0;
+                    boolean cellAlreadyOccupied=false;
+                    for(Bomb b:bombs0){
+                        if(b.ownerId().equals(p.id())){nbBombs++;}
+                        if(p.position().equals(b.position())){cellAlreadyOccupied=true;}
+                    }
+                    
+                    // Si c'est tout bon
+                    if(nbBombs<p.maxBombs() && !cellAlreadyOccupied){
+                        bombs1.add(p.newBomb());
+                    }
+                }
+            }
+            
+            // On retourne uniquement les nouvelles bombes
+            bombs1.removeAll(bombs0);
+        }
+        return bombs1;
+    }
+    
+    private static List<Player> nextPlayers(List<Player> players0, Map<PlayerID, Bonus> playerBonuses, Set<Cell> bombedCells1, Board board1, Set<Cell> blastedCells1, Map<PlayerID, Optional<Direction>> speedChangeEvents){
         return null;
     }
     /**
