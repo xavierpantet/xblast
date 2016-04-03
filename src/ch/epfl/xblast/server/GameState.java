@@ -16,6 +16,7 @@ import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.PlayerID;
+import ch.epfl.xblast.server.Player.DirectedPosition;
 
 public final class GameState {
     
@@ -178,12 +179,96 @@ public final class GameState {
         return bombMap;
     }
     
+    /**
+     * Retourne l'ensemble des cases sur lesquelles se trouve au moins une particule d'explosion
+     * @return
+     */
     public Set<Cell> blastedCells(){
-        return null;
+        Set<Cell> cellSet = new HashSet<>();
+        for (Sq<Cell> cell : blasts){
+            cellSet.add(cell.head());
+        }
+        return cellSet;
     }
     
+    /**
+     * Retourne l'état du jeu pour le coup d'horloge suivant, 
+     * en fonction de l'actuel et des événements donnés (speedChangeEvents et bombDropEvents)
+     * @param speedChangeEvents
+     * @param bombDropEvents
+     * @return
+     */
     public GameState next(Map<PlayerID, Optional<Direction>> speedChangeEvents, Set<PlayerID> bombDropEvents){
-        return null;
+        
+        
+       
+        //speedChangeEvents
+        List<Player> newPlayers = new ArrayList<Player>();
+        DirectedPosition directionToSet;
+        Player testedPlayer;
+        
+        for (int i=0; i<players.size(); i++){
+            
+            testedPlayer = players.get(i);
+            directionToSet = new DirectedPosition(testedPlayer.position(), speedChangeEvents.get(testedPlayer.id()).orElse(testedPlayer.direction()));
+       
+            newPlayers.add(new Player(testedPlayer.id(), Sq.constant(testedPlayer.lifeState()), Sq.constant(directionToSet), testedPlayer.maxBombs(), testedPlayer.bombRange()));
+                    
+            //(PlayerID id, Sq<LifeState> lifeStates, Sq<DirectedPosition> directedPos, int maxBombs, int bombRange)
+            
+        }
+        
+        //bombDropEvents
+        List<Bomb> newBombs = new ArrayList<Bomb>();
+        
+       // (PlayerID ownerId, Cell position, Sq<Integer> fuseLengths, int range)
+        
+        Player testedPlayer2 = new Player(null, 0, null, 0, 0);
+        Player testedPlayerInFinder;
+
+        for (PlayerID p : bombDropEvents) {
+            
+            //finder
+            
+            for (int i=0; i<players.size(); i++){
+                testedPlayerInFinder = players.get(i);
+                if(testedPlayerInFinder.id()==p){
+                    testedPlayer2=testedPlayerInFinder;
+                }
+               
+               
+            }
+            
+            System.out.println(p);
+            newBombs.add(new Bomb(p, testedPlayer2.position().containingCell(), Sq.constant(testedPlayer2.bombRange()), testedPlayer2.bombRange()));
+        }
+        
+        
+        
+        //consumedBonus
+        //On regarde si des jours sont sur des bonus
+        
+        Set<Cell> consumedBonuses = new HashSet<>();
+        Cell playerCase;
+        for (int i=0; i<players.size(); i++){
+            playerCase = players.get(i).position().containingCell();
+            if ((playerCase.equals(Block.BONUS_BOMB))||(playerCase.equals(Block.BONUS_RANGE))){
+                consumedBonuses.add(playerCase);
+            }
+        }
+        
+        //blastedCells
+        //On met dans un Set toutes les cases qui sont occupés par un blast
+        Set<Cell> blastedCells = new HashSet<>();
+        for (int i=0; i<blasts.size(); i++){
+            blastedCells.add(new Cell(blasts.get(i).head().x(), blasts.get(i).head().y()));
+        }
+        
+        
+
+        
+        return new GameState(this.ticks+1, nextBoard(this.board, consumedBonuses, blastedCells), newPlayers, newBombs, explosions, blasts);
+        
     }
     
     /**
