@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
+import java.util.Iterator;
+
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.PlayerID;
-import ch.epfl.xblast.server.Player.DirectedPosition;
-import ch.epfl.xblast.server.Player.LifeState;
 
 public final class GameState {
     
@@ -178,96 +178,12 @@ public final class GameState {
         return bombMap;
     }
     
-    /**
-     * Retourne l'ensemble des cases sur lesquelles se trouve au moins une particule d'explosion
-     * @return
-     */
     public Set<Cell> blastedCells(){
-        Set<Cell> cellSet = new HashSet<>();
-        for (Sq<Cell> cell : blasts){
-            cellSet.add(cell.head());
-        }
-        return cellSet;
+        return null;
     }
-
-    /**
-     * Retourne l'état du jeu pour le coup d'horloge suivant, 
-     * en fonction de l'actuel et des événements donnés (speedChangeEvents et bombDropEvents)
-     * @param speedChangeEvents
-     * @param bombDropEvents
-     * @return
-     */
+    
     public GameState next(Map<PlayerID, Optional<Direction>> speedChangeEvents, Set<PlayerID> bombDropEvents){
-        
-        
-       
-        //speedChangeEvents
-        List<Player> newPlayers = new ArrayList<Player>();
-        DirectedPosition directionToSet;
-        Player testedPlayer;
-        
-        for (int i=0; i<players.size(); i++){
-            
-            testedPlayer = players.get(i);
-            directionToSet = new DirectedPosition(testedPlayer.position(), speedChangeEvents.get(testedPlayer.id()).orElse(testedPlayer.direction()));
-       
-            newPlayers.add(new Player(testedPlayer.id(), Sq.constant(testedPlayer.lifeState()), Sq.constant(directionToSet), testedPlayer.maxBombs(), testedPlayer.bombRange()));
-                    
-            //(PlayerID id, Sq<LifeState> lifeStates, Sq<DirectedPosition> directedPos, int maxBombs, int bombRange)
-            
-        }
-        
-        //bombDropEvents
-        List<Bomb> newBombs = new ArrayList<Bomb>();
-        
-       // (PlayerID ownerId, Cell position, Sq<Integer> fuseLengths, int range)
-        
-        Player testedPlayer2 = new Player(null, 0, null, 0, 0);
-        Player testedPlayerInFinder;
-
-        for (PlayerID p : bombDropEvents) {
-            
-            //finder
-            
-            for (int i=0; i<players.size(); i++){
-                testedPlayerInFinder = players.get(i);
-                if(testedPlayerInFinder.id()==p){
-                    testedPlayer2=testedPlayerInFinder;
-                }
-               
-               
-            }
-            
-            System.out.println(p);
-            newBombs.add(new Bomb(p, testedPlayer2.position().containingCell(), Sq.constant(testedPlayer2.bombRange()), testedPlayer2.bombRange()));
-        }
-        
-        
-        
-        //consumedBonus
-        //On regarde si des jours sont sur des bonus
-        
-        Set<Cell> consumedBonuses = new HashSet<>();
-        Cell playerCase;
-        for (int i=0; i<players.size(); i++){
-            playerCase = players.get(i).position().containingCell();
-            if ((playerCase.equals(Block.BONUS_BOMB))||(playerCase.equals(Block.BONUS_RANGE))){
-                consumedBonuses.add(playerCase);
-            }
-        }
-        
-        //blastedCells
-        //On met dans un Set toutes les cases qui sont occupés par un blast
-        Set<Cell> blastedCells = new HashSet<>();
-        for (int i=0; i<blasts.size(); i++){
-            blastedCells.add(new Cell(blasts.get(i).head().x(), blasts.get(i).head().y()));
-        }
-        
-        
-
-        
-        return new GameState(this.ticks+1, nextBoard(this.board, consumedBonuses, blastedCells), newPlayers, newBombs, explosions, blasts);
-        
+        return null;
     }
     
     /**
@@ -344,43 +260,6 @@ public final class GameState {
     }
     
     /**
-     * Calcule les particules d'explosion pour l'état suivant étant données celles de l'état courant, le plateau de jeu courant et les explosions courantes.
-     * @param particules0
-     * @param plateau0
-     * @param explosions0
-     * @return les nouvelles particules
-     */
-    private static List<Sq<Cell>> nextBlasts(List<Sq<Cell>> blasts0, Board board0, List<Sq<Sq<Cell>>> explosions0){
-        List<Sq<Cell>> blasts1 = new ArrayList<>();
-        for(Sq<Cell> s:blasts0){
-            if(board0.blockAt(s.head()).isFree()){
-                if(!s.tail().isEmpty()){ blasts1.add(s.tail());}
-            }
-        }
-        
-        for(Sq<Sq<Cell>> s:explosions0){
-           blasts1.add(s.head());
-        }
-        return blasts1;
-    }
-    
-    /**
-     * Calcule les explosions pour le prochain état en fonction des actuelles.
-     * @param explosions0
-     * @return
-     */
-    private static List<Sq<Sq<Cell>>> nextExplosions(List<Sq<Sq<Cell>>> explosions0){
-
-        List<Sq<Sq<Cell>>> futurExplosions = new ArrayList();
-        
-        for (Sq<Sq<Cell>> tab: explosions0){
-            futurExplosions.add(tab.tail());
-        }
-
-        return futurExplosions;
-    }
-    
-    /**
      * Retourne les nouvelles bombes déposées par les joueurs, tenant compte
      * des piorités et de leurs droits
      * @author Xavier Pantet (260474)
@@ -423,5 +302,29 @@ public final class GameState {
             bombs1.removeAll(bombs0);
         }
         return bombs1;
+    }
+    
+    private static List<Player> nextPlayers(List<Player> players0, Map<PlayerID, Bonus> playerBonuses, Set<Cell> bombedCells1, Board board1, Set<Cell> blastedCells1, Map<PlayerID, Optional<Direction>> speedChangeEvents){
+        return null;
+    }
+    /**
+     * Calcule les particules d'explosion pour l'état suivant étant données celles de l'état courant, le plateau de jeu courant et les explosions courantes.
+     * @param particules0
+     * @param plateau0
+     * @param explosions0
+     * @return les nouvelles particules
+     */
+    private static List<Sq<Cell>> nextBlasts(List<Sq<Cell>> blasts0, Board board0, List<Sq<Sq<Cell>>> explosions0){
+        List<Sq<Cell>> blasts1 = new ArrayList<>();
+        for(Sq<Cell> s:blasts0){
+            if(board0.blockAt(s.head()).isFree()){
+                if(!s.tail().isEmpty()){ blasts1.add(s.tail());}
+            }
+        }
+        
+        for(Sq<Sq<Cell>> s:explosions0){
+           blasts1.add(s.head());
+        }
+        return blasts1;
     }
 }
