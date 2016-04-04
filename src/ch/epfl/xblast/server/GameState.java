@@ -18,6 +18,8 @@ import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.SubCell;
 import ch.epfl.xblast.server.Player.DirectedPosition;
+import ch.epfl.xblast.server.Player.LifeState;
+import ch.epfl.xblast.server.Player.LifeState.State;
 
 public final class GameState {
     
@@ -394,11 +396,15 @@ public final class GameState {
     
     private static List<Player> nextPlayers(List<Player> players0, Map<PlayerID, Bonus> playerBonuses, Set<Cell> bombedCells1, Board board1, Set<Cell> blastedCells1, Map<PlayerID, Optional<Direction>> speedChangeEvents){
        
-        SubCell position;
+        
         Sq<DirectedPosition> sequencePos;
+        DirectedPosition nextSequencePos;
+        Sq<LifeState> sequenceLife;
+        List<Player> playerList = new ArrayList<Player>();
+        Player newPlayer;
         
         for(Player p:players0){
-            position=p.position();
+            SubCell position=p.position();
           //Si le joueur a un desir de changement de direction
             if(speedChangeEvents.get(p).isPresent()){
                 
@@ -408,63 +414,37 @@ public final class GameState {
                 }
                 
                 else {
-                  /*  sequencePos = p.directedPositions().takeWhile(Player.DirectedPosition.moving(p.directedPositions().head()).equals(SubCell.centralSubCellOf(position.containingCell())))
-                            .concat(Player.DirectedPosition.moving(new Player.DirectedPosition(SubCell.centralSubCellOf(position.containingCell()), speedChangeEvents.get(p).get())));
-               */ }
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                //On vérifie si la case suivante possède n'est pas un mur
-                if(board1.blockAt(position.containingCell().neighbor(speedChangeEvents.get(p).get())).canHostPlayer()){
-                    
-                    //On regarde si le jour se trouve a moins de 6 cases du centre, afin d'eviter des calculs
-                    if(position.distanceToCentral()>=6){
-                        //On vérifie si la case actuelle n'a pas de bombes
-                        if(!bombedCells1.contains(board1.blockAt(position.containingCell()))){
-                    
-                                sequencePos = p.directedPositions().takeWhile(0, u -> u+1 < position.distanceToCentral())
-                                           .concat(Sq.iterate(SubCell.centralSubCellOf(position.containingCell()), c -> c.neighbor(speedChangeEvents.get(p).get())));
-                        }
-                        //si y'a une bombe
-                        else{
-                            sequencePos = p.directedPositions().takeWhile(0, u -> u+1 < position.distanceToCentral()-6).concat(Sq.constant(p.directedPositions().findFirst(0, u -> u+1 > position.distanceToCentral()-6)));
-                            
-                        }
-                    }
-                    
-                  //si y'a un mur
-                 }else{
-                     
-                     //On regarde si le jour se trouve a moins de 6 cases du centre, afin d'eviter des calculs
-                     if(position.distanceToCentral()>=6){
-                         //On vérifie si la case actuelle n'a pas de bombes
-                         if(!bombedCells1.contains(board1.blockAt(position.containingCell()))){
-                     
-                             sequencePos = p.directedPositions().takeWhile(0, u -> u+1 < position.distanceToCentral()-6).concat(Sq.constant(p.directedPositions().findFirst(0, u -> u+1 > position.distanceToCentral()-6)));
-                         }
-                         //si y'a une bombe
-                         else{
-                             sequencePos = p.directedPositions().takeWhile(0, u -> u+1 < position.distanceToCentral()).concat(Sq.constant(p.directedPositions().findFirst(0, u -> u+1 > position.distanceToCentral())));
-                             
-                         }
-                     }
-                 }
-    
+                   
+                    sequencePos = p.directedPositions().takeWhile(u -> !u.equals(SubCell.centralSubCellOf(position.containingCell()))).concat(Player.DirectedPosition.moving(new Player.DirectedPosition(SubCell.centralSubCellOf(position.containingCell()), speedChangeEvents.get(p).get())));
+                }
+            }
+            else{
+                   sequencePos = p.directedPositions();
+            }
+            nextSequencePos=sequencePos.head();
+            
+            if(p.lifeState().canMove() && ((position.isCentral() && board1.blockAt(position.containingCell().neighbor(nextSequencePos.direction())).canHostPlayer())
+                    || (position.distanceToCentral()==6 && !bombedCells1.contains(position.containingCell())))){
+                sequencePos=sequencePos.tail();
             }
             
- 
+            if(p.lifeState().canMove() && p.lifeState().state()==State.VULNERABLE && blastedCells1.contains(position.containingCell())){
+                sequenceLife=p.statesForNextLife();
+            }
+            else{
+                sequenceLife=p.lifeStates();
+            }
             
+            newPlayer = new Player(p.id(), sequenceLife, sequencePos, p.maxBombs(), p.bombRange());
             
+            if(playerBonuses.containsKey(p.id())){
+                newPlayer = playerBonuses.get(p.id()).applyTo(newPlayer);
+            }
+            
+            playerList.add(newPlayer);
+   
         }
-        
-        
+
         return null;
     }
     
