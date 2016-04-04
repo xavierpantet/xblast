@@ -15,6 +15,7 @@ import java.util.Iterator;
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
+import ch.epfl.xblast.Lists;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.SubCell;
 import ch.epfl.xblast.server.Player.DirectedPosition;
@@ -202,77 +203,79 @@ public final class GameState {
      * @return
      */
     public GameState next(Map<PlayerID, Optional<Direction>> speedChangeEvents, Set<PlayerID> bombDropEvents){
-        
-        
        
-        //speedChangeEvents
-        List<Player> newPlayers = new ArrayList<Player>();
-        DirectedPosition directionToSet;
-        Player testedPlayer;
-        
-        for (int i=0; i<players.size(); i++){
-            
-            testedPlayer = players.get(i);
-            directionToSet = new DirectedPosition(testedPlayer.position(), speedChangeEvents.get(testedPlayer.id()).orElse(testedPlayer.direction()));
-       
-            newPlayers.add(new Player(testedPlayer.id(), Sq.constant(testedPlayer.lifeState()), Sq.constant(directionToSet), testedPlayer.maxBombs(), testedPlayer.bombRange()));
-                    
-            //(PlayerID id, Sq<LifeState> lifeStates, Sq<DirectedPosition> directedPos, int maxBombs, int bombRange)
-            
-        }
-        
-        //bombDropEvents
-        List<Bomb> newBombs = new ArrayList<Bomb>();
-        
-       // (PlayerID ownerId, Cell position, Sq<Integer> fuseLengths, int range)
-        
-        Player testedPlayer2 = new Player(null, 0, null, 0, 0);
-        Player testedPlayerInFinder;
+   
 
-        for (PlayerID p : bombDropEvents) {
-            
-            //finder
-            
-            for (int i=0; i<players.size(); i++){
-                testedPlayerInFinder = players.get(i);
-                if(testedPlayerInFinder.id()==p){
-                    testedPlayer2=testedPlayerInFinder;
-                }
-               
-               
-            }
-            
-            System.out.println(p);
-            newBombs.add(new Bomb(p, testedPlayer2.position().containingCell(), Sq.constant(testedPlayer2.bombRange()), testedPlayer2.bombRange()));
-        }
-        
-        
-        
-        //consumedBonus
-        //On regarde si des jours sont sur des bonus
-        
-        Set<Cell> consumedBonuses = new HashSet<>();
-        Cell playerCase;
-        for (int i=0; i<players.size(); i++){
-            playerCase = players.get(i).position().containingCell();
-            if ((playerCase.equals(Block.BONUS_BOMB))||(playerCase.equals(Block.BONUS_RANGE))){
-                consumedBonuses.add(playerCase);
-            }
-        }
-        
-        //blastedCells
-        //On met dans un Set toutes les cases qui sont occupés par un blast
-        Set<Cell> blastedCells = new HashSet<>();
-        for (int i=0; i<blasts.size(); i++){
-            blastedCells.add(new Cell(blasts.get(i).head().x(), blasts.get(i).head().y()));
-        }
-        
-        
+          //nextBlasts
+          List<Sq<Cell>> nextBlasts = nextBlasts(blasts, board, explosions);
+          
+          //blastedCells
+          Set<Cell> blastedCells = new HashSet<Cell>();
+          for(Sq<Cell> c : nextBlasts){
+              blastedCells.add(c.head());
+          }
+          
+          //consummedBonuses
+          //On regarde si des jours sont sur des bonus
+          
+          Set<Cell> consumedBonuses = new HashSet<>();
+          Map<PlayerID, Bonus> playerBonuses = new HashMap<PlayerID, Bonus>();
+          
+          Cell playerCase;
+          PlayerID playerID;
+          for (int i=0; i<players.size(); i++){
+              playerCase = players.get(i).position().containingCell();
+              playerID = players.get(i).id();
+              
+ 
+              if(playerCase.equals(Block.BONUS_BOMB)){
+                  consumedBonuses.add(playerCase);
+                  playerBonuses.put(playerID, Bonus.INC_BOMB);
+              } else if (playerCase.equals(Block.BONUS_RANGE)){
+                  consumedBonuses.add(playerCase);
+                  playerBonuses.put(playerID, Bonus.INC_RANGE);
+              }
+          }
+          
+          //NextBoard
+          Board nextBoard;
+          nextBoard = nextBoard(board, consumedBonuses, blastedCells);
+          
+          //NextExplosion
+          List<Sq<Sq<Cell>>> nextExplosion = nextExplosions(this.explosions);
+          
+          //Newly dropped Bombs
+          List<Bomb> newBombs = newlyDroppedBombs(players, bombDropEvents, bombs);
+          
+          //Création d'un set ou il y a des bombes
+          Set<Cell> bombedCells = new HashSet<Cell>();
+          for (Bomb b:newBombs){
+              bombedCells.add(b.position());
+          }
+          
+          //NextPlayers
+          
+         List<Player> nextPlayers =  nextPlayers(players, playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
+         
+
+      
 
         
-        return new GameState(this.ticks+1, nextBoard(this.board, consumedBonuses, blastedCells), newPlayers, newBombs, explosions, blasts);
+        return new GameState(ticks+1, nextBoard, nextPlayers, newBombs, nextExplosion, nextBlasts);
         
     }
+    
+    
+    private static List<Sq<Sq<Cell>>> nextExplosions(List<Sq<Sq<Cell>>> explosions0){
+        List<Sq<Sq<Cell>>> newExplosions=new ArrayList<>();
+        
+        for (Sq<Sq<Cell>> sq : explosions0) {
+            if(!sq.tail().isEmpty())
+                newExplosions.add(sq.tail());     
+        }
+        return newExplosions;
+    }
+    
     
     /**
      * Calcule l'état futur du plateau de jeu
