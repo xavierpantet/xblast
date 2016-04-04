@@ -16,6 +16,7 @@ import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.PlayerID;
+import ch.epfl.xblast.SubCell;
 import ch.epfl.xblast.server.Player.DirectedPosition;
 
 public final class GameState {
@@ -389,9 +390,88 @@ public final class GameState {
         return bombs1;
     }
     
+    
+    
     private static List<Player> nextPlayers(List<Player> players0, Map<PlayerID, Bonus> playerBonuses, Set<Cell> bombedCells1, Board board1, Set<Cell> blastedCells1, Map<PlayerID, Optional<Direction>> speedChangeEvents){
+       
+        SubCell position;
+        Sq<DirectedPosition> sequencePos;
+        
+        for(Player p:players0){
+            position=p.position();
+          //Si le joueur a un desir de changement de direction
+            if(speedChangeEvents.get(p).isPresent()){
+                
+                //On regarde si il a envie d'aller dans la direction opposée de ou il vient
+                if(speedChangeEvents.get(p).get()==p.direction().opposite()){
+                    sequencePos = Player.DirectedPosition.moving(new Player.DirectedPosition(position, p.direction().opposite()));
+                }
+                
+                else {
+                  /*  sequencePos = p.directedPositions().takeWhile(Player.DirectedPosition.moving(p.directedPositions().head()).equals(SubCell.centralSubCellOf(position.containingCell())))
+                            .concat(Player.DirectedPosition.moving(new Player.DirectedPosition(SubCell.centralSubCellOf(position.containingCell()), speedChangeEvents.get(p).get())));
+               */ }
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                //On vérifie si la case suivante possède n'est pas un mur
+                if(board1.blockAt(position.containingCell().neighbor(speedChangeEvents.get(p).get())).canHostPlayer()){
+                    
+                    //On regarde si le jour se trouve a moins de 6 cases du centre, afin d'eviter des calculs
+                    if(position.distanceToCentral()>=6){
+                        //On vérifie si la case actuelle n'a pas de bombes
+                        if(!bombedCells1.contains(board1.blockAt(position.containingCell()))){
+                    
+                                sequencePos = p.directedPositions().takeWhile(0, u -> u+1 < position.distanceToCentral())
+                                           .concat(Sq.iterate(SubCell.centralSubCellOf(position.containingCell()), c -> c.neighbor(speedChangeEvents.get(p).get())));
+                        }
+                        //si y'a une bombe
+                        else{
+                            sequencePos = p.directedPositions().takeWhile(0, u -> u+1 < position.distanceToCentral()-6).concat(Sq.constant(p.directedPositions().findFirst(0, u -> u+1 > position.distanceToCentral()-6)));
+                            
+                        }
+                    }
+                    
+                  //si y'a un mur
+                 }else{
+                     
+                     //On regarde si le jour se trouve a moins de 6 cases du centre, afin d'eviter des calculs
+                     if(position.distanceToCentral()>=6){
+                         //On vérifie si la case actuelle n'a pas de bombes
+                         if(!bombedCells1.contains(board1.blockAt(position.containingCell()))){
+                     
+                             sequencePos = p.directedPositions().takeWhile(0, u -> u+1 < position.distanceToCentral()-6).concat(Sq.constant(p.directedPositions().findFirst(0, u -> u+1 > position.distanceToCentral()-6)));
+                         }
+                         //si y'a une bombe
+                         else{
+                             sequencePos = p.directedPositions().takeWhile(0, u -> u+1 < position.distanceToCentral()).concat(Sq.constant(p.directedPositions().findFirst(0, u -> u+1 > position.distanceToCentral())));
+                             
+                         }
+                     }
+                 }
+    
+            }
+            
+ 
+            
+            
+        }
+        
+        
         return null;
     }
+    
+    
+    
+    
+    
     /**
      * Calcule les particules d'explosion pour l'état suivant étant données celles de l'état courant, le plateau de jeu courant et les explosions courantes.
      * @param particules0
