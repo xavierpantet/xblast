@@ -177,9 +177,11 @@ public final class GameState {
      */
     public Map<Cell, Bomb> bombedCells(){
         Map<Cell, Bomb> bombMap= new HashMap<>();
+        
         for(Bomb b:bombs){
             bombMap.put(b.position(), b);
         }
+       
         return bombMap;
     }
     
@@ -254,6 +256,26 @@ public final class GameState {
           for (Bomb b:newBombs){
               bombedCells.add(b.position());
           }
+       
+          
+          //Création d'une liste avec toutes les bombes
+          List<Bomb> totalBombs = new ArrayList<Bomb>();
+          for (Bomb b:newBombs){
+              totalBombs.add(b);
+          }
+          
+          
+          for (Bomb b:bombs){
+              if(b.fuseLength()>1){
+                  totalBombs.add(new Bomb(b.ownerId(), b.position(), b.fuseLengths().tail(), b.range()));
+              }else{
+                  for(Sq<Sq<Cell>> exp : b.explosion()){
+                      nextExplosion.add(exp);
+                  }
+              }
+          }
+          totalBombs.removeAll(bombs);
+          System.out.println("Bombes: " + totalBombs.size());
           
           //NextPlayers
 
@@ -261,7 +283,7 @@ public final class GameState {
         
      
          
-        return new GameState(ticks+1, nextBoard, nextPlayers, newBombs, nextExplosion, nextBlasts);
+        return new GameState(ticks+1, nextBoard, nextPlayers, totalBombs, nextExplosion, nextBlasts);
         
     }
     
@@ -326,6 +348,7 @@ public final class GameState {
             else if(currentCell==Block.DESTRUCTIBLE_WALL && blastedCells1.contains(currentCell)){
                 Block b;
                 
+                System.out.println("MUR A DETRUIRE");
                 // On calcule le bloc qui remplacera la case
                 int prob = RANDOM.nextInt(3);
                 switch (prob){
@@ -440,11 +463,14 @@ public final class GameState {
                 sequencePos=sequencePos.tail();
             }
             
+            
+            
             if(p.lifeState().canMove() && p.lifeState().state()==State.VULNERABLE && blastedCells1.contains(position.containingCell())){
                 sequenceLife=p.statesForNextLife();
             }
             else{
-                sequenceLife=p.lifeStates();
+                
+                sequenceLife=p.lifeStates().tail();
             }
             
             newPlayer = new Player(p.id(), sequenceLife, sequencePos, p.maxBombs(), p.bombRange());

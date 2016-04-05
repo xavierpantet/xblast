@@ -10,6 +10,7 @@ import ch.epfl.xblast.server.Board;
 import ch.epfl.xblast.server.Bomb;
 import ch.epfl.xblast.server.GameState;
 import ch.epfl.xblast.server.Player;
+import ch.epfl.xblast.server.Player.LifeState.State;
 
 public final class GameStatePrinter {
     private GameStatePrinter() {}
@@ -40,6 +41,8 @@ public final class GameStatePrinter {
                 
                 }  
                 
+                
+                
                 for (Player p: ps) {
                     if (p.position().containingCell().equals(c)) {
                         System.out.print(stringForPlayer(p));
@@ -47,14 +50,16 @@ public final class GameStatePrinter {
                     }  
                 }
 
-                Block b = board.blockAt(c);
-                System.out.print(stringForBlock(b));
+                
                 
                 if(blastedCells.contains(c)){
-                    System.out.println(stringForBlastedCells());
+                    System.out.print(stringForBlastedCells());
                     continue xLoop;
                 
                 }
+                
+                Block b = board.blockAt(c);
+                System.out.print(stringForBlock(b));
 
             }
         
@@ -64,15 +69,18 @@ public final class GameStatePrinter {
         for (Player p: ps) {
             
             System.out.println(p.id() +" a "+ p.lives()+ " vies restantes ("+p.lifeState().state()+")");
+            System.out.println("Next IS : "+p.lifeStates().tail().head().state());
             System.out.println("bombes max : "+p.maxBombs()+", portée : "+p.bombRange());
             System.out.println(p.position().containingCell() + " -> " + p.position().distanceToCentral());
             System.out.println("");
         
         }
+        System.out.println("Temps: "+ s.remainingTime());
+        System.out.println("Ticks: "+ s.ticks());
     }
 
     private static String stringForBomb(Bomb b){
-        if(b.fuseLength()>10){
+        if(b.fuseLength()>50){
             return "\u001b[41m" + "\u001b[37m" + "ÒÒ" + "\u001b[m" + "\u001b[m";
         }
         
