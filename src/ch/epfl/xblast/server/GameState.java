@@ -256,11 +256,8 @@ public final class GameState {
           //NextPlayers
           
          List<Player> nextPlayers =  nextPlayers(players, playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
+     
          
-
-      
-
-        
         return new GameState(ticks+1, nextBoard, nextPlayers, newBombs, nextExplosion, nextBlasts);
         
     }
