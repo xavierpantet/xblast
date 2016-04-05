@@ -35,6 +35,14 @@ public final class GameStatePrinter {
             xLoop: for (int x = 0; x < Cell.COLUMNS; ++x) {
                 Cell c = new Cell(x, y);
                 
+                Block b = board.blockAt(c);
+                
+                // Si la case est une case spéciale, on l'affiche expressément, sinon voir plus bas
+                if(!b.canHostPlayer()){
+                    System.out.print(stringForBlock(b));
+                    continue xLoop;
+                }
+                
                 if(bombs.containsKey(c)){
                     System.out.print(stringForBomb(bombs.get(c)));
                     continue xLoop;
@@ -58,8 +66,8 @@ public final class GameStatePrinter {
                 
                 }
                 
-                Block b = board.blockAt(c);
                 System.out.print(stringForBlock(b));
+                
 
             }
         
@@ -122,7 +130,7 @@ public final class GameStatePrinter {
         case FREE: return "  ";
         case INDESTRUCTIBLE_WALL: return "\u001b[40m" + "XX" + "\u001b[m";
         case DESTRUCTIBLE_WALL: return "\u001b[47m" + "xx" + "\u001b[m";
-        case CRUMBLING_WALL: return "\u001b[43m" + "~" + "\u001b[m";
+        case CRUMBLING_WALL: return "\u001b[43m" + "~~" + "\u001b[m";
         case BONUS_BOMB: return "\u001b[45m" + "+b" + "\u001b[m";
         case BONUS_RANGE: return "\u001b[46m" + "+r" + "\u001b[m";
         default: throw new Error();

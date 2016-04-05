@@ -321,7 +321,7 @@ public final class GameState {
             }
             
             // Si on est sur un bonus atteint par une explosion
-            else if(currentCell.isBonus() && blastedCells1.contains(currentCell)){
+            else if(currentCell.isBonus() && blastedCells1.contains(c)){
                 
                 // On parcourt les Ticks.BONUS_DISAPPEARING_TICKS premiers éléments de la séquence pour
                 // savoir si le bonus a déjà été touché par une particule auparavent
@@ -345,10 +345,9 @@ public final class GameState {
             }
             
             // Si on est sur un mur destructible atteint par une explosion
-            else if(currentCell==Block.DESTRUCTIBLE_WALL && blastedCells1.contains(currentCell)){
+            else if(currentCell==Block.DESTRUCTIBLE_WALL && blastedCells1.contains(c)){
                 Block b;
                 
-                System.out.println("MUR A DETRUIRE");
                 // On calcule le bloc qui remplacera la case
                 int prob = RANDOM.nextInt(3);
                 switch (prob){
@@ -367,7 +366,7 @@ public final class GameState {
             
             // Si on a rien de spécial, on ne change rien
             else{
-                board1.add(Sq.constant(currentCell));
+                board1.add(board0.blocksAt(c).tail());
             }
         }
         return new Board(board1);
