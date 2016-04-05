@@ -207,7 +207,9 @@ public final class GameState {
    
 
           //nextBlasts
+       
           List<Sq<Cell>> nextBlasts = nextBlasts(blasts, board, explosions);
+         
           
           //blastedCells
           Set<Cell> blastedCells = new HashSet<Cell>();
@@ -254,8 +256,9 @@ public final class GameState {
           }
           
           //NextPlayers
-          
+
          List<Player> nextPlayers =  nextPlayers(players, playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
+        
      
          
         return new GameState(ticks+1, nextBoard, nextPlayers, newBombs, nextExplosion, nextBlasts);
@@ -369,8 +372,7 @@ public final class GameState {
             for(Player p:players0){
                 
                 // S'il est vivant et qu'il veut déposer une bombe
-                if(p.isAlive() && bombDropEvents.contains(p)){
-                    
+                if(p.isAlive() && bombDropEvents.contains(p.id())){
                     // On va tester s'il n'a pas atteint son max et si la case est libre
                     int nbBombs=0;
                     boolean cellAlreadyOccupied=false;
@@ -395,35 +397,45 @@ public final class GameState {
     
     
     private static List<Player> nextPlayers(List<Player> players0, Map<PlayerID, Bonus> playerBonuses, Set<Cell> bombedCells1, Board board1, Set<Cell> blastedCells1, Map<PlayerID, Optional<Direction>> speedChangeEvents){
-       
         
         Sq<DirectedPosition> sequencePos;
         DirectedPosition nextSequencePos;
         Sq<LifeState> sequenceLife;
         List<Player> playerList = new ArrayList<Player>();
         Player newPlayer;
+ 
         
         for(Player p:players0){
             SubCell position=p.position();
           //Si le joueur a un desir de changement de direction
-            if(speedChangeEvents.get(p).isPresent()){
+            if(speedChangeEvents.containsKey(p.id())){
+                if(speedChangeEvents.get(p.id()).isPresent()){
+                    Optional<Direction> directionToGo=speedChangeEvents.get(p.id());
                 
-                //On regarde si il a envie d'aller dans la direction opposée de ou il vient
-                if(speedChangeEvents.get(p).get()==p.direction().opposite()){
-                    sequencePos = Player.DirectedPosition.moving(new Player.DirectedPosition(position, p.direction().opposite()));
-                }
-                
-                else {
-                   
-                    sequencePos = p.directedPositions().takeWhile(u -> !u.equals(SubCell.centralSubCellOf(position.containingCell()))).concat(Player.DirectedPosition.moving(new Player.DirectedPosition(SubCell.centralSubCellOf(position.containingCell()), speedChangeEvents.get(p).get())));
+                    if(p.direction().isParallelTo(speedChangeEvents.get(p.id()).get())){
+                  
+                        sequencePos = DirectedPosition.moving(new DirectedPosition(position, directionToGo.get()));
+                    } else {
+                      
+                        sequencePos = p.directedPositions().takeWhile(u -> !u.position().isCentral())
+                                .concat(DirectedPosition.moving(new DirectedPosition(p.directedPositions().findFirst(u -> u.position().isCentral()).position(), speedChangeEvents.get(p.id()).get())));
+                     
+                    }
+                }else{
+                    sequencePos = p.directedPositions().takeWhile(u -> !u.position().isCentral())
+                            
+                            .concat(DirectedPosition.stopped(p.directedPositions().findFirst(u -> u.position().isCentral())));
+             
                 }
             }
             else{
-                   sequencePos = p.directedPositions();
+                sequencePos=p.directedPositions();
             }
             nextSequencePos=sequencePos.head();
             
-            if(p.lifeState().canMove() && ((position.isCentral() && board1.blockAt(position.containingCell().neighbor(nextSequencePos.direction())).canHostPlayer())
+            
+         
+            if(p.lifeState().canMove() && (board1.blockAt(position.containingCell().neighbor(nextSequencePos.direction())).canHostPlayer()
                     || (position.distanceToCentral()==6 && !bombedCells1.contains(position.containingCell())))){
                 sequencePos=sequencePos.tail();
             }
@@ -445,7 +457,7 @@ public final class GameState {
    
         }
 
-        return null;
+        return playerList;
     }
     
     
