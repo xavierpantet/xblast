@@ -56,10 +56,10 @@ public final class GameState {
         
         this.ticks = ticks;
         this.board = board;
-        this.players = Collections.unmodifiableList(players);
-        this.bombs = Collections.unmodifiableList(bombs);
-        this.explosions = Collections.unmodifiableList(explosions);
-        this.blasts = Collections.unmodifiableList(blasts);
+        this.players = Collections.unmodifiableList(new LinkedList<Player>(players));
+        this.bombs = Collections.unmodifiableList(new LinkedList<Bomb>(bombs));
+        this.explosions = Collections.unmodifiableList(new LinkedList<Sq<Sq<Cell>>>(explosions));
+        this.blasts = Collections.unmodifiableList(new LinkedList<Sq<Cell>>(blasts));
         
     }
     

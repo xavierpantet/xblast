@@ -23,7 +23,7 @@ public final class Board {
      */
     public Board(List<Sq<Block>> blocks) throws IllegalArgumentException{
         if(blocks.size()==Cell.COUNT){
-            this.blocks=Collections.unmodifiableList(blocks);
+            this.blocks=Collections.unmodifiableList(new LinkedList<Sq<Block>>(blocks));
         }
         else{throw new IllegalArgumentException("La liste doit posséder "+Cell.COUNT+" éléments");}
     
