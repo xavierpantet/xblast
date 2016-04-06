@@ -1,6 +1,7 @@
 package ch.epfl.xblast.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -10,12 +11,9 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
-import java.util.Iterator;
-
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
-import ch.epfl.xblast.Lists;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.SubCell;
 import ch.epfl.xblast.server.Player.DirectedPosition;
@@ -58,10 +56,10 @@ public final class GameState {
         
         this.ticks = ticks;
         this.board = board;
-        this.players = players;
-        this.bombs = bombs;
-        this.explosions = explosions;
-        this.blasts = blasts;
+        this.players = Collections.unmodifiableList(players);
+        this.bombs = Collections.unmodifiableList(bombs);
+        this.explosions = Collections.unmodifiableList(explosions);
+        this.blasts = Collections.unmodifiableList(blasts);
         
     }
     
@@ -119,7 +117,7 @@ public final class GameState {
      * @return le temps restant
      */
     public double remainingTime(){
-        return (this.ticks-Ticks.TOTAL_TICKS)/Ticks.TICKS_PER_SECOND;
+        return (Ticks.TOTAL_TICKS-this.ticks)/Ticks.TICKS_PER_SECOND;
     }
     
     /**

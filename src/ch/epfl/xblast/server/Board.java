@@ -12,7 +12,7 @@ import ch.epfl.xblast.Lists;
  * @author Xavier Pantet (260473)
  * @author Timothée Duran (258683)
  */
-public class Board {
+public final class Board {
     private final List<Sq<Block>> blocks;
     
     /**
@@ -23,7 +23,7 @@ public class Board {
      */
     public Board(List<Sq<Block>> blocks) throws IllegalArgumentException{
         if(blocks.size()==Cell.COUNT){
-            this.blocks=blocks;
+            this.blocks=Collections.unmodifiableList(blocks);
         }
         else{throw new IllegalArgumentException("La liste doit posséder "+Cell.COUNT+" éléments");}
     
