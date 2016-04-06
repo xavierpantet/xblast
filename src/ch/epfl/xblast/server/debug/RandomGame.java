@@ -29,10 +29,10 @@ public class RandomGame {
         
         List<Player> players = new ArrayList<>();
         RandomEventGenerator randomShit=new RandomEventGenerator(2016, 30, 100);
-        players.add(new Player(PlayerID.PLAYER_1, 3, new Cell(1, 1), 5, 5));
-        players.add(new Player(PlayerID.PLAYER_2, 3, new Cell(13, 1), 5, 5));
-        players.add(new Player(PlayerID.PLAYER_4, 3, new Cell(1, 11), 5, 5));
-        players.add(new Player(PlayerID.PLAYER_3, 3, new Cell(13, 11), 5, 5));
+        players.add(new Player(PlayerID.PLAYER_1, 3, new Cell(1, 1), 2, 3));
+        players.add(new Player(PlayerID.PLAYER_2, 3, new Cell(13, 1), 2, 3));
+        players.add(new Player(PlayerID.PLAYER_4, 3, new Cell(1, 11), 2, 3));
+        players.add(new Player(PlayerID.PLAYER_3, 3, new Cell(13, 11), 2, 3));
         
         GameState g = new GameState(board, players);
         
@@ -40,7 +40,7 @@ public class RandomGame {
             GameStatePrinter.printGameState(g);
             g=g.next(randomShit.randomSpeedChangeEvents(), randomShit.randomBombDropEvents());
            
-                Thread.sleep(100);
+                Thread.sleep(50);
             
             System.out.println("\u001b[2J");
         }

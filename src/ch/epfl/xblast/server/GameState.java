@@ -203,86 +203,73 @@ public final class GameState {
      * @return
      */
     public GameState next(Map<PlayerID, Optional<Direction>> speedChangeEvents, Set<PlayerID> bombDropEvents){
-       
-   
-
-          //nextBlasts
-       
-          List<Sq<Cell>> nextBlasts = nextBlasts(blasts, board, explosions);
-         
-          
-          //blastedCells
-          Set<Cell> blastedCells = new HashSet<Cell>();
-          for(Sq<Cell> c : nextBlasts){
-              blastedCells.add(c.head());
-          }
-          
-          //consummedBonuses
-          //On regarde si des jours sont sur des bonus
-          
-          Set<Cell> consumedBonuses = new HashSet<>();
-          Map<PlayerID, Bonus> playerBonuses = new HashMap<PlayerID, Bonus>();
-          
-          Cell playerCase;
-          PlayerID playerID;
-          for (int i=0; i<players.size(); i++){
-              playerCase = players.get(i).position().containingCell();
-              playerID = players.get(i).id();
-              
- 
-              if(playerCase.equals(Block.BONUS_BOMB)){
-                  consumedBonuses.add(playerCase);
-                  playerBonuses.put(playerID, Bonus.INC_BOMB);
-              } else if (playerCase.equals(Block.BONUS_RANGE)){
-                  consumedBonuses.add(playerCase);
-                  playerBonuses.put(playerID, Bonus.INC_RANGE);
-              }
-          }
-          
-          //NextBoard
-          Board nextBoard;
-          nextBoard = nextBoard(board, consumedBonuses, blastedCells);
-          
-          //NextExplosion
-          List<Sq<Sq<Cell>>> nextExplosion = nextExplosions(this.explosions);
-          
-          //Newly dropped Bombs
-          List<Bomb> newBombs = newlyDroppedBombs(players, bombDropEvents, bombs);
-          
-          //Création d'un set ou il y a des bombes
-          Set<Cell> bombedCells = new HashSet<Cell>();
-          for (Bomb b:newBombs){
-              bombedCells.add(b.position());
-          }
-       
-          
-          //Création d'une liste avec toutes les bombes
-          List<Bomb> totalBombs = new ArrayList<Bomb>();
-          for (Bomb b:newBombs){
-              totalBombs.add(b);
-          }
-          
-          
-          for (Bomb b:bombs){
-              if(b.fuseLength()>1){
-                  totalBombs.add(new Bomb(b.ownerId(), b.position(), b.fuseLengths().tail(), b.range()));
-              }else{
-                  for(Sq<Sq<Cell>> exp : b.explosion()){
-                      nextExplosion.add(exp);
-                  }
-              }
-          }
-          totalBombs.removeAll(bombs);
-          System.out.println("Bombes: " + totalBombs.size());
-          
-          //NextPlayers
-
-         List<Player> nextPlayers =  nextPlayers(players, playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
+        // (1) nextBlasts
+        List<Sq<Cell>> nextBlasts = nextBlasts(blasts, board, explosions);
         
-     
-         
-        return new GameState(ticks+1, nextBoard, nextPlayers, totalBombs, nextExplosion, nextBlasts);
+        // Pour 2, on calcule blastedCells
+        Set<Cell> blastedCells = new HashSet<Cell>();
+        for(Sq<Cell> c : nextBlasts){
+            blastedCells.add(c.head());
+        }
         
+        // Pour 2 et 3, on calcule consummedBonuses
+        Set<Cell> consumedBonuses = new HashSet<>();
+        Map<PlayerID, Bonus> playerBonuses = new HashMap<PlayerID, Bonus>();
+        
+        Cell playerCase;
+        PlayerID playerID;
+        for (int i=0; i<players.size(); i++){
+            playerCase = players.get(i).position().containingCell();
+            playerID = players.get(i).id();
+            
+
+            if(playerCase.equals(Block.BONUS_BOMB)){
+                consumedBonuses.add(playerCase);
+                playerBonuses.put(playerID, Bonus.INC_BOMB);
+            } else if (playerCase.equals(Block.BONUS_RANGE)){
+                consumedBonuses.add(playerCase);
+                playerBonuses.put(playerID, Bonus.INC_RANGE);
+            }
+        }
+        
+        // (2) NextBoard
+        Board nextBoard = nextBoard(board, consumedBonuses, blastedCells);
+        
+        // (3) Explosions
+        // Explosions dues à d'autres explosions
+        List<Sq<Sq<Cell>>> nextExplosion = new LinkedList<>();
+        for(Bomb b:bombs){
+            if(blastedCells.contains(b.position())){
+                nextExplosion.addAll(b.explosion());
+            }
+        }
+        
+        // nextExpolosions
+        nextExplosion.addAll(nextExplosions(this.explosions));
+        
+        // Newly dropped Bombs
+        List<Bomb> newBombs = newlyDroppedBombs(players, bombDropEvents, bombs);
+        
+        // Pour 5, on créé un set contenant les cellules portant une bombe
+        Set<Cell> bombedCells = new HashSet<Cell>();
+        for (Bomb b:newBombs){
+            bombedCells.add(b.position());
+        }
+        
+        for (Bomb b:bombs){
+            if(b.fuseLength()>1){
+                newBombs.add(new Bomb(b.ownerId(), b.position(), b.fuseLengths().tail(), b.range()));
+            }else{
+                for(Sq<Sq<Cell>> exp : b.explosion()){
+                    nextExplosion.add(exp);
+                }
+            }
+        }
+        newBombs.removeAll(bombs);
+
+        // (5) NextPlayers
+        List<Player> nextPlayers =  nextPlayers(players, playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
+        return new GameState(ticks+1, nextBoard, nextPlayers, newBombs, nextExplosion, nextBlasts);
     }
     
     
@@ -313,8 +300,28 @@ public final class GameState {
         for(Cell c:Cell.ROW_MAJOR_ORDER){
             currentCell=board0.blockAt(c);
             
+            // Si on est sur un mur destructible atteint par une explosion
+            if(currentCell==Block.DESTRUCTIBLE_WALL && blastedCells1.contains(c)){
+                Block b;
+                
+                // On calcule le bloc qui remplacera la case
+                int prob = RANDOM.nextInt(3);
+                switch (prob){
+                    case 0: b=Block.BONUS_BOMB;
+                    break;
+                    
+                    case 1: b=Block.BONUS_RANGE;
+                    break;
+                    
+                    default: b=Block.FREE;
+                }
+                
+                board1.add(Sq.constant(Block.CRUMBLING_WALL).limit(Ticks.WALL_CRUMBLING_TICKS)
+                        .concat(Sq.constant(b)));
+            }
+            
             // Si on est sur un bonus qui a été consommé
-            if(consumedBonuses.contains(currentCell)){
+            else if(consumedBonuses.contains(currentCell)){
                 board1.add(Sq.constant(Block.FREE));
             }
             
@@ -340,26 +347,9 @@ public final class GameState {
                     board1.add(Sq.constant(currentCell).limit(Ticks.BONUS_DISAPPEARING_TICKS)
                             .concat(Sq.constant(Block.FREE)));
                 }
-            }
-            
-            // Si on est sur un mur destructible atteint par une explosion
-            else if(currentCell==Block.DESTRUCTIBLE_WALL && blastedCells1.contains(c)){
-                Block b;
-                
-                // On calcule le bloc qui remplacera la case
-                int prob = RANDOM.nextInt(3);
-                switch (prob){
-                    case 0: b=Block.BONUS_BOMB;
-                    break;
-                    
-                    case 1: b=Block.BONUS_RANGE;
-                    break;
-                    
-                    default: b=Block.FREE;
+                else{
+                    board1.add(board0.blocksAt(c).tail());
                 }
-                
-                board1.add(Sq.constant(Block.CRUMBLING_WALL).limit(Ticks.WALL_CRUMBLING_TICKS)
-                        .concat(Sq.constant(b)));
             }
             
             // Si on a rien de spécial, on ne change rien
