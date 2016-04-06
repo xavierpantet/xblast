@@ -247,6 +247,7 @@ public final class GameState {
         // nextExpolosions
         nextExplosion.addAll(nextExplosions(this.explosions));
         
+        
         // Newly dropped Bombs
         List<Bomb> newBombs = newlyDroppedBombs(players, bombDropEvents, bombs);
         
@@ -269,6 +270,7 @@ public final class GameState {
 
         // (5) NextPlayers
         List<Player> nextPlayers =  nextPlayers(players, playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
+        
         return new GameState(ticks+1, nextBoard, nextPlayers, newBombs, nextExplosion, nextBlasts);
     }
     
@@ -277,8 +279,9 @@ public final class GameState {
         List<Sq<Sq<Cell>>> newExplosions=new ArrayList<>();
         
         for (Sq<Sq<Cell>> sq : explosions0) {
-            if(!sq.tail().isEmpty())
-                newExplosions.add(sq.tail());     
+            if(!sq.tail().isEmpty()){
+                newExplosions.add(sq.tail());
+            }
         }
         return newExplosions;
     }
