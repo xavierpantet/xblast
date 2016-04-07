@@ -40,12 +40,9 @@ public class RandomGame {
             g=g.next(randomShit.randomSpeedChangeEvents(), randomShit.randomBombDropEvents());
             GameStatePrinter.printGameState(g);
            
-               
+                Thread.sleep(50);
             
             System.out.println("\u001b[2J");
-        }for (int i=0; i<60; i++){
-            g=g.next(randomShit.randomSpeedChangeEvents(), randomShit.randomBombDropEvents());
-            GameStatePrinter.printGameState(g); 
         }
     }
 
