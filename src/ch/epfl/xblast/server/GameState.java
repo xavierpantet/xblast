@@ -108,7 +108,7 @@ public final class GameState {
             };
         }
         
-        if (nbOfAlivePlayers<=3){
+        if (nbOfAlivePlayers<=1){
             return true;
         } else {
             return false;
@@ -232,17 +232,19 @@ public final class GameState {
         
         Cell playerCase;
         PlayerID playerID;
-        for (int i=0; i<players.size(); i++){
-            playerCase = players.get(i).position().containingCell();
-            playerID = players.get(i).id();
+        for (int i=0; i<playersPermut.size(); i++){
+            playerCase = playersPermut.get(i).position().containingCell();
+            playerID = playersPermut.get(i).id();
             
 
-            if(playerCase.equals(Block.BONUS_BOMB)){
+            if(board.blockAt(playerCase)==Block.BONUS_BOMB && !consumedBonuses.contains(playerCase)){
                 consumedBonuses.add(playerCase);
                 playerBonuses.put(playerID, Bonus.INC_BOMB);
-            } else if (playerCase.equals(Block.BONUS_RANGE)){
+                Bonus.INC_BOMB.applyTo(playersPermut.get(i));
+            } else if (board.blockAt(playerCase)==Block.BONUS_RANGE && !consumedBonuses.contains(playerCase)){
                 consumedBonuses.add(playerCase);
                 playerBonuses.put(playerID, Bonus.INC_RANGE);
+                Bonus.INC_RANGE.applyTo(playersPermut.get(i));
             }
         }
         
@@ -335,7 +337,7 @@ public final class GameState {
             }
             
             // Si on est sur un bonus qui a été consommé
-            else if(consumedBonuses.contains(currentCell)){
+            else if(consumedBonuses.contains(c)){
                 board1.add(Sq.constant(Block.FREE));
             }
             
@@ -429,18 +431,19 @@ public final class GameState {
         
         for(Player p:players0){
             SubCell position=p.position();
-          //Si le joueur a un desir de changement de direction
+            
+            //Si le joueur a un desir de changement de direction
             if(speedChangeEvents.containsKey(p.id())){
-                if(speedChangeEvents.get(p.id()).isPresent()){
-                    Optional<Direction> directionToGo=speedChangeEvents.get(p.id());
+                Optional<Direction> directionToGo=speedChangeEvents.get(p.id());
+                if(directionToGo.isPresent()){
                 
-                    if(p.direction().isParallelTo(speedChangeEvents.get(p.id()).get())){
+                    if(p.direction().isParallelTo(directionToGo.get())){
                   
                         sequencePos = DirectedPosition.moving(new DirectedPosition(position, directionToGo.get()));
                     } else {
                       
                         sequencePos = p.directedPositions().takeWhile(u -> !u.position().isCentral())
-                                .concat(DirectedPosition.moving(new DirectedPosition(p.directedPositions().findFirst(u -> u.position().isCentral()).position(), speedChangeEvents.get(p.id()).get())));
+                                .concat(DirectedPosition.moving(new DirectedPosition(p.directedPositions().findFirst(u -> u.position().isCentral()).position(), directionToGo.get())));
                      
                     }
                 }else{
@@ -457,8 +460,10 @@ public final class GameState {
             
             
          
-            if(p.lifeState().canMove() && (board1.blockAt(position.containingCell().neighbor(nextSequencePos.direction())).canHostPlayer()
-                    || (position.distanceToCentral()==6 && !bombedCells1.contains(position.containingCell())))){
+            if(p.lifeState().canMove() && !board1.blockAt(nextSequencePos.position().containingCell().neighbor(nextSequencePos.direction())).canHostPlayer() && nextSequencePos.position().isCentral()
+                    || nextSequencePos.position().distanceToCentral()==6 && bombedCells1.contains(nextSequencePos.position().containingCell()) && sequencePos.findFirst(u -> !u.position().isCentral()).equals(SubCell.centralSubCellOf(nextSequencePos.position().containingCell()))){
+            }
+            else{
                 sequencePos=sequencePos.tail();
             }
             

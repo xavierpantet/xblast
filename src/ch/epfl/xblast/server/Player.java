@@ -88,7 +88,7 @@ public final class Player {
         }
         else{
             return Sq.constant(new LifeState(nbLives, State.DYING)).limit(Ticks.PLAYER_DYING_TICKS)
-                    .concat(Sq.constant(new LifeState(nbLives, State.INVULNERABLE)).limit(Ticks.PLAYER_INVULNERABLE_TICKS))
+                    .concat(Sq.constant(new LifeState(nbLives-1, State.INVULNERABLE)).limit(Ticks.PLAYER_INVULNERABLE_TICKS))
                     .concat(Sq.constant(new LifeState(nbLives-1, State.VULNERABLE)));
         }
         
