@@ -50,6 +50,7 @@ public final class GameState {
     public GameState(int ticks, Board board, List<Player> players, List<Bomb> bombs, List<Sq<Sq<Cell>>> explosions, List<Sq<Cell>> blasts) throws IllegalArgumentException, NullPointerException{
         
         int playerSize = players.size();
+        
         if ((ticks<0)||(playerSize != 4)){
             throw new IllegalArgumentException();
         }
@@ -103,9 +104,7 @@ public final class GameState {
               
                 nbOfAlivePlayers++;
            
-            } else {
-             
-            };
+            }
         }
         
         if (nbOfAlivePlayers<=1){
@@ -120,7 +119,7 @@ public final class GameState {
      * @return le temps restant
      */
     public double remainingTime(){
-        return ((double) Ticks.TOTAL_TICKS-this.ticks)/ (double) Ticks.TICKS_PER_SECOND;
+        return ((double) Ticks.TOTAL_TICKS-this.ticks)/(double) Ticks.TICKS_PER_SECOND;
     }
     
     /**
@@ -132,6 +131,7 @@ public final class GameState {
      */
     public Optional<PlayerID> winner(){
         Optional<PlayerID> winner = Optional.empty();
+        
         if(alivePlayers().size()==1){
             winner = Optional.of(alivePlayers().get(0).id());
         }
@@ -145,6 +145,18 @@ public final class GameState {
     public Board board(){
         return this.board;
     }
+    
+  //#########################
+  //#########################
+  //#########################
+  //#########################
+  //#########################
+    //Pk pas renvoyer une copie de players plutôt que players? Immuable ?
+    //#########################
+    //#########################
+    //#########################
+    //#########################
+    //#########################
     
     /**
      * Retourne les joueurs, sous la forme d'une liste contenant toujours 4 éléments, car même les joueurs morts en font partie
@@ -161,13 +173,12 @@ public final class GameState {
     public List<Player> alivePlayers(){
         
         List<Player> alivePlayers = new ArrayList<Player>();
-        for (int i=0; i<4; i++){
-            Player testedPlayer = this.players().get(i);
-            if (testedPlayer.isAlive()){
-                alivePlayers.add(testedPlayer);
+        
+        for(Player p:this.players()){
+            if(p.isAlive()){
+                alivePlayers.add(p); 
             }
         }
-        
         return alivePlayers;
     }
     
@@ -191,7 +202,9 @@ public final class GameState {
      * @return
      */
     public Set<Cell> blastedCells(){
+        
         Set<Cell> cellSet = new HashSet<>();
+        
         for (Sq<Cell> cell : blasts){
             cellSet.add(cell.head());
         }
@@ -206,6 +219,7 @@ public final class GameState {
      * @return
      */
     public GameState next(Map<PlayerID, Optional<Direction>> speedChangeEvents, Set<PlayerID> bombDropEvents){
+        
         // Préliminaires: calcul des permutations
         List<PlayerID> playersPermutId = new ArrayList<>(PERMUTATIONS.get(ticks%PERMUTATIONS.size()));
         List<Player> playersPermut = new ArrayList<>();
@@ -431,6 +445,7 @@ public final class GameState {
         
         for(Player p:players0){
             SubCell position=p.position();
+            Sq<DirectedPosition> playerDirectedPosition = p.directedPositions();
             
             //Si le joueur a un desir de changement de direction
             if(speedChangeEvents.containsKey(p.id())){
@@ -442,19 +457,19 @@ public final class GameState {
                         sequencePos = DirectedPosition.moving(new DirectedPosition(position, directionToGo.get()));
                     } else {
                       
-                        sequencePos = p.directedPositions().takeWhile(u -> !u.position().isCentral())
-                                .concat(DirectedPosition.moving(new DirectedPosition(p.directedPositions().findFirst(u -> u.position().isCentral()).position(), directionToGo.get())));
+                        sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
+                                .concat(DirectedPosition.moving(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), directionToGo.get())));
                      
                     }
                 }else{
-                    sequencePos = p.directedPositions().takeWhile(u -> !u.position().isCentral())
+                    sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                             
-                            .concat(DirectedPosition.stopped(p.directedPositions().findFirst(u -> u.position().isCentral())));
+                            .concat(DirectedPosition.stopped(playerDirectedPosition.findFirst(u -> u.position().isCentral())));
              
                 }
             }
             else{
-                sequencePos=p.directedPositions();
+                sequencePos=playerDirectedPosition;
             }
             nextSequencePos=sequencePos.head();
             

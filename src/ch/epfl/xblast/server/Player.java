@@ -184,17 +184,11 @@ public final class Player {
             // Le joueur est tout d'abord invulnérable (pendant un certain temps)
             Sq<LifeState> lifeState = Sq.constant(new LifeState(lives, State.INVULNERABLE)).limit(Ticks.PLAYER_INVULNERABLE_TICKS);
          
-            //Sq<LifeState> lifeState = Sq.constant(new LifeState(lives, State.INVULNERABLE)).limit(1);
-            //LifeState etat = new LifeState(lives, State.INVULNERABLE);
-           // Sq<LifeState> lifeState = Sq.repeat(10, new LifeState(lives, State.INVULNERABLE));
-        
-           // lifeState = Sq.repeat(Ticks.PLAYER_INVULNERABLE_TICKS, new LifeState(lives, State.INVULNERABLE)).limit(Ticks.PLAYER_INVULNERABLE_TICKS);
             // Puis il est vulnérable pour une durée indéfinie
             lifeState = lifeState.concat(Sq.constant(new LifeState(lives, State.VULNERABLE)));
 
             return lifeState;
-        }
-        else{throw new IllegalArgumentException("Le nombre de vie doit être non négatif");}
+        } else {throw new IllegalArgumentException("Le nombre de vie doit être non négatif");}
     }
     
     /**

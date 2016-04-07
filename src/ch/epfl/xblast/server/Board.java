@@ -24,9 +24,9 @@ public final class Board {
     public Board(List<Sq<Block>> blocks) throws IllegalArgumentException{
         if(blocks.size()==Cell.COUNT){
             this.blocks=Collections.unmodifiableList(new LinkedList<Sq<Block>>(blocks));
+        } else {
+            throw new IllegalArgumentException("La liste doit posséder "+Cell.COUNT+" éléments");
         }
-        else{throw new IllegalArgumentException("La liste doit posséder "+Cell.COUNT+" éléments");}
-    
     }
    
     /**
@@ -37,8 +37,8 @@ public final class Board {
      * @return un plateau ofRows
      */
    public static Board ofRows(List<List<Block>> rows) throws IllegalArgumentException{
-       checkBlockMatrix(rows, Cell.ROWS, Cell.COLUMNS);
        
+       checkBlockMatrix(rows, Cell.ROWS, Cell.COLUMNS);
        List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
 
        for(List<Block> l : rows){
@@ -46,6 +46,7 @@ public final class Board {
                tmpBlocks.add(Sq.constant(e));
            }
        }
+       
        return new Board(tmpBlocks); 
    }
    
@@ -92,8 +93,7 @@ public final class Board {
     * ou lève l'exception IllegalArgumentException si la liste reçue n'est pas constituée de 6 listes de 7 éléments chacune.
     * @param matrice de blocs
     * @return un plateau ofQuadrantNWBlocksWalled
-    */
-   
+    */  
    public static Board ofQuadrantNWBlocksWalled(List<List<Block>> quadrantNWBlocks) throws IllegalArgumentException{
        List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
       
@@ -130,8 +130,8 @@ public final class Board {
        }catch(Exception e){
            throw new IllegalArgumentException(e);
        }
-       return new Board(tmpBlocks);
        
+       return new Board(tmpBlocks);  
    }
    
    /**
