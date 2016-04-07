@@ -35,10 +35,10 @@ public class RandomGame {
         players.add(new Player(PlayerID.PLAYER_3, 3, new Cell(13, 11), 2, 3));
         
         GameState g = new GameState(board, players);
-        
+        GameStatePrinter.printGameState(g);
         while(!g.isGameOver()){
-            GameStatePrinter.printGameState(g);
             g=g.next(randomShit.randomSpeedChangeEvents(), randomShit.randomBombDropEvents());
+            GameStatePrinter.printGameState(g);
            
                 Thread.sleep(20);
             
