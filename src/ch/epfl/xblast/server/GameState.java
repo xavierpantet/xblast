@@ -1,6 +1,7 @@
 package ch.epfl.xblast.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.Set;
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
+import ch.epfl.xblast.Lists;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.SubCell;
 import ch.epfl.xblast.server.Player.DirectedPosition;
@@ -29,6 +31,7 @@ public final class GameState {
     private final List<Sq<Sq<Cell>>> explosions;
     private final List<Sq<Cell>> blasts;
     
+    private static final List<List<PlayerID>> PERMUTATIONS = Collections.unmodifiableList(Lists.permutations(Arrays.asList(PlayerID.values())));
     private static final Random RANDOM = new Random(2016);
     
     
@@ -117,7 +120,7 @@ public final class GameState {
      * @return le temps restant
      */
     public double remainingTime(){
-        return (Ticks.TOTAL_TICKS-this.ticks)/Ticks.TICKS_PER_SECOND;
+        return ((double) Ticks.TOTAL_TICKS-this.ticks)/ (double) Ticks.TICKS_PER_SECOND;
     }
     
     /**
@@ -203,6 +206,17 @@ public final class GameState {
      * @return
      */
     public GameState next(Map<PlayerID, Optional<Direction>> speedChangeEvents, Set<PlayerID> bombDropEvents){
+        // Préliminaires: calcul des permutations
+        List<PlayerID> playersPermutId = new ArrayList<>(PERMUTATIONS.get(ticks%PERMUTATIONS.size()));
+        List<Player> playersPermut = new ArrayList<>();
+        for(Player p:players){
+            for(PlayerID id:playersPermutId){
+                if(p.id().equals(id)){
+                    playersPermut.add(p);
+                }
+            }
+        }
+        
         // (1) nextBlasts
         List<Sq<Cell>> nextBlasts = nextBlasts(blasts, board, explosions);
         
@@ -245,28 +259,25 @@ public final class GameState {
         }
         
         // nextExpolosions
-        nextExplosion.addAll(nextExplosions(this.explosions));
+        nextExplosion.addAll(nextExplosions(explosions));
         
         
         // Newly dropped Bombs
-        List<Bomb> newBombs = newlyDroppedBombs(players, bombDropEvents, bombs);
+        List<Bomb> newBombs = newlyDroppedBombs(playersPermut, bombDropEvents, bombs);
+        
+        for (Bomb b:bombs){
+            if(b.fuseLength()==1 || blastedCells.contains(b.position())){
+                nextExplosion.addAll(b.explosion());
+            }else{
+                newBombs.add(new Bomb(b.ownerId(), b.position(), b.fuseLengths().tail(), b.range()));
+            }
+        }
         
         // Pour 5, on créé un set contenant les cellules portant une bombe
         Set<Cell> bombedCells = new HashSet<Cell>();
         for (Bomb b:newBombs){
             bombedCells.add(b.position());
         }
-        
-        for (Bomb b:bombs){
-            if(b.fuseLength()>1){
-                newBombs.add(new Bomb(b.ownerId(), b.position(), b.fuseLengths().tail(), b.range()));
-            }else{
-                for(Sq<Sq<Cell>> exp : b.explosion()){
-                    nextExplosion.add(exp);
-                }
-            }
-        }
-        newBombs.removeAll(bombs);
 
         // (5) NextPlayers
         List<Player> nextPlayers =  nextPlayers(players, playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
@@ -391,7 +402,7 @@ public final class GameState {
                     boolean cellAlreadyOccupied=false;
                     for(Bomb b:bombs0){
                         if(b.ownerId().equals(p.id())){nbBombs++;}
-                        if(p.position().equals(b.position())){cellAlreadyOccupied=true;}
+                        if(p.position().containingCell().equals(b.position())){cellAlreadyOccupied=true;}
                     }
                     
                     // Si c'est tout bon
@@ -400,10 +411,8 @@ public final class GameState {
                     }
                 }
             }
-            
-            // On retourne uniquement les nouvelles bombes
-            bombs1.removeAll(bombs0);
         }
+        bombs1.removeAll(bombs0);
         return bombs1;
     }
     
@@ -491,7 +500,7 @@ public final class GameState {
         List<Sq<Cell>> blasts1 = new ArrayList<>();
         for(Sq<Cell> s:blasts0){
             if(board0.blockAt(s.head()).isFree()){
-                if(!s.tail().isEmpty()){ blasts1.add(s.tail());}
+                if(!s.tail().isEmpty()){blasts1.add(s.tail());}
             }
         }
         
