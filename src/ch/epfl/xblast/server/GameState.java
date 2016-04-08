@@ -240,10 +240,10 @@ public final class GameState {
             playerID = playersPermut.get(i).id();
             
 
-            if(board.blockAt(playerCase)==Block.BONUS_BOMB && !consumedBonuses.contains(playerCase)){
+            if(playersPermut.get(i).position().isCentral() && board.blockAt(playerCase)==Block.BONUS_BOMB && !consumedBonuses.contains(playerCase)){
                 consumedBonuses.add(playerCase);
                 playerBonuses.put(playerID, Bonus.INC_BOMB);
-            } else if (board.blockAt(playerCase)==Block.BONUS_RANGE && !consumedBonuses.contains(playerCase)){
+            } else if (playersPermut.get(i).position().isCentral() && board.blockAt(playerCase)==Block.BONUS_RANGE && !consumedBonuses.contains(playerCase)){
                 consumedBonuses.add(playerCase);
                 playerBonuses.put(playerID, Bonus.INC_RANGE);
             }
