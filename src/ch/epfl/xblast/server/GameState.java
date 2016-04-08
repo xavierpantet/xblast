@@ -211,13 +211,14 @@ public final class GameState {
         // Préliminaires: calcul des permutations
         List<PlayerID> playersPermutId = new ArrayList<>(PERMUTATIONS.get(ticks%PERMUTATIONS.size()));
         List<Player> playersPermut = new ArrayList<>();
-        for(Player p:players){
-            for(PlayerID id:playersPermutId){
+        for(PlayerID id:playersPermutId){
+            for(Player p:players){
                 if(p.id().equals(id)){
                     playersPermut.add(p);
                 }
             }
         }
+        
         
         // (1) nextBlasts
         List<Sq<Cell>> nextBlasts = nextBlasts(blasts, board, explosions);
@@ -242,11 +243,9 @@ public final class GameState {
             if(board.blockAt(playerCase)==Block.BONUS_BOMB && !consumedBonuses.contains(playerCase)){
                 consumedBonuses.add(playerCase);
                 playerBonuses.put(playerID, Bonus.INC_BOMB);
-                Bonus.INC_BOMB.applyTo(playersPermut.get(i));
             } else if (board.blockAt(playerCase)==Block.BONUS_RANGE && !consumedBonuses.contains(playerCase)){
                 consumedBonuses.add(playerCase);
                 playerBonuses.put(playerID, Bonus.INC_RANGE);
-                Bonus.INC_RANGE.applyTo(playersPermut.get(i));
             }
         }
         

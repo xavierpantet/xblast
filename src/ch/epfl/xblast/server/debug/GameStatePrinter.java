@@ -43,21 +43,20 @@ public final class GameStatePrinter {
                     continue xLoop;
                 }
                 
-                
                 for (Player p: ps) {
                     if (p.position().containingCell().equals(c)) {
                         System.out.print(stringForPlayer(p));
                         continue xLoop;
                     }  
                 }
+
                 
                 if(bombs.containsKey(c)){
                     System.out.print(stringForBomb(bombs.get(c)));
                     continue xLoop;
                 
                 }  
-                
-
+               
                 
                 
                 if(blastedCells.contains(c)){
