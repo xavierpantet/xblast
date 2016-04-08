@@ -75,7 +75,7 @@ public final class GameState {
     public GameState(Board board, List<Player> players){
 
        this(0, board, players, new ArrayList<Bomb>(), new ArrayList<Sq<Sq<Cell>>>(), new ArrayList<Sq<Cell>>());
-       
+       //(Arrays.asList(new Bomb(PlayerID.PLAYER_1, new Cell(7, 7), 10, 3),new Bomb(PlayerID.PLAYER_1, new Cell(6, 7), 20, 3),new Bomb(PlayerID.PLAYER_1, new Cell(5, 7), 30, 3))
     }
     
     /**
@@ -145,19 +145,7 @@ public final class GameState {
     public Board board(){
         return this.board;
     }
-    
-  //#########################
-  //#########################
-  //#########################
-  //#########################
-  //#########################
-    //Pk pas renvoyer une copie de players plutôt que players? Immuable ?
-    //#########################
-    //#########################
-    //#########################
-    //#########################
-    //#########################
-    
+
     /**
      * Retourne les joueurs, sous la forme d'une liste contenant toujours 4 éléments, car même les joueurs morts en font partie
      * @return les joueurs
@@ -475,11 +463,12 @@ public final class GameState {
             
             
          
-            if(p.lifeState().canMove() && !board1.blockAt(nextSequencePos.position().containingCell().neighbor(nextSequencePos.direction())).canHostPlayer() && nextSequencePos.position().isCentral()
-                    || nextSequencePos.position().distanceToCentral()==6 && bombedCells1.contains(nextSequencePos.position().containingCell()) && sequencePos.findFirst(u -> !u.position().isCentral()).equals(SubCell.centralSubCellOf(nextSequencePos.position().containingCell()))){
-            }
-            else{
-                sequencePos=sequencePos.tail();
+            if(p.lifeState().canMove()){
+                if(!(p.position().isCentral()) || (p.position().isCentral() && board1.blockAt(p.position().containingCell().neighbor(nextSequencePos.direction())).canHostPlayer())){
+                    if((p.position().distanceToCentral()!=6) || !(p.position().distanceToCentral()==6 && bombedCells1.contains(p.position().containingCell()) && sequencePos.findFirst(u -> !u.position().isCentral()).equals(SubCell.centralSubCellOf(nextSequencePos.position().containingCell())))){
+                        sequencePos=sequencePos.tail();
+                    }
+                }
             }
             
             
