@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -59,7 +60,7 @@ public final class GameState {
         }
         
         this.ticks = ticks;
-        this.board = board;
+        this.board=Objects.requireNonNull(board);
         this.players = Collections.unmodifiableList(new LinkedList<Player>(players));
         this.bombs = Collections.unmodifiableList(new LinkedList<Bomb>(bombs));
         this.explosions = Collections.unmodifiableList(new LinkedList<Sq<Sq<Cell>>>(explosions));
@@ -93,7 +94,7 @@ public final class GameState {
      * @return vrai <=> partie terminée
      */
     public boolean isGameOver(){
-        if (this.ticks==Ticks.TOTAL_TICKS){
+        if (this.ticks>Ticks.TOTAL_TICKS){
             return true;
         }
         
