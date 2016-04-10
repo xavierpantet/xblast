@@ -268,7 +268,7 @@ public final class GameState {
         
         // Newly dropped Bombs
         List<Bomb> newBombs = newlyDroppedBombs(playersPermut, bombDropEvents, bombs);
-        
+
         for (Bomb b:bombs){
             if(b.fuseLength()==1 || blastedCells.contains(b.position())){
                 nextExplosion.addAll(b.explosion());
@@ -411,7 +411,8 @@ public final class GameState {
                     
                     // Si c'est tout bon
                     if(nbBombs<p.maxBombs() && !cellAlreadyOccupied){
-                        bombs1.add(p.newBomb());
+                        Bomb b = p.newBomb();
+                        bombs1.add(new Bomb(b.ownerId(), b.position(), b.fuseLength()-1, b.range()));
                     }
                 }
             }
@@ -461,17 +462,14 @@ public final class GameState {
             }
             nextSequencePos=sequencePos.head();
             
-            
          
             if(p.lifeState().canMove()){
                 if(!(p.position().isCentral()) || (p.position().isCentral() && board1.blockAt(p.position().containingCell().neighbor(nextSequencePos.direction())).canHostPlayer())){
-                    if((p.position().distanceToCentral()!=6) || !(p.position().distanceToCentral()==6 && bombedCells1.contains(p.position().containingCell()) && sequencePos.findFirst(u -> !u.position().isCentral()).equals(SubCell.centralSubCellOf(nextSequencePos.position().containingCell())))){
+                    if((p.position().distanceToCentral()!=6) || !(p.position().distanceToCentral()==6 && bombedCells1.contains(p.position().containingCell()) && sequencePos.findFirst(u -> u.position().isCentral()).position().equals(SubCell.centralSubCellOf(p.position().containingCell())))){
                         sequencePos=sequencePos.tail();
                     }
                 }
             }
-            
-            
             
             if(p.lifeState().canMove() && p.lifeState().state()==State.VULNERABLE && blastedCells1.contains(position.containingCell())){
                 sequenceLife=p.statesForNextLife();
