@@ -102,6 +102,7 @@ public class GameSimulation {
                 for(List<Integer> e: pos) {
                 	DirectedPosition h = seq.head();
                 	assertTrue(GameSimulation.compare(h, e));
+
                 	seq = seq.tail();                	
                 }
             }          

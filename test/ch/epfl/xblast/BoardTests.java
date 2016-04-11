@@ -1,18 +1,23 @@
 package ch.epfl.xblast;
 
-import ch.epfl.cs108.Sq;
-import ch.epfl.xblast.Cell;
-import ch.epfl.xblast.Lists;
-import ch.epfl.xblast.server.Block;
-import ch.epfl.xblast.server.Board;
-import org.junit.Test;
+import static ch.epfl.xblast.server.Block.CRUMBLING_WALL;
+import static ch.epfl.xblast.server.Block.FREE;
+import static ch.epfl.xblast.server.Block.INDESTRUCTIBLE_WALL;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static ch.epfl.xblast.server.Block.*;
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import ch.epfl.cs108.Sq;
+import ch.epfl.xblast.server.Block;
+import ch.epfl.xblast.server.Board;
 
 public class BoardTests {
 
@@ -140,8 +145,12 @@ public class BoardTests {
     @Test
     public void ofQuadrantNWBlocksWalledIsCorrect() {
 
-        List<List<Block>> matrix = Collections.nCopies(Cell.ROWS / 2, generateRow(Cell.COLUMNS / 2, Block.values()));
-        Board board = Board.ofQuadrantNWBlocksWalled(new ArrayList<>(matrix));
+        //List<List<Block>> matrix = Collections.nCopies(Cell.ROWS / 2, generateRow(Cell.COLUMNS / 2, Block.values()));
+        List<List<Block>> matrix = Stream
+                .generate(() -> generateRow(Cell.COLUMNS / 2, Block.values()))
+                .limit(Cell.ROWS / 2)
+                .collect(Collectors.toCollection(ArrayList::new));
+        Board board = Board.ofQuadrantNWBlocksWalled(matrix);
 
         boardIsWalled(board);
 
@@ -168,8 +177,12 @@ public class BoardTests {
     @Test
     public void ofInnerBlocksWalledIsCorrect() {
         List<Block> aRow = Collections.nCopies(Cell.COLUMNS - 2, CRUMBLING_WALL);
-        List<List<Block>> matrix = Collections.nCopies(Cell.ROWS - 2, new ArrayList<>(aRow));
-        Board board = Board.ofInnerBlocksWalled(new ArrayList<>(matrix));
+        //List<List<Block>> matrix = Collections.nCopies(Cell.ROWS - 2, new ArrayList<>(aRow));
+        List<List<Block>> matrix = Stream
+                .generate(() -> new ArrayList<>(aRow))
+                .limit(Cell.ROWS - 2)
+                .collect(Collectors.toCollection(ArrayList::new));
+        Board board = Board.ofInnerBlocksWalled(matrix);
 
         boardIsWalled(board);
 

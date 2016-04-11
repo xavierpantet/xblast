@@ -453,7 +453,7 @@ public final class GameState {
                     boolean found=false;
                     Sq<DirectedPosition> sq = p.directedPositions();
                     DirectedPosition temp;
-                    for(int i=0; i<8; i++){
+                    for(int i=0; i<15; i++){
                         temp=sq.head();
                         if(!temp.direction().equals(dirTest)){
                             found=true;
