@@ -81,18 +81,7 @@ public final class Player {
      * @return l'état de vie suivant
      */
     public Sq<LifeState> statesForNextLife(){
-        int nbLives=lives();
-        if(nbLives==1){
-            return Sq.constant(new LifeState(nbLives, State.DYING)).limit(Ticks.PLAYER_DYING_TICKS)
-                    .concat(Sq.constant(new LifeState(nbLives-1, State.DEAD)));
-        }
-
-        else{
-            return Sq.constant(new LifeState(nbLives, State.DYING)).limit(Ticks.PLAYER_DYING_TICKS)
-                    .concat(Sq.constant(new LifeState(nbLives-1, State.INVULNERABLE)).limit(Ticks.PLAYER_INVULNERABLE_TICKS))
-                    .concat(Sq.constant(new LifeState(nbLives-1, State.VULNERABLE)));
-        }
-        
+        return Sq.repeat(Ticks.PLAYER_DYING_TICKS, new LifeState(lives(), State.DYING)).concat(createStateSequence(lives()-1));   
     }
     
     /**
@@ -182,7 +171,7 @@ public final class Player {
         }
         else if(lives>0){
             // Le joueur est tout d'abord invulnérable (pendant un certain temps)
-            Sq<LifeState> lifeState = Sq.constant(new LifeState(lives, State.INVULNERABLE)).limit(Ticks.PLAYER_INVULNERABLE_TICKS);
+            Sq<LifeState> lifeState = Sq.repeat(Ticks.PLAYER_INVULNERABLE_TICKS, new LifeState(lives, State.INVULNERABLE));
          
             // Puis il est vulnérable pour une durée indéfinie
             lifeState = lifeState.concat(Sq.constant(new LifeState(lives, State.VULNERABLE)));
@@ -328,7 +317,7 @@ public final class Player {
          * @return si le joueur peut bouger ou non
          */
         public boolean canMove(){
-            return ((this.state==State.VULNERABLE)||(this.state==State.INVULNERABLE))? true : false;
+            return (this.state==State.VULNERABLE)||(this.state==State.INVULNERABLE);
         }
 
     }

@@ -87,7 +87,7 @@ public class RandomTestGame {
         player_positions.close();
     }
     
-    @Test
+    /*@Test
     public void testPositionsGraphicRandomGame() throws InterruptedException, IOException, URISyntaxException {
         String fileName = getClass().getResource("/stage6files/randomgame_positions.txt").toURI().getPath();
         Stream<String> player_positions = Files.lines(Paths.get(fileName));
@@ -100,12 +100,14 @@ public class RandomTestGame {
             Map<PlayerID, Optional<Direction>> randSpeed=randEvents.randomSpeedChangeEvents();
             s = s.next(randSpeed, randEvents.randomBombDropEvents());
             Player p = s.players().get(3);
+            System.out.println(p.position());
+            System.out.println("Ticks: " + s.ticks());
             /*System.out.println(randSpeed.get(p.id()));
             System.out.println(p.position());
             System.out.println(p.position().distanceToCentral());
             System.out.println(p.lifeState().state());
             System.out.println("Mur ? " + s.board().blockAt(p.position().containingCell().neighbor(p.direction())));
-            System.out.println();*/
+            System.out.println();
             //for(Player p: s.players()) {
                 System.out.println(p.id());
                 pos_iterator.next();
@@ -120,9 +122,8 @@ public class RandomTestGame {
                     System.out.println(e);
                     /*System.out.println("Bombe ? " + s.bombedCells().containsKey(s.board().blockAt(h.position().containingCell())));
                     System.out.println("Mur ? " + s.board().blockAt(h.position().containingCell().neighbor(h.direction())));
-                    System.out.println();*/
-                    //assertTrue(GameSimulation.compare(h, e));
-
+                    System.out.println();
+                    assertTrue(GameSimulation.compare(h, e));
 
                     seq = seq.tail();                   
                 }
@@ -132,5 +133,5 @@ public class RandomTestGame {
             //}
         }
         player_positions.close();
-    }
+    }*/
 }

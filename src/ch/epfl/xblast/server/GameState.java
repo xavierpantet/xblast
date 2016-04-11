@@ -464,14 +464,14 @@ public final class GameState {
             
          
             if(p.lifeState().canMove()){
-                if(!(p.position().isCentral()) || (p.position().isCentral() && board1.blockAt(p.position().containingCell().neighbor(nextSequencePos.direction())).canHostPlayer())){
+                if(!p.position().isCentral() || (p.position().isCentral() && board1.blockAt(p.position().containingCell().neighbor(nextSequencePos.direction())).canHostPlayer())){
                     if((p.position().distanceToCentral()!=6) || !(p.position().distanceToCentral()==6 && bombedCells1.contains(p.position().containingCell()) && sequencePos.findFirst(u -> u.position().isCentral()).position().equals(SubCell.centralSubCellOf(p.position().containingCell())))){
                         sequencePos=sequencePos.tail();
                     }
                 }
             }
             
-            if(p.lifeState().state()==State.VULNERABLE && blastedCells1.contains(position.containingCell())){
+            if(p.lifeState().state()==State.VULNERABLE && blastedCells1.contains(sequencePos.head().position().containingCell())){
                 sequenceLife=p.statesForNextLife();
             }
             else{
