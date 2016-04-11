@@ -445,9 +445,10 @@ public final class GameState {
                   
                         sequencePos = DirectedPosition.moving(new DirectedPosition(position, directionToGo.get()));
                     } else {
-                      
-                        sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
+                          sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                                 .concat(DirectedPosition.moving(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), directionToGo.get())));
+                          System.out.println("Change " + p.id() + directionToGo.get());
+                          System.out.println(p.position().distanceToCentral());
                     }
                 }else{
                     sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
