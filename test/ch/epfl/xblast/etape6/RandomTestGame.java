@@ -78,6 +78,22 @@ public class RandomTestGame {
 
                 for(List<Integer> e: pos) {
                 	DirectedPosition h = seq.head();
+                	if(!GameSimulation.compare(h, e)){
+                	System.out.println(h.position());
+                	System.out.println(e);
+                	System.out.println(s.ticks());
+                	System.out.println(h.direction() + " - " + Direction.values()[e.get(2)]);
+                	System.out.println(h.position().distanceToCentral());
+                	System.out.println(p.lifeState().state());
+                	s = s.next(randEvents.randomSpeedChangeEvents(), randEvents.randomBombDropEvents());
+                	System.out.println(h.position());
+                    System.out.println(e);
+                    System.out.println(s.ticks());
+                    System.out.println(h.direction() + " - " + Direction.values()[e.get(2)]);
+                    System.out.println(h.position().distanceToCentral());
+                    System.out.println(p.lifeState().state());
+                    System.out.println(s.board().blockAt(p.position().containingCell().neighbor(h.direction())));
+                	}
                 	assertTrue(GameSimulation.compare(h, e));
 
                 	seq = seq.tail();                	
@@ -102,7 +118,7 @@ public class RandomTestGame {
             Player p = s.players().get(3);
             System.out.println(p.position());
             System.out.println("Ticks: " + s.ticks());
-            /*System.out.println(randSpeed.get(p.id()));
+            System.out.println(randSpeed.get(p.id()));
             System.out.println(p.position());
             System.out.println(p.position().distanceToCentral());
             System.out.println(p.lifeState().state());
