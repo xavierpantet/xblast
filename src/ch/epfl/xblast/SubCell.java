@@ -76,7 +76,7 @@ public final class SubCell {
      * @return vrai si et seulement si la sous-case est une sous-case centrale
      */
     public boolean isCentral(){
-        return (midCaseX-(x%COLUMNS)==0)&&(midCaseY-(y%ROWS)==0)? true:false;
+        return distanceToCentral()==0;
     }
     
     /**

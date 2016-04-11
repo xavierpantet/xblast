@@ -447,13 +447,28 @@ public final class GameState {
                     } else {
                           sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                                 .concat(DirectedPosition.moving(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), directionToGo.get())));
-                          System.out.println("Change " + p.id() + directionToGo.get());
-                          System.out.println(p.position().distanceToCentral());
                     }
                 }else{
-                    sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
-                            
+                    Direction dirTest = p.direction();
+                    boolean found=false;
+                    Sq<DirectedPosition> sq = p.directedPositions();
+                    DirectedPosition temp;
+                    for(int i=0; i<8; i++){
+                        temp=sq.head();
+                        if(!temp.direction().equals(dirTest)){
+                            found=true;
+                        }
+                        sq=sq.tail();
+                    }
+                    if(!found){
+                        sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                             .concat(DirectedPosition.stopped(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), p.direction())));
+                    }
+                    else{
+                        sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
+                                .concat(DirectedPosition.stopped(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), sq.head().direction())));
+                    }
+                    
                 }
             }
             else{
