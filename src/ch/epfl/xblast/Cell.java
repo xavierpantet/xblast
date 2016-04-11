@@ -7,16 +7,16 @@ import java.lang.Math;
 
 /**
  * Classe représentant une case du tableau de jeu.
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class Cell {
+    
     // Attributs statiques du plateau de jeu
     public final static int COLUMNS=15;
     public final static int ROWS=13;
     public final static int COUNT=COLUMNS*ROWS;
     public final static List<Cell> ROW_MAJOR_ORDER=Collections.unmodifiableList(rowMajorOrder());
     public final static List<Cell> SPIRAL_ORDER=Collections.unmodifiableList(spiralOrder());
-    
     private final int x;
     private final int y;
     
@@ -52,6 +52,7 @@ public final class Cell {
      */
     private static ArrayList<Cell> rowMajorOrder(){
         ArrayList<Cell> cells = new ArrayList<Cell>();
+        
         // On parcourt simplement le tableau en ROW_MAJOR_ORDER et on ajoute les cellules
         for(int i=0; i<ROWS; i++){
             for(int j=0; j<COLUMNS; j++){
@@ -66,6 +67,7 @@ public final class Cell {
      * @return cellules en SPIRAL_ORDER
      */
     private static ArrayList<Cell> spiralOrder(){
+        
         // On construit les tableaux ix et iy
         List<Integer> ix = new ArrayList<Integer>();
         List<Integer> iy = new ArrayList<Integer>();
@@ -158,10 +160,12 @@ public final class Cell {
     /**
      * Redéfinition de equals. Retourne vrai <=> that est une classe
      * dont les coordonnées normalisées sont les mêmes que this
+     * @param that
      * @return vrai si une case est égale à une autre
      */
     @Override
     public boolean equals(Object that){
+        
         // Vérifie si this et that sont des instances de la même classe
         if (that!= null && (that.getClass().equals(this.getClass()))){
             if (that instanceof Cell){
@@ -193,5 +197,4 @@ public final class Cell {
 
     }
     
-
 }

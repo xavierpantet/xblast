@@ -2,7 +2,7 @@ package ch.epfl.xblast;
 
 /**
  * Classe représentant une sous-case d'une case du tableau de jeu.
- * @author Timothée Duran (258683)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 
 public final class SubCell {
@@ -10,15 +10,17 @@ public final class SubCell {
     private final int y;
     public final static int COLUMNS=16;
     public final static int ROWS=16;
-    
     public final static int midCaseX = (int) Math.floor(COLUMNS/2);
     public final static int midCaseY = (int) Math.floor(ROWS/2);
     
+    /**
+     * Constructeur de la subcell
+     * @param x
+     * @param y
+     */
     public SubCell(int x, int y){
- 
         this.x=Math.floorMod(x, 240);
         this.y=Math.floorMod(y, 208);
-     
     }
     
     /**
@@ -41,7 +43,7 @@ public final class SubCell {
      * Calcule la sous-case centrale d'une case donnée en paramètre.
      * Si la largeur, respectivement la hauteur, d'une cellule est paire, alors on retournera la sous-case
      * qui se trouve juste à gauche, respectivement juste en-dessus, du milieu de la cellule.
-     * @param cellule
+     * @param la cellule
      * @return la sous-case centrale de cell
      */
     public static SubCell centralSubCellOf(Cell cell){
@@ -116,6 +118,7 @@ public final class SubCell {
     /**
      * Redéfinit la méthode equals de Object et retourne vrai si et seulement si 
      * l'objet that est une sous-case et ses coordonnées normalisées sont identiques à celles de la sous-case réceptrice
+     * @param that
      * @return vrai <=> this = that
      */
     @Override

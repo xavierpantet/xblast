@@ -3,7 +3,7 @@ package ch.epfl.xblast;
 /**
  * Les 4 directions que l'on peut prendre dans le jeu.
  * Pour Nord, Est, Sud et West
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public enum Direction {
     N, E, S, W;
@@ -41,6 +41,7 @@ public enum Direction {
     /**
      * Retourne vrai <=> la direction this est parallèle à la direction that
      * (that est elle même ou son opposée)
+     * @param that
      * @return vrai <=> la direction est elle-même ou son opposée
      */
     public boolean isParallelTo(Direction that){

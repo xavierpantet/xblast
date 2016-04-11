@@ -2,7 +2,7 @@ package ch.epfl.xblast;
 
 /**
  * Interface de données temporelles.
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public interface Time {
     static final int S_PER_MIN=60;

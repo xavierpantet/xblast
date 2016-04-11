@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Classe représentant une liste d'objets quelconques.
  * Fournit essentiellement des méthodes statiques utilitaires.
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class Lists {
     private Lists(){}
@@ -27,7 +27,9 @@ public final class Lists {
             Collections.reverse(sub);
             list.addAll(sub);
             return list;
-        }else{throw new IllegalArgumentException("La liste ne peut pas être vide");}
+        }else{
+            throw new IllegalArgumentException("La liste ne peut pas être vide");
+            }
     }
     
     /**
