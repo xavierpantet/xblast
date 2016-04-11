@@ -23,12 +23,12 @@ public class RandomGame {
         
         Board board = Board.ofQuadrantNWBlocksWalled(
                 Arrays.asList(
-                  Arrays.asList(__, __, __, __, __, xx, __),
-                  Arrays.asList(__, __, __, XX, xx, __, xx),
-                  Arrays.asList(__, __, __, __, __, xx, __),
-                  Arrays.asList(xx, __, __, __, XX, __, __),
-                  Arrays.asList(__, __, __, __, __, __, __),
-                  Arrays.asList(xx, __, __, __, __, __, __)));
+                        Arrays.asList(__, __, __, __, __, xx, __),
+                        Arrays.asList(__, XX, xx, XX, xx, XX, xx),
+                        Arrays.asList(__, xx, __, __, __, xx, __),
+                        Arrays.asList(xx, XX, __, XX, XX, XX, XX),
+                        Arrays.asList(__, xx, __, xx, __, __, __),
+                        Arrays.asList(xx, XX, xx, XX, xx, XX, __)));
         
         List<Player> players = new ArrayList<>();
         RandomEventGenerator randomShit=new RandomEventGenerator(2016, 30, 100);

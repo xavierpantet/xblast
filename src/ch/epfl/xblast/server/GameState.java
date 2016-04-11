@@ -453,7 +453,7 @@ public final class GameState {
                 }else{
                     sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                             
-                            .concat(DirectedPosition.stopped(playerDirectedPosition.findFirst(u -> u.position().isCentral())));
+                            .concat(DirectedPosition.stopped(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), p.direction())));
              
                 }
             }
@@ -471,7 +471,7 @@ public final class GameState {
                 }
             }
             
-            if(p.lifeState().canMove() && p.lifeState().state()==State.VULNERABLE && blastedCells1.contains(position.containingCell())){
+            if(p.lifeState().state()==State.VULNERABLE && blastedCells1.contains(position.containingCell())){
                 sequenceLife=p.statesForNextLife();
             }
             else{

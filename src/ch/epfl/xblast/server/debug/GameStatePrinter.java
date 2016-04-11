@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import ch.epfl.xblast.Cell;
+import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.server.Block;
 import ch.epfl.xblast.server.Board;
 import ch.epfl.xblast.server.Bomb;
@@ -74,11 +75,13 @@ public final class GameStatePrinter {
             System.out.println();
         }
         for (Player p: ps) {
-            
-            System.out.println(p.id() +" a "+ p.lives()+ " vies restantes ("+p.lifeState().state()+")");
+            if(p.id()==PlayerID.PLAYER_4){
+            /*System.out.println(p.id() +" a "+ p.lives()+ " vies restantes ("+p.lifeState().state()+")");
             System.out.println("Next IS : "+p.lifeStates().tail().head().state());
             System.out.println("bombes max : "+p.maxBombs()+", portée : "+p.bombRange());
-            System.out.println(p.position().containingCell() + " -> " + p.position().distanceToCentral());
+            System.out.println(p.position().containingCell() + " -> " + p.position().distanceToCentral());*/
+            System.out.println(p.position());
+            System.out.println(p.position().distanceToCentral());}
             System.out.println("");
         
         }
