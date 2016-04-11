@@ -70,29 +70,36 @@ public class RandomTestGame {
         RandomEventGenerator randEvents = new RandomEventGenerator(2016, 30, 100);
         GameState s = new GameState(createBoard(), createPlayers(3, 2, 3, POS_NW, POS_NE, POS_SE, POS_SW));
         while (!s.isGameOver()) {
-            s = s.next(randEvents.randomSpeedChangeEvents(), randEvents.randomBombDropEvents());
-
+            Map<PlayerID, Optional<Direction>> randSpeed = randEvents.randomSpeedChangeEvents();
+            s = s.next(randSpeed, randEvents.randomBombDropEvents());
             for(Player p: s.players()) {
                 List<List<Integer>> pos = GameSimulation.positionsList(pos_iterator.next());
                 Sq<DirectedPosition> seq = p.directedPositions();
+                System.out.println(p.id() + ": " + randSpeed.get(p.id()));
+                System.out.println(p.id() + ": "+p.directedPositions().head().direction());
+                System.out.println(p.position().distanceToCentral());
 
                 for(List<Integer> e: pos) {
                 	DirectedPosition h = seq.head();
                 	if(!GameSimulation.compare(h, e)){
+                	System.out.println(p.id());
                 	System.out.println(h.position());
                 	System.out.println(e);
                 	System.out.println(s.ticks());
                 	System.out.println(h.direction() + " - " + Direction.values()[e.get(2)]);
+                	System.out.println(p.directedPositions().head().direction() + " - " + Direction.values()[e.get(2)]);
                 	System.out.println(h.position().distanceToCentral());
                 	System.out.println(p.lifeState().state());
+                	System.out.println(s.board().blockAt(p.position().containingCell().neighbor(Direction.values()[e.get(2)])));
                 	s = s.next(randEvents.randomSpeedChangeEvents(), randEvents.randomBombDropEvents());
                 	System.out.println(h.position());
                     System.out.println(e);
                     System.out.println(s.ticks());
                     System.out.println(h.direction() + " - " + Direction.values()[e.get(2)]);
+                    System.out.println(p.directedPositions().head().direction() + " - " + Direction.values()[e.get(2)]);
                     System.out.println(h.position().distanceToCentral());
                     System.out.println(p.lifeState().state());
-                    System.out.println(s.board().blockAt(p.position().containingCell().neighbor(h.direction())));
+                    System.out.println(s.board().blockAt(p.position().containingCell().neighbor(Direction.values()[e.get(2)])));
                 	}
                 	assertTrue(GameSimulation.compare(h, e));
 

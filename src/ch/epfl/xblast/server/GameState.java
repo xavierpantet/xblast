@@ -448,13 +448,11 @@ public final class GameState {
                       
                         sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                                 .concat(DirectedPosition.moving(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), directionToGo.get())));
-                     
                     }
                 }else{
                     sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                             
                             .concat(DirectedPosition.stopped(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), p.direction())));
-             
                 }
             }
             else{
