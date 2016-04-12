@@ -6,51 +6,58 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Classe représentant une liste d'objets quelconques.
- * Fournit essentiellement des méthodes statiques utilitaires.
+ * Classe générique représentant une liste d'objets quelconques.
+ * Fournit uniquement des méthodes statiques utilitaires applicables à des listes.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class Lists {
     private Lists(){}
 
     /**
-     * Retourne un miroir de la liste passée en paramètre ou IllegalArgumentException si
-     * celle-ci est vide
-     * @param la liste à laquelle on va appliquer le miroir
-     * @return un miroir de la liste en entrée
+     * Retourne un miroir de la liste passée en paramètre ou IllegalArgumentException si celle-ci est vide.
+     * @param l la liste à laquelle on va appliquer le miroir
+     * @return un miroir de la liste l
      * @throws IllegalArgumentException
      */
     public static <T> List<T> mirrored(List<T> l) throws IllegalArgumentException{
         if(!l.isEmpty()){
+            // On copie l
             List<T> list = new ArrayList<T>(l);
             List<T> sub = new ArrayList<T>(list.subList(0, list.size()-1));
+            
+            // On inverse la sous-liste
             Collections.reverse(sub);
+            
+            // On concatène les deux listes
             list.addAll(sub);
             return list;
-        }else{
+        }
+        else{
             throw new IllegalArgumentException("La liste ne peut pas être vide");
-            }
+        }
     }
     
     /**
-     * Calcule de manière récursive l'ensemble des combinaisons possibles sur une liste.
-     * @param liste simple
-     * @return une liste des combinaisons de la liste donnée
+     * Calcule de manière récursive l'ensemble des combinaisons possibles des éléments d'une sur une liste.
+     * @param l la liste dont on veut calculer les permutations
+     * @return une liste des combinaisons des éléments de l
      */
     public static <T> List<List<T>> permutations(List<T> l){
         int size = l.size();
         
-        // Si le tableau est vide ou qu'il contient 1 élément
+        // Si la liste contient 0 ou 1 élément
         if(size==0 || size==1){
-            // On retourne un tableau de tableau vide, ou un tableau contenant un tableau du premier élément
+            // On retourne un tableau de tableaux vide, ou un tableau contenant un tableau du premier élément
             List<List<T>> trivialArray = (size==0)? new ArrayList<>(Arrays.asList(Arrays.asList())) : new ArrayList<>(Arrays.asList(Arrays.asList(l.get(0))));
             return trivialArray;
         }
         else{
             T firstElement = l.get(0);
             
-            // Cas d'arrêt de la récursion
-            // Permutations d'un tableau [X, Y] --> [[X, Y], [Y, X]]
+            /*
+             *  BOTTOM OF THE RECURSION
+             *  Permutations d'un tableau de deux éléments: [X, Y] --> [[X, Y], [Y, X]]
+             */
             if(size==2){
                 List<List<T>> queue = new ArrayList<>();
                 queue.add(new ArrayList<>(l));
@@ -59,9 +66,8 @@ public final class Lists {
                 return queue;
             }
             
-            // Si le tableau contient plus de deux éléments
+            // RECURSION
             else{
-                
                 // On applique la récursion sur la queue du tableau
                 List<List<T>> recursive = new ArrayList<>();
                 recursive.addAll(permutations(l.subList(1, size)));

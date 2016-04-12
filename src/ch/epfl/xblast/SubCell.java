@@ -6,17 +6,29 @@ package ch.epfl.xblast;
  */
 
 public final class SubCell {
-    private final int x;
-    private final int y;
-    public final static int COLUMNS=16;
-    public final static int ROWS=16;
-    public final static int midCaseX = (int) Math.floor(COLUMNS/2);
-    public final static int midCaseY = (int) Math.floor(ROWS/2);
     
     /**
-     * Constructeur de la subcell
-     * @param x
-     * @param y
+     * Nombre de colonnes d'une case.
+     */
+    public final static int COLUMNS=16;
+    
+    /**
+     * Nombre de lignes d'une case.
+     */
+    public final static int ROWS=16;
+    
+    // Deux variables utiles au fonctionnement de la classe
+    private final static int midCaseX = (int) Math.floor(COLUMNS/2);
+    private final static int midCaseY = (int) Math.floor(ROWS/2);
+    
+    // Attributs privés
+    private final int x;
+    private final int y;
+    
+    /**
+     * Constructeur de sous-case
+     * @param x l'abscisse
+     * @param y l'ordonnée
      */
     public SubCell(int x, int y){
         this.x=Math.floorMod(x, 240);
@@ -25,7 +37,7 @@ public final class SubCell {
     
     /**
      * Retourne l'abscisse de la cellule
-     * @return position x
+     * @return position x - abscisse
      */
     public int x(){
         return this.x;
@@ -33,7 +45,7 @@ public final class SubCell {
     
     /**
      * Retourne l'ordonnée de la cellule
-     * @return position y
+     * @return position y - ordonnée
      */
     public int y(){
         return this.y;
@@ -41,9 +53,8 @@ public final class SubCell {
     
     /**
      * Calcule la sous-case centrale d'une case donnée en paramètre.
-     * Si la largeur, respectivement la hauteur, d'une cellule est paire, alors on retournera la sous-case
-     * qui se trouve juste à gauche, respectivement juste en-dessus, du milieu de la cellule.
-     * @param la cellule
+     * Si la largeur, respectivement la hauteur, d'une cellule est paire, alors on retournera la sous-case qui se trouve juste à gauche, respectivement juste en-dessus, du milieu de la cellule.
+     * @param cell  la cellule dont on veut calculer la sous-case centrale
      * @return la sous-case centrale de cell
      */
     public static SubCell centralSubCellOf(Cell cell){
@@ -56,7 +67,7 @@ public final class SubCell {
     }
     
     /**
-     * Retourne la distance de Manhattan de la sous-case à la sous-case centrale
+     * Retourne la distance de Manhattan de la sous-case à la sous-case centrale.
      * @return distance au centre
      */
     public int distanceToCentral() {
@@ -72,8 +83,8 @@ public final class SubCell {
     }
     
     /**
-     * Retourne vrai si et seulement si la sous-case est une sous-case centrale
-     * @return vrai si et seulement si la sous-case est une sous-case centrale
+     * Retourne vrai si et seulement si la sous-case est une sous-case centrale.
+     * @return vrai <=> la sous-case est une sous-case centrale
      */
     public boolean isCentral(){
         return distanceToCentral()==0;
@@ -81,7 +92,8 @@ public final class SubCell {
     
     /**
      * Retourne la sous-case voisine, dans la direction donnée.
-     * @return sous-case voisine
+     * @param d la direction
+     * @return sous-case voisine dans la direction d
      */
     public SubCell neighbor(Direction d){
         switch(d){
@@ -116,9 +128,8 @@ public final class SubCell {
     }
     
     /**
-     * Redéfinit la méthode equals de Object et retourne vrai si et seulement si 
-     * l'objet that est une sous-case et ses coordonnées normalisées sont identiques à celles de la sous-case réceptrice
-     * @param that
+     * Redéfinition de equals de Object et retourne vrai si et seulement si l'objet that est une sous-case et ses coordonnées normalisées sont identiques à celles de la sous-case réceptrice.
+     * @param that  la sous-case à comparer
      * @return vrai <=> this = that
      */
     @Override
@@ -136,18 +147,17 @@ public final class SubCell {
     }
     
     /**
-     * Retourne un identifiant unique pour la sous-case
-     * @return un hashcode unique
+     * Retourne un une valeur de hachage pour la sous-case
+     * @return une valeur de hachage
      */
     @Override
     public int hashCode(){
         return y*Cell.COLUMNS*COLUMNS+x;
     }
+    
     /**
-     * Redéfinit la méthode toString de Object et 
-     * retourne une représentation textuelle de la sous-case, 
-     * constituée de ses coordonnées entre parenthèses.
-     * @return version textuelle
+     * Redéfinition de toString de Object et retourne une représentation textuelle de la sous-case, constituée de ses coordonnées entre parenthèses.
+     * @return la sous-case au format (x, y)
      */
     @Override
     public String toString(){

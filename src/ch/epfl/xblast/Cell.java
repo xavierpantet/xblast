@@ -6,24 +6,44 @@ import java.util.List;
 import java.lang.Math;
 
 /**
- * Classe représentant une case du tableau de jeu.
+ * Classe représentant une case (cellule) du tableau de jeu.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class Cell {
     
-    // Attributs statiques du plateau de jeu
+    /**
+     * Nombre de colonnes total d'un plateau de jeu.
+     */
     public final static int COLUMNS=15;
+    
+    /**
+     * Nombre de lignes total d'un plateau de jeu.
+     */
     public final static int ROWS=13;
+    
+    /**
+     * Nombre de cases (cellules) total d'un plateau de jeu.
+     */
     public final static int COUNT=COLUMNS*ROWS;
+    
+    /**
+     * Les cases d'un plateau de jeu selon l'ordre de lecture.
+     */
     public final static List<Cell> ROW_MAJOR_ORDER=Collections.unmodifiableList(rowMajorOrder());
+    
+    /**
+     * Les cases d'un plateau de jeu en spirale.
+     */
     public final static List<Cell> SPIRAL_ORDER=Collections.unmodifiableList(spiralOrder());
+    
+    // Attributs privés
     private final int x;
     private final int y;
     
     /**
-     * Constructeur de cellule
-     * @param x
-     * @param y
+     * Constructeur de cellule.
+     * @param x l'abscisse
+     * @param y l'ordonnée
      */
     public Cell(int x, int y){
         this.x=Math.floorMod(x, COLUMNS);
@@ -31,29 +51,25 @@ public final class Cell {
     }
     
     /**
-     * Retourne l'abscisse de la cellule
-     * @return position x
+     * Retourne l'abscisse de la cellule.
+     * @return position x (abscisse)
      */
     public int x(){
         return this.x;
     }
     
     /**
-     * Retourne l'ordonnée de la cellule
-     * @return position y
+     * Retourne l'ordonnée de la cellule.
+     * @return position y (ordonnée)
      */
     public int y(){
         return this.y;
     }
     
-    /**
-     * Retourne le tableau des cellules du plateau triées dans le sens de lecture.
-     * @return cellules en ROW_MAJOR_ORDER
-     */
     private static ArrayList<Cell> rowMajorOrder(){
         ArrayList<Cell> cells = new ArrayList<Cell>();
         
-        // On parcourt simplement le tableau en ROW_MAJOR_ORDER et on ajoute les cellules
+        // On parcourt simplement le tableau selon l'ordre de lecture et on créé les cellules correspondantes
         for(int i=0; i<ROWS; i++){
             for(int j=0; j<COLUMNS; j++){
                 cells.add(new Cell(j, i));
@@ -62,11 +78,9 @@ public final class Cell {
         return cells;
     }
     
-    /**
-     * Retourne le tableau des cellules du plateau triées en spirale.
-     * @return cellules en SPIRAL_ORDER
-     */
     private static ArrayList<Cell> spiralOrder(){
+        // Voir algorithme proposé sur le site du cours
+        
         
         // On construit les tableaux ix et iy
         List<Integer> ix = new ArrayList<Integer>();
@@ -105,8 +119,8 @@ public final class Cell {
     }
     
     /**
-     * Retourne l'index de la case selon l'ordre ROW_MAJOR_ORDER
-     * @return index de la case en ROW_MAJOR_ORDER
+     * Retourne l'index de la case selon l'ordre de lecture (ROW_MAJOR_ORDER).
+     * @return l'index de la case en ROW_MAJOR_ORDER
      */
     public int rowMajorIndex(){
         return y*COLUMNS+x;
@@ -114,9 +128,9 @@ public final class Cell {
     
     /**
      * Retourne la case voisine dans la direction d, en tenant compte du tore.
-     * Par défaut, on retourne null
-     * @param la direction dans laquelle se trouve la case voisine
-     * @return la case voisine
+     * Par défaut, on retourne null.
+     * @param d la direction de la case voisine désirée
+     * @return la case voisine dans la direction d
      */
     public Cell neighbor(Direction d){
         // On détecte les éventuels problèmes liés au tore
@@ -139,9 +153,9 @@ public final class Cell {
         else if(bottomProblem){
             return ROW_MAJOR_ORDER.get(indexOfThisCell-(ROWS-1)*COLUMNS);
         }
+        
         // Si on se trouve au milieu du plateau
         else{
-            // On teste d
             switch(d){
             case E:
                 return ROW_MAJOR_ORDER.get(indexOfThisCell+1);
@@ -158,17 +172,16 @@ public final class Cell {
     }
     
     /**
-     * Redéfinition de equals. Retourne vrai <=> that est une classe
-     * dont les coordonnées normalisées sont les mêmes que this
-     * @param that
-     * @return vrai si une case est égale à une autre
+     * Redéfinition de equals. Retourne vrai <=> that est une classe dont les coordonnées normalisées sont les mêmes que this.
+     * @param that  la cellule à tester
+     * @return vrai <=> this=that
      */
     @Override
     public boolean equals(Object that){
-        
         // Vérifie si this et that sont des instances de la même classe
-        if (that!= null && (that.getClass().equals(this.getClass()))){
+        if (that!=null && (that.getClass().equals(this.getClass()))){
             if (that instanceof Cell){
+                
                 // On vérifie si les coordonnées normalisées sont les mêmes
                 Cell c = (Cell) that;
                 return (this.x==c.x() && this.y==c.y());
@@ -179,8 +192,8 @@ public final class Cell {
     }
     
     /**
-     * Retourne une valeur de hashage unique pour la case
-     * return un hashcode unique
+     * Retourne une valeur de hachage pour la case.
+     * return une valeur de hachage
      */
     @Override
     public int hashCode(){
@@ -188,8 +201,8 @@ public final class Cell {
     }
     
     /**
-     * Redéfinit toString
-     * @return coordonnées de la case
+     * Redéfinition de toString.
+     * @return les coordonnées de la case au format (x, y)
      */
     @Override
     public String toString(){

@@ -9,9 +9,9 @@ public final class ArgumentChecker {
     private ArgumentChecker(){}
     
     /**
-     * Permet de vérifier qu'un entier est positif ou nul
-     * @param value
-     * @return value si >=0, IllegalArgumentException sinon 
+     * Permet de vérifier qu'un entier est positif ou nul.
+     * @param value la valeur à vérifier
+     * @return value si >=0 ou lève IllegalArgumentException sinon 
      * @throws IllegalArgumentException
      */
     public static int requireNonNegative(int value) throws IllegalArgumentException{
