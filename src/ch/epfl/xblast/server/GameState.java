@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.Set;
 
 import ch.epfl.cs108.Sq;
+import ch.epfl.xblast.ArgumentChecker;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.Lists;
@@ -37,31 +38,26 @@ public final class GameState {
     
     
     /**
+     * Constructeur de GameState.
      * Construit l'état du jeu pour le coup d'horloge, le plateau de jeu, les joueurs, les bombes, les explosions et les particules d'explosion (blasts) donnés ; 
      * lève l'exception IllegalArgumentException si le coup d'horloge est (strictement) négatif ou 
      * si la liste des joueurs ne contient pas exactement 4 éléments, 
-     * ou l'exception NullPointerException si l'un des cinq derniers arguments est nul
-     * @param coup d'horloge
-     * @param plateau
-     * @param joueurs
-     * @param bombes
-     * @param explosions
-     * @param particules
+     * ou l'exception NullPointerException si l'un des cinq derniers arguments est nul.
+     * @param ticks (int) le coup d'horloge
+     * @param board (Board) le plateau
+     * @param players   (List<Player>) la liste des joueurs
+     * @param bombs (List<Bomb>) la liste des bombes
+     * @param explosions    (List<Sq<Sq<Cell>>>) la liste des explosions
+     * @param blasts    (List<Sq<Cell>>) la liste des particules d'explosion
      */
     public GameState(int ticks, Board board, List<Player> players, List<Bomb> bombs, List<Sq<Sq<Cell>>> explosions, List<Sq<Cell>> blasts) throws IllegalArgumentException, NullPointerException{
-        
-        int playerSize = players.size();
-        
-        if ((ticks<0)||(playerSize != 4)){
-            throw new IllegalArgumentException();
-        }
-        if ((players.get(0)==null)||(players.get(1)==null)||(players.get(2)==null)||(players.get(3)==null)){
-            throw new NullPointerException();
-        }
-        
-        this.ticks = ticks;
+        this.ticks = ArgumentChecker.requireNonNegative(ticks);
         this.board=Objects.requireNonNull(board);
-        this.players = Collections.unmodifiableList(new LinkedList<Player>(players));
+        
+        if(players.size()==4){
+            this.players = Collections.unmodifiableList(new LinkedList<Player>(players));
+        }else{throw new IllegalArgumentException("La liste des joueurs doit contenir 4 éléments");}
+        
         this.bombs = Collections.unmodifiableList(new LinkedList<Bomb>(bombs));
         this.explosions = Collections.unmodifiableList(new LinkedList<Sq<Sq<Cell>>>(explosions));
         this.blasts = Collections.unmodifiableList(new LinkedList<Sq<Cell>>(blasts));
@@ -70,17 +66,15 @@ public final class GameState {
     
     /**
      * Construit l'état du jeu pour le plateau et les joueurs donnés, pour le coup d'horloge 0 et aucune bombe, explosion ou particule d'explosion.
-     * @param plateau
-     * @param joueurs
+     * @param board (Board) le plateau de jeu
+     * @param players   (List<Player>) les joueurs
      */
     public GameState(Board board, List<Player> players){
-
-       this(0, board, players, new ArrayList<Bomb>(), new ArrayList<Sq<Sq<Cell>>>(), new ArrayList<Sq<Cell>>());
-       //(Arrays.asList(new Bomb(PlayerID.PLAYER_1, new Cell(7, 7), 10, 3),new Bomb(PlayerID.PLAYER_1, new Cell(6, 7), 20, 3),new Bomb(PlayerID.PLAYER_1, new Cell(5, 7), 30, 3))
+       this(0, board, players, new LinkedList<Bomb>(), new LinkedList<Sq<Sq<Cell>>>(), new LinkedList<Sq<Cell>>());
     }
     
     /**
-     * Retourne le coup d'horloge correspondant à l'état
+     * Retourne le coup d'horloge correspondant à l'état.
      * @return le coup d'horloge
      */
     public int ticks(){
@@ -88,47 +82,37 @@ public final class GameState {
     }
     
     /**
-     * Retourne vrai si et seulement si l'état correspond à une partie terminée, 
-     * c-à-d si le nombre de coups d'horloge d'une partie (Ticks.TOTAL_TICKS) est écoulé, 
-     * ou s'il n'y a pas plus d'un joueur vivant
-     * @return vrai <=> partie terminée
+     * Retourne vrai <=> l'état correspond à une partie terminée, c-à-d si le nombre de coups d'horloge d'une partie (Ticks.TOTAL_TICKS) est écoulé, ou s'il n'y a pas plus d'un joueur vivant.
+     * @return vrai <=> la partie est terminée
      */
     public boolean isGameOver(){
+        
+        // Check du temps
         if (this.ticks>Ticks.TOTAL_TICKS){
             return true;
         }
         
+        // Check du nombre de joueurs vivants
         int nbOfAlivePlayers = 0;
-    
-        for (int i=0; i<4; i++){
-            if (players.get(i).isAlive()){
-              
-                nbOfAlivePlayers++;
-           
-            }
+        for(Player p : players){
+            if(p.isAlive()){nbOfAlivePlayers++;}
         }
         
-        if (nbOfAlivePlayers<=1){
-            return true;
-        } else {
-            return false;
-        }
+        return nbOfAlivePlayers<=1;
     }
 
     /**
-     * Retourne le temps restant dans la partie, en secondes
-     * @return le temps restant
+     * Retourne le temps restant dans la partie, en secondes.
+     * @return le temps restant en secondes
      */
     public double remainingTime(){
         return ((double) Ticks.TOTAL_TICKS-this.ticks)/(double) Ticks.TICKS_PER_SECOND;
     }
     
     /**
-     * Retourne un Optional sur le vainqueur de la partie
-     * Si un vainqueur est défini, on le retourne,
-     * sinon on retourne un Optional vide
-     * @author Xavier Pantet (260473)
-     * @return le vainqueur
+     * Retourne un Optional sur le vainqueur de la partie.
+     * Si un vainqueur est défini, on le retourne, sinon on retourne un Optional vide.
+     * @return le vainqueur de la partie, s'il existe
      */
     public Optional<PlayerID> winner(){
         Optional<PlayerID> winner = Optional.empty();
@@ -140,30 +124,29 @@ public final class GameState {
     }
     
     /**
-     * Retourne le plateau de jeu
+     * Retourne le plateau de jeu.
      * @return le plateau de jeu
      */
     public Board board(){
-        return this.board;
+        return board;
     }
 
     /**
-     * Retourne les joueurs, sous la forme d'une liste contenant toujours 4 éléments, car même les joueurs morts en font partie
-     * @return les joueurs
+     * Retourne les joueurs, sous la forme d'une liste contenant toujours 4 éléments, car même les joueurs morts en font partie.
+     * @return les joueurs morts et vivants
      */
     public List<Player> players(){
-        return this.players;
+        return players;
     }
     
     /**
-     * Retourne les joueurs vivants, c-à-d ceux ayant au moins une vie
+     * Retourne les joueurs vivants, c-à-d ceux ayant au moins une vie.
      * @return les joueurs vivants
      */
     public List<Player> alivePlayers(){
+        List<Player> alivePlayers = new LinkedList<Player>();
         
-        List<Player> alivePlayers = new ArrayList<Player>();
-        
-        for(Player p:this.players()){
+        for(Player p: players){
             if(p.isAlive()){
                 alivePlayers.add(p); 
             }
@@ -172,26 +155,23 @@ public final class GameState {
     }
     
     /**
-     * Retourne une table associative des Bombes avec les cases qu'elles occupent
-     * @author Xavier Pantet (260473)
-     * @return une association cases-bombes
+     * Retourne une table associative des bombes avec les cases qu'elles occupent.
+     * @return une table associative position-bombe
      */
     public Map<Cell, Bomb> bombedCells(){
-        Map<Cell, Bomb> bombMap= new HashMap<>();
+        Map<Cell, Bomb> bombMap=new HashMap<>();
         
         for(Bomb b:bombs){
             bombMap.put(b.position(), b);
         }
-       
         return bombMap;
     }
     
     /**
-     * Retourne l'ensemble des cases sur lesquelles se trouve au moins une particule d'explosion
-     * @return
+     * Retourne l'ensemble des cases sur lesquelles se trouve au moins une particule d'explosion.
+     * @return les cases sur lesquelles se trouvent une particule d'explosion
      */
     public Set<Cell> blastedCells(){
-        
         Set<Cell> cellSet = new HashSet<>();
         
         for (Sq<Cell> cell : blasts){
@@ -201,17 +181,16 @@ public final class GameState {
     }
     
     /**
-     * Retourne l'état du jeu pour le coup d'horloge suivant, 
-     * en fonction de l'actuel et des événements donnés (speedChangeEvents et bombDropEvents)
-     * @param speedChangeEvents
-     * @param bombDropEvents
-     * @return
+     * Retourne l'état du jeu pour le coup d'horloge suivant, en fonction de l'actuel et des événements donnés (speedChangeEvents et bombDropEvents).
+     * @param speedChangeEvents (Map<PlayerID, Optional<Direction>>) les événements de changement de direction
+     * @param bombDropEvents    (Set<PlayerID> les événements de dépôt de bombe)
+     * @return l'état du jeu au tick suivant
      */
     public GameState next(Map<PlayerID, Optional<Direction>> speedChangeEvents, Set<PlayerID> bombDropEvents){
         
         // Préliminaires: calcul des permutations
-        List<PlayerID> playersPermutId = new ArrayList<>(PERMUTATIONS.get(ticks%PERMUTATIONS.size()));
-        List<Player> playersPermut = new ArrayList<>();
+        List<PlayerID> playersPermutId = new LinkedList<>(PERMUTATIONS.get(ticks%PERMUTATIONS.size()));
+        List<Player> playersPermut = new LinkedList<>();
         for(PlayerID id:playersPermutId){
             for(Player p:players){
                 if(p.id().equals(id)){
@@ -234,18 +213,19 @@ public final class GameState {
         Set<Cell> consumedBonuses = new HashSet<>();
         Map<PlayerID, Bonus> playerBonuses = new HashMap<PlayerID, Bonus>();
         
-        Cell playerCase;
+        Cell playerCell;
         PlayerID playerID;
-        for (int i=0; i<playersPermut.size(); i++){
-            playerCase = playersPermut.get(i).position().containingCell();
-            playerID = playersPermut.get(i).id();
+        
+        for(Player p : playersPermut){
+            playerCell = p.position().containingCell();
+            playerID = p.id();
             
 
-            if(playersPermut.get(i).position().isCentral() && board.blockAt(playerCase)==Block.BONUS_BOMB && !consumedBonuses.contains(playerCase)){
-                consumedBonuses.add(playerCase);
+            if(p.position().isCentral() && board.blockAt(playerCell)==Block.BONUS_BOMB && !consumedBonuses.contains(playerCell)){
+                consumedBonuses.add(playerCell);
                 playerBonuses.put(playerID, Bonus.INC_BOMB);
-            } else if (playersPermut.get(i).position().isCentral() && board.blockAt(playerCase)==Block.BONUS_RANGE && !consumedBonuses.contains(playerCase)){
-                consumedBonuses.add(playerCase);
+            }else if (p.position().isCentral() && board.blockAt(playerCell)==Block.BONUS_RANGE && !consumedBonuses.contains(playerCell)){
+                consumedBonuses.add(playerCell);
                 playerBonuses.put(playerID, Bonus.INC_RANGE);
             }
         }
@@ -254,6 +234,7 @@ public final class GameState {
         Board nextBoard = nextBoard(board, consumedBonuses, blastedCells);
         
         // (3) Explosions
+        
         // Explosions dues à d'autres explosions
         List<Sq<Sq<Cell>>> nextExplosion = new LinkedList<>();
         for(Bomb b:bombs){
@@ -268,31 +249,35 @@ public final class GameState {
         
         // Newly dropped Bombs
         List<Bomb> newBombs = newlyDroppedBombs(playersPermut, bombDropEvents, bombs);
+        newBombs.addAll(bombs);
+        
+        List<Bomb> nextBombs = new LinkedList<>();
 
-        for (Bomb b:bombs){
+        // (5) Bombes
+        for (Bomb b : newBombs){
             if(b.fuseLength()==1 || blastedCells.contains(b.position())){
                 nextExplosion.addAll(b.explosion());
             }else{
-                newBombs.add(new Bomb(b.ownerId(), b.position(), b.fuseLengths().tail(), b.range()));
+                nextBombs.add(new Bomb(b.ownerId(), b.position(), b.fuseLengths().tail(), b.range()));
             }
         }
         
-        // Pour 5, on créé un set contenant les cellules portant une bombe
+        // Pour 6, on créé un set contenant les cellules portant une bombe
         Set<Cell> bombedCells = new HashSet<Cell>();
-        for (Bomb b:newBombs){
+        for (Bomb b:nextBombs){
             bombedCells.add(b.position());
         }
 
-        // (5) NextPlayers
+        // (6) NextPlayers
         List<Player> nextPlayers =  nextPlayers(players, playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
         
-        return new GameState(ticks+1, nextBoard, nextPlayers, newBombs, nextExplosion, nextBlasts);
+        return new GameState(ticks+1, nextBoard, nextPlayers, nextBombs, nextExplosion, nextBlasts);
     }
     
     
     private static List<Sq<Sq<Cell>>> nextExplosions(List<Sq<Sq<Cell>>> explosions0){
-        List<Sq<Sq<Cell>>> newExplosions=new ArrayList<>();
-        
+        // Les prochaines explosions sont la queue de chaque élément de explosions0
+        List<Sq<Sq<Cell>>> newExplosions=new LinkedList<>();
         for (Sq<Sq<Cell>> sq : explosions0) {
             if(!sq.tail().isEmpty()){
                 newExplosions.add(sq.tail());
@@ -301,14 +286,12 @@ public final class GameState {
         return newExplosions;
     }
     
-    
     /**
-     * Calcule l'état futur du plateau de jeu
-     * @author Xavier Pantet (260473)
-     * @param plateau0
-     * @param bonus consommés
-     * @param particules
-     * @return l'état futur du plateau de jeu
+     * Calcule l'état futur des explosions
+     * @param board0    (Board) le plateau de jeu actuel
+     * @param consumedBonuses   (Set<Cell>) les positions des bonus consommés par le joueurs
+     * @param blastedCells1 (Set<Cell>) les positions des particules d'explosion futures
+     * @return le plateau de jeu suivant
      */
     private static Board nextBoard(Board board0, Set<Cell> consumedBonuses, Set<Cell> blastedCells1){
         List<Sq<Block>> board1 = new ArrayList<>();
@@ -364,8 +347,7 @@ public final class GameState {
                 if(!foundFree){
                     board1.add(Sq.constant(currentCell).limit(Ticks.BONUS_DISAPPEARING_TICKS)
                             .concat(Sq.constant(Block.FREE)));
-                }
-                else{
+                }else{
                     board1.add(board0.blocksAt(c).tail());
                 }
             }
@@ -379,16 +361,13 @@ public final class GameState {
     }
     
     /**
-     * Retourne les nouvelles bombes déposées par les joueurs, tenant compte
-     * des piorités et de leurs droits
-     * @author Xavier Pantet (260474)
-     * @param joueurs0
-     * @param dépôts de bombes
-     * @param bombes actuelles
-     * @return les nouvelles bombes
+     * Retourne les nouvelles bombes déposées par les joueurs, tenant compte des priorités et de leurs droits.
+     * @param players0  (List<Player>) les joueurs ordonnés selon les permutations
+     * @param bombDropEvents    (Set<PlayerID>) événements de dépôts de bombes
+     * @param bombs0    (List<Bomb>) les bombes actuelles
+     * @return les nouvelles bombes déposées par les joueurs
      */
     private static List<Bomb> newlyDroppedBombs(List<Player> players0, Set<PlayerID> bombDropEvents, List<Bomb> bombs0){
-        
         // On copie bombs1 pour n'itérer que sur un seul tableau quand on teste si une case contient déjà une bombe ou non
         List<Bomb> bombs1 = new LinkedList<>(bombs0);
         int nbEvents=bombDropEvents.size();
@@ -411,8 +390,7 @@ public final class GameState {
                     
                     // Si c'est tout bon
                     if(nbBombs<p.maxBombs() && !cellAlreadyOccupied){
-                        Bomb b = p.newBomb();
-                        bombs1.add(new Bomb(b.ownerId(), b.position(), b.fuseLength()-1, b.range()));
+                        bombs1.add(p.newBomb());
                     }
                 }
             }
@@ -421,10 +399,17 @@ public final class GameState {
         return bombs1;
     }
     
-    
-    
+    /**
+     * Calcule l'état des joueurs au coup d'horloge suivant.
+     * @param players0  (List<Player>) les joueurs actuels
+     * @param playerBonuses (Map<PlayerID, Bonus>) les bonus consommés par les joueurs
+     * @param bombedCells1  (Set<Cell>) les cellules contenant une bombe
+     * @param board1    (Board) le plateau
+     * @param blastedCells1 (Set<Cell>) les cellules sur lesquelles se trouvent des particules d'explosions
+     * @param speedChangeEvents (Map<PlayerID, Optional<Direction>>) les événements de changement de direction
+     * @return les joueurs au tick suivant
+     */
     private static List<Player> nextPlayers(List<Player> players0, Map<PlayerID, Bonus> playerBonuses, Set<Cell> bombedCells1, Board board1, Set<Cell> blastedCells1, Map<PlayerID, Optional<Direction>> speedChangeEvents){
-        
         Sq<DirectedPosition> sequencePos;
         DirectedPosition nextSequencePos;
         Sq<LifeState> sequenceLife;
@@ -439,31 +424,50 @@ public final class GameState {
             //Si le joueur a un desir de changement de direction
             if(speedChangeEvents.containsKey(p.id())){
                 Optional<Direction> directionToGo=speedChangeEvents.get(p.id());
-                if(directionToGo.isPresent()){
                 
+                // S'il s'agit d'une direction définie
+                if(directionToGo.isPresent()){
+                    
+                    // S'il s'agit d'une direction parallèle, il peut changer directement
                     if(p.direction().isParallelTo(directionToGo.get())){
-                  
                         sequencePos = DirectedPosition.moving(new DirectedPosition(position, directionToGo.get()));
-                    } else {
+                    }
+                    
+                    // Sinon, il doit aller jusqu'à la prochaine sous-case centrale
+                    else {
                           sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                                 .concat(DirectedPosition.moving(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), directionToGo.get())));
                     }
-                }else{
+                }
+                
+                // Si le joueur veut s'arrêter
+                else{
+                    
+                    // On doit d'abord vérifier que le joueur n'avait pas prévu de changer de direction
                     Direction dirTest = p.direction();
                     boolean found=false;
                     Sq<DirectedPosition> sq = p.directedPositions();
                     DirectedPosition temp;
+                    
+                    // Donc on doit itérer sur les 15 prochaines sous-cases (15 est la distance maximale que le joueur doit parcourir avant d'atteindre la prochaine sous-case centrale)
                     for(int i=0; i<15; i++){
                         temp=sq.head();
+                        
+                        // Si on détecte, un changement de direction...
                         if(!temp.direction().equals(dirTest)){
                             found=true;
+                            break;
                         }
                         sq=sq.tail();
                     }
+                    
+                    // Si le joueur ne voulait pas changer, il gardera sa direction actuelle
                     if(!found){
                         sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                             .concat(DirectedPosition.stopped(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), p.direction())));
                     }
+                    
+                    // Si le joueur voulait changer, on doit prendre la direction qu'il voulait utiliser
                     else{
                         sequencePos = playerDirectedPosition.takeWhile(u -> !u.position().isCentral())
                                 .concat(DirectedPosition.stopped(new DirectedPosition(playerDirectedPosition.findFirst(u -> u.position().isCentral()).position(), sq.head().direction())));
@@ -471,60 +475,69 @@ public final class GameState {
                     
                 }
             }
+            
+            // Si le joueur ne veut pas changer, on ne change rien
             else{
                 sequencePos=playerDirectedPosition;
             }
+            
+            // On prend simplement sa prochaine position dirigée
             nextSequencePos=sequencePos.head();
             
-         
+            // Si le joueur peut bouger
             if(p.lifeState().canMove()){
+                
+                // Et qu'il n'est pas bloqué par un mur
                 if(!p.position().isCentral() || (p.position().isCentral() && board1.blockAt(p.position().containingCell().neighbor(nextSequencePos.direction())).canHostPlayer())){
+                    
+                    // Et qu'il n'est pas bloqué par une bombe
                     if((p.position().distanceToCentral()!=6) || !(p.position().distanceToCentral()==6 && bombedCells1.contains(p.position().containingCell()) && sequencePos.findFirst(u -> u.position().isCentral()).position().equals(SubCell.centralSubCellOf(p.position().containingCell())))){
+                        
+                        // Alors, on fait évoluer la position dirigée
                         sequencePos=sequencePos.tail();
                     }
                 }
             }
             
+            // On met éventuellement à jour l'état de vie
             if(p.lifeState().state()==State.VULNERABLE && blastedCells1.contains(sequencePos.head().position().containingCell())){
                 sequenceLife=p.statesForNextLife();
             }
             else{
-                
                 sequenceLife=p.lifeStates().tail();
             }
             
+            // On crée le nouveau joueur
             newPlayer = new Player(p.id(), sequenceLife, sequencePos, p.maxBombs(), p.bombRange());
             
+            // Auquel on applique éventuellement les bonus consommés
             if(playerBonuses.containsKey(p.id())){
                 newPlayer = playerBonuses.get(p.id()).applyTo(newPlayer);
             }
-            
             playerList.add(newPlayer);
    
         }
-
         return playerList;
     }
     
-    
-    
-    
-    
     /**
      * Calcule les particules d'explosion pour l'état suivant étant données celles de l'état courant, le plateau de jeu courant et les explosions courantes.
-     * @param particules0
-     * @param plateau0
-     * @param explosions0
+     * @param blasts0   (List<Sq<Cell>>) les particules actuelles
+     * @param board0    (Board) le plateau actuel
+     * @param explosions0   (List<Sq<Sq<Cell>>>) les explosions actuelles
      * @return les nouvelles particules
      */
     private static List<Sq<Cell>> nextBlasts(List<Sq<Cell>> blasts0, Board board0, List<Sq<Sq<Cell>>> explosions0){
-        List<Sq<Cell>> blasts1 = new ArrayList<>();
+        List<Sq<Cell>> blasts1 = new LinkedList<>();
+        
+        // Pour faire évoluer les blasts, on prend simplement la queue de la séquence
         for(Sq<Cell> s:blasts0){
             if(board0.blockAt(s.head()).isFree()){
                 if(!s.tail().isEmpty()){blasts1.add(s.tail());}
             }
         }
         
+        // Et pour les explosions, on prend la tête de chaque élément de la liste
         for(Sq<Sq<Cell>> s:explosions0){
            blasts1.add(s.head());
         }
