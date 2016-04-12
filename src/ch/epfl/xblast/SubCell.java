@@ -4,7 +4,6 @@ package ch.epfl.xblast;
  * Classe représentant une sous-case d'une case du tableau de jeu.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
-
 public final class SubCell {
     
     /**
@@ -27,8 +26,8 @@ public final class SubCell {
     
     /**
      * Constructeur de sous-case
-     * @param x l'abscisse
-     * @param y l'ordonnée
+     * @param x (int) l'abscisse
+     * @param y (int) l'ordonnée
      */
     public SubCell(int x, int y){
         this.x=Math.floorMod(x, 240);
@@ -37,7 +36,7 @@ public final class SubCell {
     
     /**
      * Retourne l'abscisse de la cellule
-     * @return position x - abscisse
+     * @return position x - abscisse (int9
      */
     public int x(){
         return this.x;
@@ -45,7 +44,7 @@ public final class SubCell {
     
     /**
      * Retourne l'ordonnée de la cellule
-     * @return position y - ordonnée
+     * @return position y - ordonnée (int)
      */
     public int y(){
         return this.y;
@@ -54,8 +53,8 @@ public final class SubCell {
     /**
      * Calcule la sous-case centrale d'une case donnée en paramètre.
      * Si la largeur, respectivement la hauteur, d'une cellule est paire, alors on retournera la sous-case qui se trouve juste à gauche, respectivement juste en-dessus, du milieu de la cellule.
-     * @param cell  la cellule dont on veut calculer la sous-case centrale
-     * @return la sous-case centrale de cell
+     * @param cell (Cell) la cellule dont on veut calculer la sous-case centrale
+     * @return la sous-case centrale de la cell (SubCell)
      */
     public static SubCell centralSubCellOf(Cell cell){
         
@@ -68,7 +67,7 @@ public final class SubCell {
     
     /**
      * Retourne la distance de Manhattan de la sous-case à la sous-case centrale.
-     * @return distance au centre
+     * @return distance au centre (int)
      */
     public int distanceToCentral() {
         // Calcul des coordonnées
@@ -83,8 +82,8 @@ public final class SubCell {
     }
     
     /**
-     * Retourne vrai si et seulement si la sous-case est une sous-case centrale.
-     * @return vrai <=> la sous-case est une sous-case centrale
+     * Indique si la sous-case est une sous-case centrale.
+     * @return vrai <=> la sous-case est une sous-case centrale (boolean)
      */
     public boolean isCentral(){
         return distanceToCentral()==0;
@@ -92,8 +91,8 @@ public final class SubCell {
     
     /**
      * Retourne la sous-case voisine, dans la direction donnée.
-     * @param d la direction
-     * @return sous-case voisine dans la direction d
+     * @param d (Direction) la direction donnée
+     * @return sous-case voisine dans la direction d (SubCell)
      */
     public SubCell neighbor(Direction d){
         switch(d){
@@ -117,7 +116,7 @@ public final class SubCell {
     
     /**
      * Retourne la case contenant cette sous-case.
-     * @return la cellule contenante
+     * @return la cellule contenant la sous-case (Cell)
      */
     public Cell containingCell(){
         // Nombre de cases en largeur et longueur
@@ -129,8 +128,8 @@ public final class SubCell {
     
     /**
      * Redéfinition de equals de Object et retourne vrai si et seulement si l'objet that est une sous-case et ses coordonnées normalisées sont identiques à celles de la sous-case réceptrice.
-     * @param that  la sous-case à comparer
-     * @return vrai <=> this = that
+     * @param that (Object) la sous-case à comparer
+     * @return vrai <=> this = that (boolean)
      */
     @Override
     public boolean equals(Object that){
@@ -147,8 +146,8 @@ public final class SubCell {
     }
     
     /**
-     * Retourne un une valeur de hachage pour la sous-case
-     * @return une valeur de hachage
+     * Redéfinition de hashCode, retourne un une valeur de hachage pour la sous-case
+     * @return une valeur de hachage (int)
      */
     @Override
     public int hashCode(){
@@ -157,7 +156,7 @@ public final class SubCell {
     
     /**
      * Redéfinition de toString de Object et retourne une représentation textuelle de la sous-case, constituée de ses coordonnées entre parenthèses.
-     * @return la sous-case au format (x, y)
+     * @return la sous-case au format (x, y) (String)
      */
     @Override
     public String toString(){

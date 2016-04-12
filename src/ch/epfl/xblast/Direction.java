@@ -10,7 +10,7 @@ public enum Direction {
     
     /**
      * Retourne la direction opposée à laquelle on applique la méthode.
-     * @return la direction opposée
+     * @return la direction opposée (Direction)
      */
     public Direction opposite(){
         switch(this){
@@ -25,23 +25,24 @@ public enum Direction {
             
         case S:
             return N;
+            
         default:
             return null;
         }
     }
     
     /**
-     * Retourne vrai <=> la direction est horizonzale (E ou W).
-     * @return vrai <=> la direction est E ou W
+     * Indique si la direction est horizonzale ou non (E ou W).
+     * @return vrai <=> la direction est E ou W (boolean)
      */
     public boolean isHorizontal(){
         return (this.equals(Direction.E) || this.equals(Direction.W));
     }
     
     /**
-     * Retourne vrai <=> la direction this est parallèle à la direction that (that est elle même ou son opposée).
-     * @param that  la direction à tester
-     * @return vrai <=> la direction est elle-même ou son opposée
+     * Indique si la direction this est parallèle à la direction that (that est elle même ou son opposée).
+     * @param that (Direction ) la direction à tester
+     * @return vrai <=> la direction est elle-même ou son opposée (boolean)
      */
     public boolean isParallelTo(Direction that){
         return (this.equals(that) || this.equals(that.opposite()));

@@ -15,11 +15,13 @@ public final class Lists {
 
     /**
      * Retourne un miroir de la liste passée en paramètre ou IllegalArgumentException si celle-ci est vide.
-     * @param l la liste à laquelle on va appliquer le miroir
-     * @return un miroir de la liste l
+     * @param l (List<T>) la liste à laquelle on va appliquer le miroir
+     * @return un miroir de la liste l (List<T>)
      * @throws IllegalArgumentException
      */
     public static <T> List<T> mirrored(List<T> l) throws IllegalArgumentException{
+        
+        //Si la liste passée n'est pas vide
         if(!l.isEmpty()){
             // On copie l
             List<T> list = new ArrayList<T>(l);
@@ -31,16 +33,15 @@ public final class Lists {
             // On concatène les deux listes
             list.addAll(sub);
             return list;
-        }
-        else{
+        } else {
             throw new IllegalArgumentException("La liste ne peut pas être vide");
         }
     }
     
     /**
      * Calcule de manière récursive l'ensemble des combinaisons possibles des éléments d'une sur une liste.
-     * @param l la liste dont on veut calculer les permutations
-     * @return une liste des combinaisons des éléments de l
+     * @param l (List<T>) la liste dont on veut calculer les permutations
+     * @return une liste des combinaisons des éléments de l (List<List<T>>)
      */
     public static <T> List<List<T>> permutations(List<T> l){
         int size = l.size();
@@ -50,8 +51,7 @@ public final class Lists {
             // On retourne un tableau de tableaux vide, ou un tableau contenant un tableau du premier élément
             List<List<T>> trivialArray = (size==0)? new ArrayList<>(Arrays.asList(Arrays.asList())) : new ArrayList<>(Arrays.asList(Arrays.asList(l.get(0))));
             return trivialArray;
-        }
-        else{
+        } else {
             T firstElement = l.get(0);
             
             /*
@@ -86,10 +86,10 @@ public final class Lists {
                         temp.add(i, firstElement);
                         headPermut.add(temp);
                     }
-
                 }
                 return headPermut;
             }
         }
     }
+    
 }

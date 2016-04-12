@@ -42,8 +42,8 @@ public final class Cell {
     
     /**
      * Constructeur de cellule.
-     * @param x l'abscisse
-     * @param y l'ordonnée
+     * @param x (int) l'abscisse
+     * @param y (int) l'ordonnée
      */
     public Cell(int x, int y){
         this.x=Math.floorMod(x, COLUMNS);
@@ -66,6 +66,10 @@ public final class Cell {
         return this.y;
     }
     
+    /**
+     * Retourne une ArrayList de Cell qui content les cases triées dans l'ordre de lecture
+     * @return ArrayList de Cell triée par ordre de lecture (ArrayList<Cell>)
+     */
     private static ArrayList<Cell> rowMajorOrder(){
         ArrayList<Cell> cells = new ArrayList<Cell>();
         
@@ -78,6 +82,10 @@ public final class Cell {
         return cells;
     }
     
+    /**
+     * Retourne une ArrayList de Cell qui content les cases triées dans un ordre en spirale
+     * @return ArrayList de Cell triée dans un ordre de spirale (ArrayList<Cell>)
+     */
     private static ArrayList<Cell> spiralOrder(){
         // Voir algorithme proposé sur le site du cours
         
@@ -120,7 +128,7 @@ public final class Cell {
     
     /**
      * Retourne l'index de la case selon l'ordre de lecture (ROW_MAJOR_ORDER).
-     * @return l'index de la case en ROW_MAJOR_ORDER
+     * @return l'index de la case en ROW_MAJOR_ORDER (int)
      */
     public int rowMajorIndex(){
         return y*COLUMNS+x;
@@ -129,8 +137,8 @@ public final class Cell {
     /**
      * Retourne la case voisine dans la direction d, en tenant compte du tore.
      * Par défaut, on retourne null.
-     * @param d la direction de la case voisine désirée
-     * @return la case voisine dans la direction d
+     * @param d (Direction) la direction de la case voisine désirée
+     * @return la case voisine dans la direction d (Cell)
      */
     public Cell neighbor(Direction d){
         // On détecte les éventuels problèmes liés au tore
@@ -173,8 +181,8 @@ public final class Cell {
     
     /**
      * Redéfinition de equals. Retourne vrai <=> that est une classe dont les coordonnées normalisées sont les mêmes que this.
-     * @param that  la cellule à tester
-     * @return vrai <=> this=that
+     * @param that (Object) la cellule à tester
+     * @return vrai <=> this=that (boolean)
      */
     @Override
     public boolean equals(Object that){
@@ -193,7 +201,7 @@ public final class Cell {
     
     /**
      * Retourne une valeur de hachage pour la case.
-     * return une valeur de hachage
+     * @return une valeur de hachage (int)
      */
     @Override
     public int hashCode(){
@@ -202,12 +210,11 @@ public final class Cell {
     
     /**
      * Redéfinition de toString.
-     * @return les coordonnées de la case au format (x, y)
+     * @return les coordonnées de la case au format (x, y) (String)
      */
     @Override
     public String toString(){
         return "("+x+", "+y+")";
-
     }
     
 }
