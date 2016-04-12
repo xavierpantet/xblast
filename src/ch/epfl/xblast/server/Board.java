@@ -9,8 +9,7 @@ import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Lists;
 
 /** Classe représentant un plateau de jeu
- * @author Xavier Pantet (260473)
- * @author Timothée Duran (258683)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class Board {
     private final List<Sq<Block>> blocks;

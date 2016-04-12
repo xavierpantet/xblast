@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Enumération des différents types de blocs et des méthodes associées.
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public enum Block {
     FREE, INDESTRUCTIBLE_WALL, DESTRUCTIBLE_WALL, CRUMBLING_WALL, BONUS_BOMB(Bonus.INC_BOMB), BONUS_RANGE(Bonus.INC_RANGE);
