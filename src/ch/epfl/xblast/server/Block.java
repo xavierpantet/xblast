@@ -12,15 +12,15 @@ public enum Block {
     private Bonus maybeAssociatedBonus;
     
     /**
-     * Constructeur pour les bonus
-     * @param le bonus associé
+     * Constructeur pour les bonus.
+     * @param maybeAssociatedBonus  le bonus associé
      */
     private Block(Bonus maybeAssociatedBonus) {
         this.maybeAssociatedBonus=maybeAssociatedBonus;
     }
     
     /**
-     * Constructeur par défaut
+     * Constructeur par défaut.
      */
     private Block() {
         this.maybeAssociatedBonus=null;
@@ -35,7 +35,7 @@ public enum Block {
     }
     
     /**
-     * Retourne vrai <=> le bloc peut contenir un joueur
+     * Retourne vrai <=> le bloc peut contenir un joueur.
      * @return vrai <=> le bloc peut contenir un joueur
      */
     public boolean canHostPlayer(){
@@ -43,7 +43,7 @@ public enum Block {
     }
     
     /**
-     * Retourne vrai <=> le bloc projette une ombre sur le plateau de jeu
+     * Retourne vrai <=> le bloc projette une ombre sur le plateau de jeu.
      * @return vrai <=> le bloc projette une ombre sur le plateau de jeu
      */
     public boolean castsShadow(){
@@ -51,7 +51,7 @@ public enum Block {
     }
     
     /**
-     * Retour vrai <=> le bloc est un bonus
+     * Retour vrai <=> le bloc est un bonus.
      * @return vrai <=> le bloc est un bonus
      */
     public boolean isBonus(){
