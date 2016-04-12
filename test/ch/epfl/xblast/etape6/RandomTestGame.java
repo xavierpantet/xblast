@@ -7,23 +7,18 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
-import java.util.Optional;
 
 import org.junit.Test;
 
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
-import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.PlayerID;
-import ch.epfl.xblast.SubCell;
 import ch.epfl.xblast.server.Block;
 import ch.epfl.xblast.server.Board;
 import ch.epfl.xblast.server.GameState;
 import ch.epfl.xblast.server.Player;
 import ch.epfl.xblast.server.Player.DirectedPosition;
-import ch.epfl.xblast.server.debug.GameStatePrinter;
 import ch.epfl.xblast.server.debug.RandomEventGenerator;
 
 import static org.junit.Assert.assertTrue;
@@ -83,53 +78,6 @@ public class RandomTestGame {
                 	seq = seq.tail();                	
                 }
             }
-        }
-        player_positions.close();
-    }
-    
-    @Test
-    public void testPositionsGraphicRandomGame() throws InterruptedException, IOException, URISyntaxException {
-        String fileName = getClass().getResource("/stage6files/randomgame_positions.txt").toURI().getPath();
-        Stream<String> player_positions = Files.lines(Paths.get(fileName));
-        Iterator<String> pos_iterator = player_positions.iterator();
-        
-        RandomEventGenerator randEvents = new RandomEventGenerator(2016, 30, 100);
-        
-        GameState s = new GameState(createBoard(), createPlayers(3, 2, 3, POS_NW, POS_NE, POS_SE, POS_SW));
-        while (!s.isGameOver()) {
-            Map<PlayerID, Optional<Direction>> randSpeed=randEvents.randomSpeedChangeEvents();
-            s = s.next(randSpeed, randEvents.randomBombDropEvents());
-            Player p = s.players().get(3);
-            /*System.out.println(randSpeed.get(p.id()));
-            System.out.println(p.position());
-            System.out.println(p.position().distanceToCentral());
-            System.out.println(p.lifeState().state());
-            System.out.println("Mur ? " + s.board().blockAt(p.position().containingCell().neighbor(p.direction())));
-            System.out.println();*/
-            //for(Player p: s.players()) {
-                System.out.println(p.id());
-                pos_iterator.next();
-                pos_iterator.next();
-                pos_iterator.next();
-                List<List<Integer>> pos = GameSimulation.positionsList(pos_iterator.next());
-                Sq<DirectedPosition> seq = p.directedPositions();
-                
-                for(List<Integer> e: pos) {
-                    DirectedPosition h = seq.head();
-                    System.out.print(h.position() + " - ");
-                    System.out.println(e);
-                    /*System.out.println("Bombe ? " + s.bombedCells().containsKey(s.board().blockAt(h.position().containingCell())));
-                    System.out.println("Mur ? " + s.board().blockAt(h.position().containingCell().neighbor(h.direction())));
-                    System.out.println();*/
-                    //assertTrue(GameSimulation.compare(h, e));
-
-
-                    seq = seq.tail();                   
-                }
-                System.out.println();
-                System.out.println("****************************************************");
-                System.out.println();
-            //}
         }
         player_positions.close();
     }

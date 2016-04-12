@@ -44,12 +44,7 @@ public final class GameStatePrinter {
                     continue xLoop;
                 }
                 
-                for (Player p: ps) {
-                    if (p.position().containingCell().equals(c)) {
-                        System.out.print(stringForPlayer(p));
-                        continue xLoop;
-                    }  
-                }
+
 
                 
                 if(bombs.containsKey(c)){
@@ -57,6 +52,12 @@ public final class GameStatePrinter {
                     continue xLoop;
                 
                 }  
+                for (Player p: s.players()) {
+                    if (p.position().containingCell().equals(c)) {
+                        System.out.print(stringForPlayer(p));
+                        continue xLoop;
+                    }  
+                }
                
                 
                 
@@ -74,14 +75,16 @@ public final class GameStatePrinter {
         
             System.out.println();
         }
-        for (Player p: ps) {
-            if(p.id()==PlayerID.PLAYER_4){
-            /*System.out.println(p.id() +" a "+ p.lives()+ " vies restantes ("+p.lifeState().state()+")");
-            System.out.println("Next IS : "+p.lifeStates().tail().head().state());
+        for (Player p: s.players()) {
+            if(p.id()==PlayerID.PLAYER_1){
+            System.out.println(p.id() +" a "+ p.lives()+ " vies restantes ("+p.lifeState().state()+")");
+            /*System.out.println("Next IS : "+p.lifeStates().tail().head().state());
             System.out.println("bombes max : "+p.maxBombs()+", portée : "+p.bombRange());
             System.out.println(p.position().containingCell() + " -> " + p.position().distanceToCentral());*/
-            System.out.println(p.position());
-            System.out.println(p.position().distanceToCentral());}
+            /*System.out.println(p.position());
+            System.out.println(p.position().containingCell());
+            System.out.println(p.position().distanceToCentral());
+            */}
             System.out.println("");
         
         }

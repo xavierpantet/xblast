@@ -1,7 +1,7 @@
 package ch.epfl.xblast;
 
 /**
- * Les 4 directions que l'on peut prendre dans le jeu.
+ * Enumération des 4 directions que l'on peut prendre dans le jeu.
  * Pour Nord, Est, Sud et West
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
@@ -9,7 +9,7 @@ public enum Direction {
     N, E, S, W;
     
     /**
-     * Retourne la direction opposée à laquelle on applique la méthode
+     * Retourne la direction opposée à laquelle on applique la méthode.
      * @return la direction opposée
      */
     public Direction opposite(){
@@ -31,7 +31,7 @@ public enum Direction {
     }
     
     /**
-     * Retourne vrai <=> la direction est horizonzale (E ou W)
+     * Retourne vrai <=> la direction est horizonzale (E ou W).
      * @return vrai <=> la direction est E ou W
      */
     public boolean isHorizontal(){
@@ -39,9 +39,8 @@ public enum Direction {
     }
     
     /**
-     * Retourne vrai <=> la direction this est parallèle à la direction that
-     * (that est elle même ou son opposée)
-     * @param that
+     * Retourne vrai <=> la direction this est parallèle à la direction that (that est elle même ou son opposée).
+     * @param that  la direction à tester
      * @return vrai <=> la direction est elle-même ou son opposée
      */
     public boolean isParallelTo(Direction that){
