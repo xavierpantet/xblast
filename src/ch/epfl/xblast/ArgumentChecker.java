@@ -7,7 +7,7 @@ package ch.epfl.xblast;
  */
 public final class ArgumentChecker {
     private ArgumentChecker(){}
-    
+
     /**
      * Permet de vérifier qu'un entier est positif ou nul.
      * @param value (int) la valeur à vérifier 

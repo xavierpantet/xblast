@@ -11,11 +11,11 @@ public enum Bonus {
      * @return un nouveau joueur dont les capacités sont améliorées (Player)
      */
     INC_BOMB {
-      @Override
-      public Player applyTo(Player player) {
-          int nbBombs=player.maxBombs();
-          return (nbBombs<9)? player.withMaxBombs(nbBombs+1) : player;
-      }
+        @Override
+        public Player applyTo(Player player) {
+            int nbBombs=player.maxBombs();
+            return (nbBombs<9)? player.withMaxBombs(nbBombs+1) : player;
+        }
     },
 
     /**
@@ -24,13 +24,13 @@ public enum Bonus {
      * @return un nouveau joueur dont les capacités sont améliorées (Player)
      */
     INC_RANGE {
-      @Override
-      public Player applyTo(Player player) {
-          int bombRange=player.bombRange();
-          return (bombRange<9)? player.withBombRange(bombRange+1) : player;
-      }
+        @Override
+        public Player applyTo(Player player) {
+            int bombRange=player.bombRange();
+            return (bombRange<9)? player.withBombRange(bombRange+1) : player;
+        }
     };
 
     abstract public Player applyTo(Player player);
-    
-  }
+
+}

@@ -13,7 +13,7 @@ public interface Ticks {
     static final int EXPLOSION_TICKS=30;
     static final int WALL_CRUMBLING_TICKS=EXPLOSION_TICKS;
     static final int BONUS_DISAPPEARING_TICKS=EXPLOSION_TICKS;
-    
+
     static final int TICKS_PER_SECOND=20;
     static final int TICK_NANOSECOND_DURATION=Time.NS_PER_S/TICKS_PER_SECOND;
     static final int TOTAL_TICKS=TICKS_PER_SECOND*120;

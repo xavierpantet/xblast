@@ -20,7 +20,7 @@ public final class Player {
     private final Sq<DirectedPosition> directedPositions;
     private final int maxBombs;
     private final int bombRange;
-    
+
     /**
      * Constructeur principal.
      * @param id (PlayerID) l'identité
@@ -38,7 +38,7 @@ public final class Player {
         this.maxBombs=ArgumentChecker.requireNonNegative(maxBombs);
         this.bombRange=ArgumentChecker.requireNonNegative(bombRange);
     }
-    
+
     /**
      * Constructeur secondaire.
      * Permet de créer un joueur en spécifiant uniquement son nombre de vies, plutôt que sa séquence d'états de vies.
@@ -54,7 +54,7 @@ public final class Player {
         this(id, createStateSequence(lives),
                 Sq.constant(new DirectedPosition(SubCell.centralSubCellOf(position), Direction.S)), maxBombs, bombRange);
     }
-    
+
     /**
      * Retourne l'identifiant.
      * @return l'identifiant (PlayerID)
@@ -62,7 +62,7 @@ public final class Player {
     public PlayerID id(){
         return id;
     }
-    
+
     /**
      * retourne la séquence des états de vie.
      * @return la séquence d'états de vie (Sq<LifeState>)
@@ -70,7 +70,7 @@ public final class Player {
     public Sq<LifeState> lifeStates(){
         return lifeStates;
     }
-    
+
     /**
      * Retourne l'état de vie actuel.
      * @return l'état de vie actuel (LifeState)
@@ -78,7 +78,7 @@ public final class Player {
     public LifeState lifeState(){
         return lifeStates.head();
     }
-    
+
     /**
      * Retourne la séquence des états de vie suivants, une fois qu'elle évolue.
      * @return une séquence de l'état de vie suivant (Sq<LifeState>)
@@ -86,7 +86,7 @@ public final class Player {
     public Sq<LifeState> statesForNextLife(){
         return Sq.repeat(Ticks.PLAYER_DYING_TICKS, new LifeState(lives(), State.DYING)).concat(createStateSequence(lives()-1));   
     }
-    
+
     /**
      * Retourne le nombre de vies restantes.
      * @return le nombre de vie restantes (int)
@@ -94,7 +94,7 @@ public final class Player {
     public int lives(){
         return lifeStates.head().lives();
     }
-    
+
     /**
      * Indique si le joueur est encore vivant (son nombre de vies est supérieur à 0)
      * @return vrai <=> le joueur est encore vivant (boolean)
@@ -102,7 +102,7 @@ public final class Player {
     public boolean isAlive(){
         return (this.lives()>0)? true:false;
     }
-    
+
     /**
      * Retourne la séquence des positions dirigées.
      * @return la séquence des positions dirigées (Sq<DirectedPosition>)
@@ -110,7 +110,7 @@ public final class Player {
     public Sq<DirectedPosition> directedPositions(){
         return directedPositions;
     }
-    
+
     /**
      * Retourne la position actuelle en SubCell.
      * @return la position actuelle (SubCell)
@@ -118,7 +118,7 @@ public final class Player {
     public SubCell position(){
         return directedPositions.head().position();
     }
-    
+
     /**
      * Retourne la direction actuelle du regard.
      * @return la direction actuelle du regard (Direction)
@@ -126,7 +126,7 @@ public final class Player {
     public Direction direction(){
         return directedPositions.head().direction();
     }
-    
+
     /**
      * Retourne le nombre maximal que le joueur peut déposer simultanément sur le plateau.
      * @return le nombre de bombes maximal (int)
@@ -134,7 +134,7 @@ public final class Player {
     public int maxBombs(){
         return maxBombs;
     }
-    
+
     /**
      * Permet de dériver un joueur en modifiant le nombre de bombes qu'il peut posséder.
      * @param newMaxBombs (int) le nouveau nombre de bombes maximal
@@ -143,7 +143,7 @@ public final class Player {
     public Player withMaxBombs(int newMaxBombs){
         return new Player(id, lifeStates, directedPositions, newMaxBombs, bombRange);
     }
-    
+
     /**
      * Retourne la portée des bombes déposées.
      * @return la portée des bombes déposées par le joueur (int)
@@ -151,7 +151,7 @@ public final class Player {
     public int bombRange(){
         return bombRange;
     }
-    
+
     /**
      * Permet de dériver un joueur en modifiant la portée des bombes qu'il dépose.
      * @param newBombRange (int) la nouvelle portée des bombes
@@ -160,7 +160,7 @@ public final class Player {
     public Player withBombRange(int newBombRange){
         return new Player(id, lifeStates, directedPositions, maxBombs, newBombRange);
     }
-    
+
     /**
      * Permet au joueur de déposer une bombe.
      * @return une bombe déposée par le joueur (Bomb)
@@ -168,7 +168,7 @@ public final class Player {
     public Bomb newBomb(){
         return new Bomb(id, position().containingCell(), Ticks.BOMB_FUSE_TICKS, bombRange);
     }
-    
+
     /**
      * Permet de créer une séquence d'états de vie en connaissant le nombre de vies initial.
      * Très utile au constructeur.
@@ -177,20 +177,20 @@ public final class Player {
      * @throws IllegalArgumentException
      */
     private static Sq<LifeState> createStateSequence(int lives) throws IllegalArgumentException{
-        
+
         if(lives==0){
             return Sq.constant(new LifeState(lives, State.DEAD));
         } else if(lives>0) {
             // Le joueur est tout d'abord invulnérable (pendant un certain temps)
             Sq<LifeState> lifeState = Sq.repeat(Ticks.PLAYER_INVULNERABLE_TICKS, new LifeState(lives, State.INVULNERABLE));
-         
+
             // Puis il est vulnérable pour une durée indéfinie
             lifeState = lifeState.concat(Sq.constant(new LifeState(lives, State.VULNERABLE)));
 
             return lifeState;
         } else {throw new IllegalArgumentException("Le nombre de vie doit être non négatif");}
     }
-    
+
     /**
      * Classe représentant une position dirigée du joueur (sa position et la direction dans laquelle il regarde).
      * @author Timothée Duran (258683), Xavier Pantet (260473)
@@ -199,7 +199,7 @@ public final class Player {
 
         private final SubCell position;
         private final Direction direction;
-        
+
         /**
          * Construit une position dirigée avec la position et la direction données, 
          * ou lève l'exception NullPointerException si l'un ou l'autre de ces arguments est nul.
@@ -211,8 +211,8 @@ public final class Player {
             this.position = Objects.requireNonNull(position);
             this.direction = Objects.requireNonNull(direction);
         }
-        
-        
+
+
         /**
          * Retourne une séquence infinie composée uniquement de la position dirigée donnée et représentant un joueur arrêté dans cette position.
          * @param p (DirectedPosition) la position dirigée
@@ -221,7 +221,7 @@ public final class Player {
         public static Sq<DirectedPosition> stopped(DirectedPosition p){
             return Sq.constant(p);
         }
-        
+
         /**
          * Retourne une séquence infinie de positions dirigées représentant un joueur se déplaçant dans la direction dans laquelle il regarde; 
          * le premier élément de cette séquence est la position dirigée, 
@@ -233,7 +233,7 @@ public final class Player {
         public static Sq<DirectedPosition> moving(DirectedPosition p){
             return Sq.iterate(p, c -> c.withPosition(c.position.neighbor(c.direction)));            
         }
-        
+
         /**
          * Retourne la position actuelle.
          * @return la position actuelle (SubCell)
@@ -241,7 +241,7 @@ public final class Player {
         public SubCell position(){
             return position;
         }
-        
+
         /**
          * Retourne une position dirigée dont la position est celle donnée, et la direction est identique à celle du récepteur.
          * @param newPosition (SubCell) la nouvelle position
@@ -250,7 +250,7 @@ public final class Player {
         public DirectedPosition withPosition(SubCell newPosition){
             return new DirectedPosition (newPosition, direction);
         }
-        
+
         /**
          * Retourne la direction de la position dirigée.
          * @return la direction (Direction)
@@ -258,7 +258,7 @@ public final class Player {
         public Direction direction(){
             return direction;
         }
-        
+
         /**
          * Retourne une position dirigée dont la direction est celle donnée, et la position est identique à celle du récepteur.
          * @param newDirection (Direction) la nouvelle direction
@@ -268,16 +268,16 @@ public final class Player {
             return new DirectedPosition (position, newDirection);
         }
     }
-    
+
     /**
      * Classe représentant l'état de vie d'un joueur (nombre de vies et état).
      * @author Timothée Duran (258683), Xavier Pantet (260473)
      */
     public static final class LifeState {
-        
+
         private final int lives;
         private final State state;
-        
+
         /**
          * Enum qui decrit les 4 états possibles d'un joueur.
          * @author Timothée Duran (258683), Xavier Pantet (260473)
@@ -285,7 +285,7 @@ public final class Player {
         public enum State {
             INVULNERABLE, VULNERABLE, DYING, DEAD;
         }
-        
+
         /**
          * Constructeur d'état de vie
          * @param lives (int) le nombre de vies
@@ -297,15 +297,15 @@ public final class Player {
             this.lives = ArgumentChecker.requireNonNegative(lives);
             this.state = Objects.requireNonNull(state); 
         }
-        
+
         /**
          * Methode qui retourne le nombre de vie restantes.
          * @return le nombre de vies restantes (int)
          */
         public int lives (){
-           return this.lives;
+            return this.lives;
         }
-        
+
         /**
          * Méthode qui retourne l'état actuel d'un joueur.
          * @return l'état actuel (int)
@@ -313,7 +313,7 @@ public final class Player {
         public State state(){
             return this.state;
         }
-        
+
         /**
          * Methode qui retourne vrai si le joueur peut bouger (son état est VULNERABLE OU INVULNERABLE) et faux sinon.
          * @return vrai <=> le joueur peut bouger ou non (boolean)

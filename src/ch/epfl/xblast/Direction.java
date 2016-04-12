@@ -7,7 +7,7 @@ package ch.epfl.xblast;
  */
 public enum Direction {
     N, E, S, W;
-    
+
     /**
      * Retourne la direction opposée à laquelle on applique la méthode.
      * @return la direction opposée (Direction)
@@ -16,21 +16,21 @@ public enum Direction {
         switch(this){
         case E:
             return W;
-            
+
         case W:
             return E;
-            
+
         case N:
             return S;
-            
+
         case S:
             return N;
-            
+
         default:
             return null;
         }
     }
-    
+
     /**
      * Indique si la direction est horizonzale ou non (E ou W).
      * @return vrai <=> la direction est E ou W (boolean)
@@ -38,7 +38,7 @@ public enum Direction {
     public boolean isHorizontal(){
         return (this.equals(Direction.E) || this.equals(Direction.W));
     }
-    
+
     /**
      * Indique si la direction this est parallèle à la direction that (that est elle même ou son opposée).
      * @param that (Direction ) la direction à tester
@@ -47,5 +47,5 @@ public enum Direction {
     public boolean isParallelTo(Direction that){
         return (this.equals(that) || this.equals(that.opposite()));
     }
-    
+
 }

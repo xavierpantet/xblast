@@ -20,16 +20,16 @@ public final class Lists {
      * @throws IllegalArgumentException
      */
     public static <T> List<T> mirrored(List<T> l) throws IllegalArgumentException{
-        
+
         //Si la liste passée n'est pas vide
         if(!l.isEmpty()){
             // On copie l
             List<T> list = new ArrayList<T>(l);
             List<T> sub = new ArrayList<T>(list.subList(0, list.size()-1));
-            
+
             // On inverse la sous-liste
             Collections.reverse(sub);
-            
+
             // On concatène les deux listes
             list.addAll(sub);
             return list;
@@ -37,7 +37,7 @@ public final class Lists {
             throw new IllegalArgumentException("La liste ne peut pas être vide");
         }
     }
-    
+
     /**
      * Calcule de manière récursive l'ensemble des combinaisons possibles des éléments d'une sur une liste.
      * @param l (List<T>) la liste dont on veut calculer les permutations
@@ -45,7 +45,7 @@ public final class Lists {
      */
     public static <T> List<List<T>> permutations(List<T> l){
         int size = l.size();
-        
+
         // Si la liste contient 0 ou 1 élément
         if(size==0 || size==1){
             // On retourne un tableau de tableaux vide, ou un tableau contenant un tableau du premier élément
@@ -53,7 +53,7 @@ public final class Lists {
             return trivialArray;
         } else {
             T firstElement = l.get(0);
-            
+
             /*
              *  BOTTOM OF THE RECURSION
              *  Permutations d'un tableau de deux éléments: [X, Y] --> [[X, Y], [Y, X]]
@@ -65,21 +65,21 @@ public final class Lists {
                 queue.add(new ArrayList<>(l));
                 return queue;
             }
-            
+
             // RECURSION
             else{
                 // On applique la récursion sur la queue du tableau
                 List<List<T>> recursive = new ArrayList<>();
                 recursive.addAll(permutations(l.subList(1, size)));
-                
+
                 List<T> temp;
                 List<List<T>> headPermut=new ArrayList<>();
                 int elementSize=0;
-                
+
                 // Pour chaque élément de recursive
                 for(List<T> element:recursive){
                     elementSize=element.size();
-                    
+
                     // On ajoute la tête à toutes les places possibles
                     for(int i=0; i<=elementSize; i++){
                         temp=new ArrayList<>(element);
@@ -91,5 +91,5 @@ public final class Lists {
             }
         }
     }
-    
+
 }
