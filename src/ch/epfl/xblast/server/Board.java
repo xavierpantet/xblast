@@ -15,14 +15,16 @@ public final class Board {
     private final List<Sq<Block>> blocks;
     
     /**
+     * Constructeur de Board.
      * Initialise les séquences avec celles passées en paramètres.
      * Lève IllegalArgumentException si la liste ne contient pas 195 éléments.
-     * @param liste des séquences pour chaque bloc
+     * @param blocks    liste des séquences pour chaque bloc
      * @throws IllegalArgumentException
      */
     public Board(List<Sq<Block>> blocks) throws IllegalArgumentException{
         if(blocks.size()==Cell.COUNT){
-            this.blocks=Collections.unmodifiableList(new LinkedList<Sq<Block>>(blocks));
+            // On choisit un ArrayList car on y accède par get dans blocksAt
+            this.blocks=Collections.unmodifiableList(new ArrayList<Sq<Block>>(blocks));
         } else {
             throw new IllegalArgumentException("La liste doit posséder "+Cell.COUNT+" éléments");
         }
@@ -32,8 +34,9 @@ public final class Board {
      * Construit un plateau constant avec la matrice de blocs donnée, 
      * ou lève l'exception IllegalArgumentException si la liste reçue n'est pas constituée 
      * de 13 listes de 15 éléments chacune.
-     * @param matrice de contenu
+     * @param rows  matrice de contenu
      * @return un plateau ofRows
+     * @throws IllegalArgumentException
      */
    public static Board ofRows(List<List<Block>> rows) throws IllegalArgumentException{
        
@@ -50,9 +53,9 @@ public final class Board {
    }
    
    /**
-    * Construit un plateau constant avec la matrices des blocs donnée emmurée,
-    * ou lève IllegalArgumentException si la matrice n'a pas les bonnes dimension
-    * @param matrices de blocs
+    * Construit un plateau constant avec la matrice des blocs donnée emmuré,
+    * ou lève IllegalArgumentException si la matrice n'a pas les bonnes dimensions.
+    * @param innerBlocks    matrices de blocs
     * @return un plateau ofInnerBlocksWalled
     * @throws IllegalArgumentException
     */
@@ -60,7 +63,7 @@ public final class Board {
        try{
            checkBlockMatrix(innerBlocks, Cell.ROWS-2, Cell.COLUMNS-2);
        
-           List<Sq<Block>> tmpBlocks = new LinkedList<Sq<Block>>();
+           List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
        
            // On ajoute le mur du haut
            tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
@@ -94,13 +97,14 @@ public final class Board {
     * @return un plateau ofQuadrantNWBlocksWalled
     */  
    public static Board ofQuadrantNWBlocksWalled(List<List<Block>> quadrantNWBlocks) throws IllegalArgumentException{
-       List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
+       List<Sq<Block>> tmpBlocks = new LinkedList<Sq<Block>>();
       
        try{
            checkBlockMatrix(quadrantNWBlocks, (Cell.ROWS-1)/2, (Cell.COLUMNS-1)/2);
            
            // On ajoute la première ligne de blocs indestructibles
            tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+           
            List<Sq<Block>> tmpLine = new LinkedList<>();
                // Pour chaque ligne de la matrice d'entrée
                for(List<Block> l : quadrantNWBlocks){
@@ -134,45 +138,43 @@ public final class Board {
    }
    
    /**
-    * Retourne la séquence des blocs pour la case donnée
-    * @param la case
-    * @return séquence des blocs correspondante
+    * Retourne la séquence des blocs pour la case donnée.
+    * @param c  la case dont on veut connaître la séquence des blocks
+    * @return la séquence des blocks de c
     */
    public Sq<Block> blocksAt(Cell c){
        // On cherche l'identifiant de la cellule
-       int CellID = c.rowMajorIndex();
-       // On retroune le sous-tableau à cet ID
-       return blocks.get(CellID);
+       int cellID = c.rowMajorIndex();
+       
+       // On retroune la séquence correspondante
+       return blocks.get(cellID);
    }
    
    /**
-    * Retourne le bloc à la cellule donnée
-    * @param la cellule
-    * @return le bloc correspondant
+    * Retourne le bloc courant à la cellule donnée.
+    * @param c  la cellule dont on veut connaître le bloc
+    * @return le bloc courant de c
     */
    public Block blockAt(Cell c){
      Sq<Block> tmpList = blocksAt(c);
      return tmpList.head();
    }
    
-   /**
-    * Permet de vérifier qu'une matrice est conforme.
-    * @param matrix
-    * @param rows
-    * @param columns
-    * @throws IllegalArgumentException
+   /*
+    * Méthode privée qui vérifie que les matrices passées en paramètres sont conformes.
+    * Notamment, elles doivent avoir le même nombre d'éléments dans chaque ligne.
+    * Le nombre de lignes et de colonnes voulu est passé en paramètre.
     */
    private static void checkBlockMatrix(List<List<Block>> matrix, int rows, int columns) throws IllegalArgumentException{
-       
-          int matrixSize =matrix.size();
-          if (matrixSize==rows){
-              for (int i=0; i<matrixSize; i++){
-                  if (matrix.get(i).size()!=columns){
-                      throw new IllegalArgumentException("La matrice fournie contient "+matrix.get(i).size()+" colonnes à l'index "+i+" alors qu'on en attend "+columns);
+          int matrixHeight=matrix.size();
+          if (matrixHeight==rows){
+              for(List<Block> tmpL : matrix){
+                  if(tmpL.size()!=columns){
+                      throw new IllegalArgumentException("L'une des lignes de la matrice fournie contient "+tmpL.size()+" colonnes alors qu'on en attend "+columns);
                   }
               }
           } else {
-              throw new IllegalArgumentException("La matrice fournie contient "+matrixSize+" lignes alors qu'on en attend "+rows);
+              throw new IllegalArgumentException("La matrice fournie contient "+matrixHeight+" lignes alors qu'on en attend "+rows);
           }
    }
    
