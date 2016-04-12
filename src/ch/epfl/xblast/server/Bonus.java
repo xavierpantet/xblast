@@ -2,13 +2,13 @@ package ch.epfl.xblast.server;
 
 /**
  * Enumération des bonus du jeu.
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public enum Bonus {
     /**
      * Définition concrète de applyTo. Retourne un joueur à qui l'on a fait consommer un bonus INC_BOMB, s'il en a le droit.
-     * @param player  le joueur qui consomme un bonus
-     * @return un nouveau joueur dont les capacités sont améliorées
+     * @param player (Player) le joueur qui consomme un bonus
+     * @return un nouveau joueur dont les capacités sont améliorées (Player)
      */
     INC_BOMB {
       @Override
@@ -20,8 +20,8 @@ public enum Bonus {
 
     /**
      * Définition concrète de applyTo. Retourne un joueur à qui l'on a fait consommer un bonus INC_RANGE, s'il en a le droit.
-     * @param player    le joueur qui consomme le bonus
-     * @return un nouveau joueur dont les capacités sont améliorées
+     * @param player (Player) le joueur qui consomme le bonus
+     * @return un nouveau joueur dont les capacités sont améliorées (Player)
      */
     INC_RANGE {
       @Override
@@ -32,4 +32,5 @@ public enum Bonus {
     };
 
     abstract public Player applyTo(Player player);
+    
   }

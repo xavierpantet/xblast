@@ -12,7 +12,7 @@ import ch.epfl.xblast.PlayerID;
 
 /**
  * Classe représentant une bombe dans le jeu.
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class Bomb {
     private final PlayerID ownerId;
@@ -21,12 +21,12 @@ public final class Bomb {
     private final int range;
     
     /**
-     * COnstructeur de bombe.
+     * Constructeur de bombe.
      * Créé une bombe avec les paramètres donnés en s'assurant qu'ils sont corrects.
-     * @param ownerId   le propriétaire
-     * @param position  la position
-     * @param fuseLengths   la seéquence des longueurs de mèche
-     * @param range la portée
+     * @param ownerId (PlayerID) le propriétaire
+     * @param position (Cell) la position
+     * @param fuseLengths (Sq<Integer>) la seéquence des longueurs de mèche
+     * @param range (int) la portée
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
@@ -44,10 +44,10 @@ public final class Bomb {
     /**
      * Surcharge du premier constructeur quasi-identique au premier.
      * Il initialise une séquence de longueurs de mèches quand on lui en donne la valeur maximale.
-     * @param ownerId   le propriétaire
-     * @param position  la position
-     * @param fuseLength    la longueur de mèche
-     * @param range la portée
+     * @param ownerId (PlayerID) le propriétaire
+     * @param position (Cell) la position
+     * @param fuseLength (int) la longueur de mèche
+     * @param range (int) la portée
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
@@ -57,7 +57,7 @@ public final class Bomb {
     
     /**
      * Retourne l'identifiant du propriétaire de la bombe.
-     * @return l'identifiant du propriétaire
+     * @return l'identifiant du propriétaire (PlayerID)
      */
     public PlayerID ownerId(){
         return ownerId;
@@ -65,7 +65,7 @@ public final class Bomb {
     
     /**
      * Retourne la position de la bombe.
-     * @return la position
+     * @return la position (Cell)
      */
     public Cell position(){
         return position;
@@ -73,7 +73,7 @@ public final class Bomb {
     
     /**
      * Retourne la séquence des longueurs de mèche de la bombe.
-     * @return la séquence des longueurs de mèche
+     * @return la séquence des longueurs de mèche (Sq<Integer>)
      */
     public Sq<Integer> fuseLengths(){
         return fuseLengths;
@@ -81,7 +81,7 @@ public final class Bomb {
     
     /**
      * Retourne la longueur actuelle de la mèche.
-     * @return la longueur actuelle de la mèche
+     * @return la longueur actuelle de la mèche (int)
      */
     public int fuseLength(){
         return fuseLengths.head().intValue();
@@ -89,7 +89,7 @@ public final class Bomb {
     
     /**
      * Retourne la portée de l'explosion de la bombe.
-     * @return la portée de l'explosion
+     * @return la portée de l'explosion (int)
      */
     public int range(){
         return range;
@@ -97,7 +97,7 @@ public final class Bomb {
     
     /**
      * Retourne l'explosion de la bombe.
-     * @return l'explosion de la bombe
+     * @return l'explosion de la bombe (List<Sq<Sq<Cell>>>)
      */
     public List<Sq<Sq<Cell>>> explosion(){
         List<Sq<Sq<Cell>>> toReturn = new ArrayList<Sq<Sq<Cell>>>();
@@ -111,8 +111,8 @@ public final class Bomb {
     
     /**
      * Retourne un bras d'explosion dans la direction donnée
-     * @param dir   la direction
-     * @return un bras d'explosion dans la direction dir
+     * @param dir (Direction) la direction
+     * @return un bras d'explosion dans la direction dir (Sq<Sq<Cell>>)
      */
     private Sq<Sq<Cell>> explosionArmTowards(Direction dir){
         Sq<Cell> singleParticle = Sq.iterate(position, c -> c.neighbor(dir)).limit(range);

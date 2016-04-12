@@ -18,7 +18,7 @@ public final class Board {
      * Constructeur de Board.
      * Initialise les séquences avec celles passées en paramètres.
      * Lève IllegalArgumentException si la liste ne contient pas 195 éléments.
-     * @param blocks    liste des séquences pour chaque bloc
+     * @param blocks (List<Sq<Block>>) liste des séquences pour chaque bloc
      * @throws IllegalArgumentException
      */
     public Board(List<Sq<Block>> blocks) throws IllegalArgumentException{
@@ -34,8 +34,8 @@ public final class Board {
      * Construit un plateau constant avec la matrice de blocs donnée, 
      * ou lève l'exception IllegalArgumentException si la liste reçue n'est pas constituée 
      * de 13 listes de 15 éléments chacune.
-     * @param rows  matrice de contenu
-     * @return un plateau ofRows
+     * @param rows (List<List<Block>>) matrice de contenu
+     * @return un plateau ofRows (Board)
      * @throws IllegalArgumentException
      */
    public static Board ofRows(List<List<Block>> rows) throws IllegalArgumentException{
@@ -48,15 +48,14 @@ public final class Board {
                tmpBlocks.add(Sq.constant(e));
            }
        }
-       
        return new Board(tmpBlocks); 
    }
    
    /**
     * Construit un plateau constant avec la matrice des blocs donnée emmuré,
-    * ou lève IllegalArgumentException si la matrice n'a pas les bonnes dimensions.
-    * @param innerBlocks    matrices de blocs
-    * @return un plateau ofInnerBlocksWalled
+    * ou lève l'erreur IllegalArgumentException si la matrice n'a pas les bonnes dimensions.
+    * @param innerBlocks (List<List<Block>>) matrices de blocs
+    * @return un plateau ofInnerBlocksWalled (Board)
     * @throws IllegalArgumentException
     */
    public static Board ofInnerBlocksWalled(List<List<Block>> innerBlocks) throws IllegalArgumentException{
@@ -84,8 +83,7 @@ public final class Board {
            // On ajoute le mur du bas
            tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
            return new Board(tmpBlocks);
-       }
-       catch(IllegalArgumentException e){
+       } catch(IllegalArgumentException e){
            throw new IllegalArgumentException(e);
        }
    }
@@ -93,8 +91,8 @@ public final class Board {
    /**
     * Construit un plateau muré symétrique avec les blocs du quadrant nord-ouest donnés,
     * ou lève l'exception IllegalArgumentException si la liste reçue n'est pas constituée de 6 listes de 7 éléments chacune.
-    * @param matrice de blocs
-    * @return un plateau ofQuadrantNWBlocksWalled
+    * @param quadrantNWBlocks (List<List<Block>>) matrice de blocs
+    * @return un plateau muré symétrique avec les blocs du quadrant nord-ouest donnés (Board)
     */  
    public static Board ofQuadrantNWBlocksWalled(List<List<Block>> quadrantNWBlocks) throws IllegalArgumentException{
        List<Sq<Block>> tmpBlocks = new LinkedList<Sq<Block>>();
@@ -133,14 +131,13 @@ public final class Board {
        }catch(Exception e){
            throw new IllegalArgumentException(e);
        }
-       
        return new Board(tmpBlocks);  
    }
    
    /**
     * Retourne la séquence des blocs pour la case donnée.
-    * @param c  la case dont on veut connaître la séquence des blocks
-    * @return la séquence des blocks de c
+    * @param c (Cell) la case dont on veut connaître la séquence des blocks
+    * @return la séquence des blocks de c (Sq<Block>)
     */
    public Sq<Block> blocksAt(Cell c){
        // On cherche l'identifiant de la cellule
@@ -152,21 +149,26 @@ public final class Board {
    
    /**
     * Retourne le bloc courant à la cellule donnée.
-    * @param c  la cellule dont on veut connaître le bloc
-    * @return le bloc courant de c
+    * @param c (Cell) la cellule dont on veut connaître le bloc
+    * @return le bloc courant de c (Block)
     */
    public Block blockAt(Cell c){
      Sq<Block> tmpList = blocksAt(c);
      return tmpList.head();
    }
    
-   /*
+   /**
     * Méthode privée qui vérifie que les matrices passées en paramètres sont conformes.
-    * Notamment, elles doivent avoir le même nombre d'éléments dans chaque ligne.
+    * Notamment, elles doivent avoir le même nombre d'éléments dans chaque ligne. Retourne une erreur "IllegalArgumentException" sinon 
     * Le nombre de lignes et de colonnes voulu est passé en paramètre.
+    * @param matrix (List<List<Block>>)
+    * @param rows (int)
+    * @param columns (int)
+    * @throws IllegalArgumentException
     */
    private static void checkBlockMatrix(List<List<Block>> matrix, int rows, int columns) throws IllegalArgumentException{
-          int matrixHeight=matrix.size();
+         
+       int matrixHeight=matrix.size();
           if (matrixHeight==rows){
               for(List<Block> tmpL : matrix){
                   if(tmpL.size()!=columns){

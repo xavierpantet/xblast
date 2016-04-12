@@ -12,14 +12,6 @@ public enum Block {
     private Bonus maybeAssociatedBonus;
     
     /**
-     * Constructeur pour les bonus.
-     * @param maybeAssociatedBonus  le bonus associé
-     */
-    private Block(Bonus maybeAssociatedBonus) {
-        this.maybeAssociatedBonus=maybeAssociatedBonus;
-    }
-    
-    /**
      * Constructeur par défaut.
      */
     private Block() {
@@ -27,40 +19,48 @@ public enum Block {
     }
     
     /**
-     * Retourne vrai <=> le bloc est libre
-     * @return vrai <=> le bloc est libre
+     * Constructeur pour les bonus.
+     * @param maybeAssociatedBonus (Bonus) le bonus associé
+     */
+    private Block(Bonus maybeAssociatedBonus) {
+        this.maybeAssociatedBonus=maybeAssociatedBonus;
+    }
+    
+    /**
+     * Indique si le bloc est libre
+     * @return vrai <=> le bloc est libre (boolean)
      */
     public boolean isFree(){
         return this.equals(Block.FREE);
     }
     
     /**
-     * Retourne vrai <=> le bloc peut contenir un joueur.
-     * @return vrai <=> le bloc peut contenir un joueur
+     * Indique si le bloc peut contenir un joueur.
+     * @return vrai <=> le bloc peut contenir un joueur (boolean)
      */
     public boolean canHostPlayer(){
         return (this == Block.FREE || this.isBonus());
     }
     
     /**
-     * Retourne vrai <=> le bloc projette une ombre sur le plateau de jeu.
-     * @return vrai <=> le bloc projette une ombre sur le plateau de jeu
+     * Indique si le bloc projette une ombre sur le plateau de jeu.
+     * @return vrai <=> le bloc projette une ombre sur le plateau de jeu (boolean)
      */
     public boolean castsShadow(){
         return (this.equals(Block.INDESTRUCTIBLE_WALL) || this.equals(Block.DESTRUCTIBLE_WALL) || this.equals(Block.CRUMBLING_WALL));
     }
     
     /**
-     * Retour vrai <=> le bloc est un bonus.
-     * @return vrai <=> le bloc est un bonus
+     * Indique si le bloc est un bonus.
+     * @return vrai <=> le bloc est un bonus (boolean)
      */
     public boolean isBonus(){
         return (this == Block.BONUS_BOMB || this == Block.BONUS_RANGE);
     }
     
     /**
-     * Retourne le bonus associé au bloc s'il existe, NoSuchElementException sinon
-     * @return le bonus associé
+     * Retourne le bonus associé au bloc s'il existe, ou retroune l'erreur "NoSuchElementException" sinon
+     * @return le bonus associé (Bonus)
      * @throws NoSuchElementException
      */
     public Bonus associatedBonus() throws NoSuchElementException {
