@@ -87,13 +87,13 @@ public final class GameState {
     public boolean isGameOver(){
 
         // Check du temps
-        if (this.ticks>Ticks.TOTAL_TICKS){
+        if (ticks()>Ticks.TOTAL_TICKS){
             return true;
         }
 
         // Check du nombre de joueurs vivants
         int nbOfAlivePlayers = 0;
-        for(Player p : players){
+        for(Player p : players()){
             if(p.isAlive()){nbOfAlivePlayers++;}
         }
 
@@ -145,7 +145,7 @@ public final class GameState {
     public List<Player> alivePlayers(){
         List<Player> alivePlayers = new LinkedList<Player>();
 
-        for(Player p: players){
+        for(Player p: players()){
             if(p.isAlive()){
                 alivePlayers.add(p); 
             }
@@ -191,7 +191,7 @@ public final class GameState {
         List<PlayerID> playersPermutId = new LinkedList<>(PERMUTATIONS.get(ticks%PERMUTATIONS.size()));
         List<Player> playersPermut = new LinkedList<>();
         for(PlayerID id:playersPermutId){
-            for(Player p:players){
+            for(Player p:players()){
                 if(p.id().equals(id)){
                     playersPermut.add(p);
                 }
@@ -220,17 +220,17 @@ public final class GameState {
             playerID = p.id();
 
 
-            if(p.position().isCentral() && board.blockAt(playerCell)==Block.BONUS_BOMB && !consumedBonuses.contains(playerCell)){
+            if(p.position().isCentral() && board().blockAt(playerCell)==Block.BONUS_BOMB && !consumedBonuses.contains(playerCell)){
                 consumedBonuses.add(playerCell);
                 playerBonuses.put(playerID, Bonus.INC_BOMB);
-            }else if (p.position().isCentral() && board.blockAt(playerCell)==Block.BONUS_RANGE && !consumedBonuses.contains(playerCell)){
+            }else if (p.position().isCentral() && board().blockAt(playerCell)==Block.BONUS_RANGE && !consumedBonuses.contains(playerCell)){
                 consumedBonuses.add(playerCell);
                 playerBonuses.put(playerID, Bonus.INC_RANGE);
             }
         }
 
         // (2) NextBoard
-        Board nextBoard = nextBoard(board, consumedBonuses, blastedCells);
+        Board nextBoard = nextBoard(board(), consumedBonuses, blastedCells);
 
         // (3) Explosions
 
@@ -268,9 +268,9 @@ public final class GameState {
         }
 
         // (6) NextPlayers
-        List<Player> nextPlayers =  nextPlayers(players, playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
+        List<Player> nextPlayers =  nextPlayers(players(), playerBonuses, bombedCells, nextBoard, blastedCells, speedChangeEvents);
 
-        return new GameState(ticks+1, nextBoard, nextPlayers, nextBombs, nextExplosion, nextBlasts);
+        return new GameState(ticks()+1, nextBoard, nextPlayers, nextBombs, nextExplosion, nextBlasts);
     }
 
 
