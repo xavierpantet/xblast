@@ -100,7 +100,7 @@ public final class Player {
      * @return vrai <=> le joueur est encore vivant (boolean)
      */
     public boolean isAlive(){
-        return (this.lives()>0)? true:false;
+        return (lives()>0)? true:false;
     }
 
     /**
@@ -141,7 +141,7 @@ public final class Player {
      * @return un joueur identique ayant newMaxBombs bombes à disposition simultanément (Player)
      */
     public Player withMaxBombs(int newMaxBombs){
-        return new Player(id, lifeStates, directedPositions, newMaxBombs, bombRange);
+        return new Player(id(), lifeStates(), directedPositions(), newMaxBombs, bombRange());
     }
 
     /**
@@ -158,7 +158,7 @@ public final class Player {
      * @return un joueur identique ayant newBombRange de portée (Player)
      */
     public Player withBombRange(int newBombRange){
-        return new Player(id, lifeStates, directedPositions, maxBombs, newBombRange);
+        return new Player(id(), lifeStates(), directedPositions(), maxBombs(), newBombRange);
     }
 
     /**
@@ -166,7 +166,7 @@ public final class Player {
      * @return une bombe déposée par le joueur (Bomb)
      */
     public Bomb newBomb(){
-        return new Bomb(id, position().containingCell(), Ticks.BOMB_FUSE_TICKS, bombRange);
+        return new Bomb(id(), position().containingCell(), Ticks.BOMB_FUSE_TICKS, bombRange());
     }
 
     /**
@@ -248,7 +248,7 @@ public final class Player {
          * @return une position dirigée identique ayant la position donnée (DirectedPosition)
          */
         public DirectedPosition withPosition(SubCell newPosition){
-            return new DirectedPosition (newPosition, direction);
+            return new DirectedPosition (newPosition, direction());
         }
 
         /**
@@ -265,7 +265,7 @@ public final class Player {
          * @return une position dirigée identique ayant la direction indiquée (DirectedPosition)
          */
         public DirectedPosition withDirection(Direction newDirection){
-            return new DirectedPosition (position, newDirection);
+            return new DirectedPosition (position(), newDirection);
         }
     }
 
@@ -319,7 +319,7 @@ public final class Player {
          * @return vrai <=> le joueur peut bouger ou non (boolean)
          */
         public boolean canMove(){
-            return (this.state==State.VULNERABLE)||(this.state==State.INVULNERABLE);
+            return (state()==State.VULNERABLE)||(state()==State.INVULNERABLE);
         }
     }
 

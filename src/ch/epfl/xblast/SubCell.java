@@ -71,8 +71,8 @@ public final class SubCell {
      */
     public int distanceToCentral() {
         // Calcul des coordonnées
-        int caseX = x%COLUMNS;
-        int caseY = y%ROWS;
+        int caseX = x()%COLUMNS;
+        int caseY = y()%ROWS;
 
         // Calcul de la distance
         int distX = Math.abs(caseX-midCaseX);
@@ -97,16 +97,16 @@ public final class SubCell {
     public SubCell neighbor(Direction d){
         switch(d){
         case E:
-            return new SubCell(x+1, y);
+            return new SubCell(x()+1, y());
 
         case W:
-            return new SubCell(x-1, y);
+            return new SubCell(x()-1, y());
 
         case N:
-            return new SubCell(x, y-1);
+            return new SubCell(x(), y()-1);
 
         case S:
-            return new SubCell(x, y+1);
+            return new SubCell(x(), y()+1);
 
         default:
             return null;
@@ -120,8 +120,8 @@ public final class SubCell {
      */
     public Cell containingCell(){
         // Nombre de cases en largeur et longueur
-        int numeroColonne = (int) Math.ceil(x/16);
-        int numeroLigne = (int) Math.ceil(y/16);
+        int numeroColonne = (int) Math.ceil(x()/16);
+        int numeroLigne = (int) Math.ceil(y()/16);
 
         return new Cell(numeroColonne, numeroLigne);
     }
@@ -138,7 +138,7 @@ public final class SubCell {
             if (that instanceof SubCell){
                 // On vérifie si les coordonnées normalisées sont les mêmes
                 SubCell c = (SubCell) that;
-                return (this.x==c.x() && this.y==c.y());
+                return (x()==c.x() && y()==c.y());
             }
             return false;
         }
@@ -151,7 +151,7 @@ public final class SubCell {
      */
     @Override
     public int hashCode(){
-        return y*Cell.COLUMNS*COLUMNS+x;
+        return y()*Cell.COLUMNS*COLUMNS+x();
     }
 
     /**
@@ -160,6 +160,6 @@ public final class SubCell {
      */
     @Override
     public String toString(){
-        return "("+x+", "+y+")";
+        return "("+x()+", "+y()+")";
     }
 }

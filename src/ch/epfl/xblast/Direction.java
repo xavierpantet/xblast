@@ -1,5 +1,7 @@
 package ch.epfl.xblast;
 
+import java.util.NoSuchElementException;
+
 /**
  * Enumération des 4 directions que l'on peut prendre dans le jeu.
  * Pour Nord, Est, Sud et West
@@ -8,11 +10,12 @@ package ch.epfl.xblast;
 public enum Direction {
     N, E, S, W;
 
-    /**
+     /**
      * Retourne la direction opposée à laquelle on applique la méthode.
      * @return la direction opposée (Direction)
+     * @throws NoSuchElementException
      */
-    public Direction opposite(){
+    public Direction opposite() throws NoSuchElementException {
         switch(this){
         case E:
             return W;
@@ -27,7 +30,7 @@ public enum Direction {
             return N;
 
         default:
-            return null;
+            throw new NoSuchElementException();
         }
     }
 

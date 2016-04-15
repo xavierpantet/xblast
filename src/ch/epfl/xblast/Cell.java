@@ -131,7 +131,7 @@ public final class Cell {
      * @return l'index de la case en ROW_MAJOR_ORDER (int)
      */
     public int rowMajorIndex(){
-        return y*COLUMNS+x;
+        return y()*COLUMNS+x();
     }
 
     /**
@@ -142,10 +142,10 @@ public final class Cell {
      */
     public Cell neighbor(Direction d){
         // On détecte les éventuels problèmes liés au tore
-        boolean leftProblem=(x==0 && d.equals(Direction.W));
-        boolean rightProblem=(x==COLUMNS-1 && d.equals(Direction.E));
-        boolean topProblem=(y==0 && d.equals(Direction.N));
-        boolean bottomProblem=(y==ROWS-1 && d.equals(Direction.S));
+        boolean leftProblem=(x()==0 && d.equals(Direction.W));
+        boolean rightProblem=(x()==COLUMNS-1 && d.equals(Direction.E));
+        boolean topProblem=(y()==0 && d.equals(Direction.N));
+        boolean bottomProblem=(y()==ROWS-1 && d.equals(Direction.S));
         int indexOfThisCell=rowMajorIndex();
 
         // Si on est dans un cas problématique
@@ -192,7 +192,7 @@ public final class Cell {
 
                 // On vérifie si les coordonnées normalisées sont les mêmes
                 Cell c = (Cell) that;
-                return (this.x==c.x() && this.y==c.y());
+                return (x()==c.x() && y()==c.y());
             }
             return false;
         }
@@ -214,7 +214,7 @@ public final class Cell {
      */
     @Override
     public String toString(){
-        return "("+x+", "+y+")";
+        return "("+x()+", "+y()+")";
     }
 
 }
