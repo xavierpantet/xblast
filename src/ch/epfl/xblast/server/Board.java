@@ -59,33 +59,29 @@ public final class Board {
      * @throws IllegalArgumentException
      */
     public static Board ofInnerBlocksWalled(List<List<Block>> innerBlocks) throws IllegalArgumentException{
-        try{
-            checkBlockMatrix(innerBlocks, Cell.ROWS-2, Cell.COLUMNS-2);
+        checkBlockMatrix(innerBlocks, Cell.ROWS-2, Cell.COLUMNS-2);
 
-            List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
+        List<Sq<Block>> tmpBlocks = new ArrayList<Sq<Block>>();
 
-            // On ajoute le mur du haut
-            tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
-            for(List<Block> l : innerBlocks){
+        // On ajoute le mur du haut
+        tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+        for(List<Block> l : innerBlocks){
 
-                // On commence une ligne par un mur
-                tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
+            // On commence une ligne par un mur
+            tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
 
-                // On ajoute les blocs
-                for(Block e:l){
-                    tmpBlocks.add(Sq.constant(e));
-                }
-
-                // On termine par un mur
-                tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));  
+            // On ajoute les blocs
+            for(Block e:l){
+                tmpBlocks.add(Sq.constant(e));
             }
 
-            // On ajoute le mur du bas
-            tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
-            return new Board(tmpBlocks);
-        } catch(IllegalArgumentException e){
-            throw new IllegalArgumentException(e);
+            // On termine par un mur
+            tmpBlocks.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));  
         }
+
+        // On ajoute le mur du bas
+        tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+        return new Board(tmpBlocks);
     }
 
     /**
@@ -96,41 +92,35 @@ public final class Board {
      */  
     public static Board ofQuadrantNWBlocksWalled(List<List<Block>> quadrantNWBlocks) throws IllegalArgumentException{
         List<Sq<Block>> tmpBlocks = new LinkedList<Sq<Block>>();
+        checkBlockMatrix(quadrantNWBlocks, (Cell.ROWS-1)/2, (Cell.COLUMNS-1)/2);
 
-        try{
-            checkBlockMatrix(quadrantNWBlocks, (Cell.ROWS-1)/2, (Cell.COLUMNS-1)/2);
+        // On ajoute la première ligne de blocs indestructibles
+        tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
 
-            // On ajoute la première ligne de blocs indestructibles
-            tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
+        List<Sq<Block>> tmpLine = new LinkedList<>();
+        // Pour chaque ligne de la matrice d'entrée
+        for(List<Block> l : quadrantNWBlocks){
 
-            List<Sq<Block>> tmpLine = new LinkedList<>();
-            // Pour chaque ligne de la matrice d'entrée
-            for(List<Block> l : quadrantNWBlocks){
+            // On ajoute le mur gauche
+            tmpLine.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
 
-                // On ajoute le mur gauche
-                tmpLine.add(Sq.constant(Block.INDESTRUCTIBLE_WALL));
-
-                // Puis, on ajoute chaque élément
-                for(Block b : l){
-                    tmpLine.add(Sq.constant(b));
-                }
-
-                // On ajoute au board la ligne obtenue en miroir
-                tmpLine=Lists.mirrored(tmpLine);
-                tmpBlocks.addAll(tmpLine);
-                tmpLine.clear();
+            // Puis, on ajoute chaque élément
+            for(Block b : l){
+                tmpLine.add(Sq.constant(b));
             }
 
-            /* A ce stade, on obient les (Cell.ROWS-1)/2 premières lignes du board
-             * Il suffit de retirer la dernière demi-ligne et de prendre le board en miroir
-             * pour obtenir le board final
-             */
-            tmpBlocks=tmpBlocks.subList(0, tmpBlocks.size()-(Cell.COLUMNS-1)/2);
-            tmpBlocks=Lists.mirrored(tmpBlocks);
-
-        }catch(Exception e){
-            throw new IllegalArgumentException(e);
+            // On ajoute au board la ligne obtenue en miroir
+            tmpLine=Lists.mirrored(tmpLine);
+            tmpBlocks.addAll(tmpLine);
+            tmpLine.clear();
         }
+
+        /* A ce stade, on obient les (Cell.ROWS-1)/2 premières lignes du board
+         * Il suffit de retirer la dernière demi-ligne et de prendre le board en miroir
+         * pour obtenir le board final
+         */
+        tmpBlocks=tmpBlocks.subList(0, tmpBlocks.size()-(Cell.COLUMNS-1)/2);
+        tmpBlocks=Lists.mirrored(tmpBlocks);
         return new Board(tmpBlocks);  
     }
 

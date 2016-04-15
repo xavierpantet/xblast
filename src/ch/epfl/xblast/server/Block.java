@@ -15,7 +15,7 @@ public enum Block {
      * Constructeur par défaut.
      */
     private Block() {
-        this.maybeAssociatedBonus=null;
+        maybeAssociatedBonus=null;
     }
 
     /**
