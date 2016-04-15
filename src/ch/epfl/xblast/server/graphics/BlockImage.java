@@ -1,4 +1,4 @@
-package ch.epfl.xblast.server;
+package ch.epfl.xblast.server.graphics;
 
 public enum BlockImage {
 
