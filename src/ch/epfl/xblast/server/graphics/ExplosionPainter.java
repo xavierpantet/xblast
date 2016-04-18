@@ -9,7 +9,7 @@ import ch.epfl.xblast.server.Bomb;
  */
 public final class ExplosionPainter {
     
-    public static float BYTE_FOR_EMPTY = 0b10000;
+    public static final int BYTE_FOR_EMPTY = 0b10000;
             
     /**
      * Constructeur par défaut privé car la classe n'est pas instanciable
