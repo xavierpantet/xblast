@@ -17,7 +17,7 @@ public final class PlayerPainter {
         Direction dir = player.direction();
         SubCell position = player.position();
         
-        if(state!=State.INVULNERABLE){
+        if(!(state==State.INVULNERABLE && tick%2==0)){
             switch(id){
             case PLAYER_2:
                 byteCode+=20;

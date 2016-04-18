@@ -3,6 +3,7 @@ package ch.epfl.xblast.server.graphics;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
@@ -22,8 +23,8 @@ public final class BoardPainter {
      * @param pallet    (Map<Block, BlockImage>) une palette établissant la correspondance entre les blocks et leurs images respectives
      * @param shadowedBlock (BlockImage) le bloc-image à utiliser pour les ombres projetées
      */
-    public BoardPainter(Map<Block, BlockImage> pallet, BlockImage shadowedBlock){
-        this.pallet=Collections.unmodifiableMap(new HashMap<>(pallet));
+    public BoardPainter(Map<Block, BlockImage> pallet, BlockImage shadowedBlock) throws NullPointerException{
+        this.pallet=Objects.requireNonNull(Collections.unmodifiableMap(new HashMap<>(pallet)));
         this.shadowedBlock=shadowedBlock;
     }
     
@@ -39,7 +40,7 @@ public final class BoardPainter {
         
         // Si le bloc est libre, on doit savoir si le bloc à gauche projette une ombre ou pas
         if(block==Block.FREE){
-            if(board.blockAt(cell.neighbor(Direction.W)).castsShadow()){
+            if(!board.blockAt(cell.neighbor(Direction.W)).castsShadow()){
                id=pallet.get(Block.FREE).ordinal(); 
             }
             else{
