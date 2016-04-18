@@ -1,4 +1,6 @@
-package ch.epfl.xblast.server;
+package ch.epfl.xblast.server.graphics;
+
+import ch.epfl.xblast.server.Bomb;
 
 /**
  * Représente un peintre de bombes et d'explosions
@@ -7,7 +9,7 @@ package ch.epfl.xblast.server;
  */
 public final class ExplosionPainter {
     
-    public static final BYTE_FOR_EMPTY = 0b10000;
+    public static float BYTE_FOR_EMPTY = 0b10000;
             
     /**
      * Constructeur par défaut privé car la classe n'est pas instanciable
@@ -30,7 +32,7 @@ public final class ExplosionPainter {
          */
         
         //Si la longeur de meche n'est pas une puissance de 2
-        if (b.fuseLength()&1==1){
+        if ((b.fuseLength()&1)==1){
            //bombe noir
             return (byte) BlockImage.BONUS_BOMB.ordinal();
         } 
