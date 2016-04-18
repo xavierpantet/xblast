@@ -19,7 +19,7 @@ public final class ExplosionPainter {
      * @param b (Bomb) la bombe à dessiner
      * @return l'octet (byte) identifiant l'image à utiliser pour dessiner la bombe qu'on lui passe ne argument.
      */
-    static final byte byteForBomb(Bomb b){
+    public static byte byteForBomb(Bomb b){
         
         /*
          * il s'agit de l'image de la bombe noire, 
@@ -27,7 +27,41 @@ public final class ExplosionPainter {
          * auquel cas il s'agit de l'image de la bombe blanche
          */
         
-        return null;
+        //Si la longeur de meche n'est pas une puissance de 2
+        if (b.fuseLength()&1==1){
+           //bombe noir
+            return (byte) BlockImage.BONUS_BOMB.ordinal();
+        } 
+        //Si c'est une puissance de 2
+        else {
+            return (byte) BlockImage.BONUS_BOMB.ordinal();
+        }
+        
+        
+    }
+    
+    public static byte byteForBlast(boolean cN, boolean cE, boolean cS, boolean cW){
+        
+        int imageNumber = 0b0000;
+        
+        if(cN==true){
+            imageNumber+= 0b1000;
+        }
+        
+        if(cE==true){
+            imageNumber+= 0b0100;
+        }
+        
+        if(cS==true){
+            imageNumber+= 0b0010;
+        }
+        
+        if(cW==true){
+            imageNumber+= 0b0001;
+        }
+        
+        return (byte) imageNumber;
+              
     }
 
 }
