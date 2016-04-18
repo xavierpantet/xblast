@@ -7,6 +7,8 @@ package ch.epfl.xblast.server;
  */
 public final class ExplosionPainter {
     
+    public static final BYTE_FOR_EMPTY = 0b10000;
+            
     /**
      * Constructeur par défaut privé car la classe n'est pas instanciable
      */
