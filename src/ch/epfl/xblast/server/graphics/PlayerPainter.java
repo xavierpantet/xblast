@@ -39,7 +39,7 @@ public final class PlayerPainter {
         }
         
         if(state==State.DYING){
-            if(player.statesForNextLife().head().lives()>=1){
+            if(player.statesForNextLife().head().lives()>1){
                 byteCode+=12;
             }
             else{
@@ -61,7 +61,7 @@ public final class PlayerPainter {
             if(remainder==1){
                 byteCode+=1;
             }
-            else if(remainder==2){
+            else if(remainder==3){
                 byteCode+=2;
             }
         }
