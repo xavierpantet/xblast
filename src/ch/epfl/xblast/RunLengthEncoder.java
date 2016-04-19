@@ -74,6 +74,12 @@ public final class RunLengthEncoder {
         return toReturn;
     }
     
+    /**
+     * Méthode de décompression.
+     * @param l la liste à décompresser
+     * @return  une liste des éléments de l décompressés
+     * @throws IllegalArgumentException
+     */
     public static List<Byte> decode(List<Byte> l) throws IllegalArgumentException {
         List<Byte> toReturn = new LinkedList<>();
         int nCopies=0;
