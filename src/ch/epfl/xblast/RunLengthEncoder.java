@@ -14,7 +14,7 @@ public final class RunLengthEncoder {
     /**
      * Méthode de compression.
      * @param l la liste d'octets à compresser
-     * @return une liste compressés des octets de l
+     * @return une liste des octets de l compressés
      */
     public static List<Byte> encode(List<Byte> l) throws IllegalArgumentException {
         
@@ -85,17 +85,30 @@ public final class RunLengthEncoder {
         int nCopies=0;
         boolean trustNCopies=false;
         
+        // Si le dernier élément est négatif, on lance une exception
         if(l.get(l.size()-1).compareTo((byte) 0) >= 0){
+            
+            // On parcourt les éléments de la liste
             for(Byte b : l){
+                
+                // Si l'élément est négatif, il s'agit d'un nombre de répétitions, que l'on stocke en indiquant
+                // que cette valeur est à prendre en compte pour l'ajout des éléments suivants
                 if(b.compareTo((byte) 0) < 0){
                     nCopies=-b+2;
                     trustNCopies=true;
                 }
+                
+                // Si l'élément est positif, il s'agit de l'élément à ajouter
                 else{
+                    
+                    // Si on doit tenir compte d'un nombre de répétitions précédents, on l'ajoute nCopies fois
                     if(trustNCopies){
                         toReturn.addAll(Collections.nCopies(nCopies, b));
                         trustNCopies=false;
                     }
+                    
+                    // Sinon, il s'agit d'un élément seul ou d'un doublet qui ne dépendent pas d'un nombre de répétitions
+                    // donc on les ajoute simplement tels quels
                     else{
                         toReturn.add(b);
                     }
