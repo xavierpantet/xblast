@@ -7,9 +7,19 @@ import ch.epfl.xblast.server.Player;
 import ch.epfl.xblast.server.Player.LifeState;
 import ch.epfl.xblast.server.Player.LifeState.State;
 
+/**
+ * Classe permettant de peindre les joueurs selon leurs caractéristiques.
+ * @author Xavier Pantet (260473)
+ */
 public final class PlayerPainter {
     private PlayerPainter(){}
     
+    /**
+     * Retourne l'octet correspondant à l'image qui doit être utilisée pour peindre le joueur.
+     * @param tick  le tick
+     * @param player    le joueur
+     * @return
+     */
     public static byte byteForPlayer(int tick, Player player){
         int byteCode=0;
         PlayerID id = player.id();
