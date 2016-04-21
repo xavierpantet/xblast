@@ -9,6 +9,7 @@ import java.util.Set;
 
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
+import ch.epfl.xblast.RunLengthEncoder;
 import ch.epfl.xblast.server.graphics.BoardPainter;
 import ch.epfl.xblast.server.graphics.ExplosionPainter;
 import ch.epfl.xblast.server.graphics.PlayerPainter;
@@ -70,8 +71,9 @@ public final class GameStateSerializer {
         
         encodedGame.add((byte)Math.ceil(g.remainingTime()/2));
         
-        //Compression
-        
-        return null;
+        //Compression et retour
+   
+        return RunLengthEncoder.encode(encodedGame);
+
     }
 }
