@@ -55,6 +55,12 @@ public class RunLengthEncoderTest {
     }
     
     @Test
+    public void encodeWorksOnDoubleSimpleArray(){
+        List<Byte> l3 = new LinkedList<>(Arrays.asList((byte) 4, (byte) 4, (byte) 3));
+        assertEquals(l3, RunLengthEncoder.decode(RunLengthEncoder.encode(l3)));
+    }
+    
+    @Test
     public void encodeWorksOnTrivialArray(){
         List<Byte> l3 = new LinkedList<>(Arrays.asList((byte) 3));
         assertEquals(l3, RunLengthEncoder.encode(l3));
