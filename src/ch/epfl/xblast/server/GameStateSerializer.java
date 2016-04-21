@@ -1,10 +1,17 @@
 package ch.epfl.xblast.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import ch.epfl.xblast.Cell;
+import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.server.graphics.BoardPainter;
+import ch.epfl.xblast.server.graphics.ExplosionPainter;
+import ch.epfl.xblast.server.graphics.PlayerPainter;
 
 /**
  * Représente un sérialiseur d'état de jeu
@@ -29,19 +36,41 @@ public final class GameStateSerializer {
     
         List<Byte> encodedGame = new ArrayList<Byte>();
         Board board = g.board();
+        Set<Cell> blastedCells = new HashSet<Cell>(g.blastedCells());
+        Map<Cell, Bomb> bombedCells = new HashMap<Cell, Bomb>(g.bombedCells());
+        int tick = g.ticks();
         
         //UTILISER SPIRAL ORDER !!!!!!!!!
         
         //Encodage du board
-        for(int i=0; i<Cell.ROWS; i++){
-            for(int j=0; j<Cell.COLUMNS; j++){
-                encodedGame.add(b.byteForCell(board, new Cell(i, j)));
-            }
+        for(Cell c : Cell.SPIRAL_ORDER){
+                encodedGame.add(b.byteForCell(board, c));
         }
         
         //Encodage des bombes et explosions
-        for()
+        for(Cell c : Cell.ROW_MAJOR_ORDER){
+            
+            if(bombedCells.containsKey(c)){
+                encodedGame.add(ExplosionPainter.byteForBomb(bombedCells.get(c)));
+            }else if(blastedCells.contains(c)&&board.blockAt(c).isFree()){
+                encodedGame.add(ExplosionPainter.byteForBlast(blastedCells.contains(c.neighbor(Direction.N)), blastedCells.contains(c.neighbor(Direction.E)), blastedCells.contains(c.neighbor(Direction.S)), blastedCells.contains(c.neighbor(Direction.W))));
+            } else {
+                encodedGame.add(ExplosionPainter.BYTE_FOR_EMPTY);
+            }
+        }
         
+        //Encodage des players
+        
+        //VOIR SI IL FAUT PLAYERS OU BIEN ALIVE PLAYERS
+        for(Player p: g.players()){
+            encodedGame.add(PlayerPainter.byteForPlayer(tick, p));
+        }
+        
+        //Encodage du temps restant
+        
+        encodedGame.add((byte)Math.ceil(g.remainingTime()/2));
+        
+        //Compression
         
         return null;
     }
