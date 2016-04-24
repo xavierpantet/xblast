@@ -129,6 +129,16 @@ public class RunLengthEncoderTest {
         assertEquals(l8, RunLengthEncoder.decode(RunLengthEncoder.encode(l8)));
     }
     
+    @Test (expected=NullPointerException.class)
+    public void encodeThrowsNullPointerException(){
+        RunLengthEncoder.encode(new LinkedList<Byte>());
+    }
+    
+    @Test (expected=NullPointerException.class)
+    public void decodeThrowsNullPointerException(){
+        RunLengthEncoder.decode(new LinkedList<Byte>());
+    }
+    
     @Test (expected=IllegalArgumentException.class)
     public void decodeThrowsException(){
         List<Byte> l = new LinkedList<>(Arrays.asList((byte) 2, (byte) -3));
