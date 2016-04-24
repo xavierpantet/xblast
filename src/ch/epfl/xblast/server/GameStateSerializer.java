@@ -73,7 +73,8 @@ public final class GameStateSerializer {
         
         //Compression et retour
    
-        return RunLengthEncoder.encode(encodedGame);
+        //return RunLengthEncoder.encode(encodedGame);
+        return (encodedGame);
 
     }
 }
