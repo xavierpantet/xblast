@@ -80,6 +80,26 @@ public class RunLengthEncoderTest {
     }
     
     @Test
+    public void encodeWorksOnLongSequencesArray(){
+        List<Byte> l1 = new LinkedList<>(Arrays.asList((byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2,
+                (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 2));
+        List<Byte> t1 = new LinkedList<>(Arrays.asList((byte) -128, (byte) 2, (byte) -8, (byte) 2));
+        assertEquals(t1, RunLengthEncoder.encode(l1));
+    }
+    
+    @Test
     public void decodeWorksProperlyWithEncodeArrays(){
         List<Byte> l = new LinkedList<>(Arrays.asList((byte) 3, (byte) 3, (byte) 3, (byte) 3));
         assertEquals(l, RunLengthEncoder.decode(RunLengthEncoder.encode(l)));
@@ -107,6 +127,16 @@ public class RunLengthEncoderTest {
         
         List<Byte> l8 = new LinkedList<>(Arrays.asList((byte) 1, (byte) 0, (byte) 1, (byte) 1, (byte) 1, (byte) 0, (byte) 1, (byte) 0, (byte) 0, (byte) 0, (byte) 1, (byte) 0, (byte) 1, (byte) 1, (byte) 0, (byte) 1, (byte) 0, (byte) 1, (byte) 0, (byte) 0, (byte) 0, (byte) 0));
         assertEquals(l8, RunLengthEncoder.decode(RunLengthEncoder.encode(l8)));
+    }
+    
+    @Test (expected=NullPointerException.class)
+    public void encodeThrowsNullPointerException(){
+        RunLengthEncoder.encode(new LinkedList<Byte>());
+    }
+    
+    @Test (expected=NullPointerException.class)
+    public void decodeThrowsNullPointerException(){
+        RunLengthEncoder.decode(new LinkedList<Byte>());
     }
     
     @Test (expected=IllegalArgumentException.class)
