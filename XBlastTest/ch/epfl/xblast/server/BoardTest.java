@@ -146,17 +146,17 @@ public class BoardTest {
         Block xx = Block.DESTRUCTIBLE_WALL;
         Board board = Board.ofInnerBlocksWalled(
                 Arrays.asList(
-                        Arrays.asList(__, __, __, __, __, xx, __, __, __, __, __, __, __),
-                        Arrays.asList(__, XX, xx, XX, xx, XX, xx, __, __, __, __, __, __),
-                        Arrays.asList(__, xx, __, __, __, xx, __, __, __, __, __, __, __),
-                        Arrays.asList(xx, XX, __, XX, XX, XX, XX, __, __, __, __, __, __),
-                        Arrays.asList(__, xx, __, xx, __, __, __, __, __, __, __, __, __),
-                        Arrays.asList(xx, XX, xx, XX, xx, XX, __, __, __, __, __, __, __),
-                        Arrays.asList(__, __, __, __, __, xx, __, __, __, __, __, __, __),
-                        Arrays.asList(__, XX, xx, XX, xx, XX, xx, __, __, __, __, __, __),
-                        Arrays.asList(__, xx, __, __, __, xx, __, __, __, __, __, __, __),
-                        Arrays.asList(xx, XX, __, XX, XX, XX, XX, __, __, __, __, __, __),
-                        Arrays.asList(__, xx, __, xx, __, __, __, __, __, __, __, __, __)));
+                        Arrays.asList(__, __, __, __, __, xx, __),
+                        Arrays.asList(__, XX, xx, XX, xx, XX, xx),
+                        Arrays.asList(__, xx, __, __, __, xx, __),
+                        Arrays.asList(xx, XX, __, XX, XX, XX, XX),
+                        Arrays.asList(__, xx, __, xx, __, __, __),
+                        Arrays.asList(xx, XX, xx, XX, xx, XX, __),
+                        Arrays.asList(__, __, __, __, __, xx, __),
+                        Arrays.asList(__, XX, xx, XX, xx, XX, xx),
+                        Arrays.asList(__, xx, __, __, __, xx, __),
+                        Arrays.asList(xx, XX, __, XX, XX, XX, XX),
+                        Arrays.asList(__, xx, __, xx, __, __, __)));
         
         List<Player> players = new ArrayList<>();
         players.add(new Player(PlayerID.PLAYER_1, 0, new Cell(1, 1), 5, 5));
