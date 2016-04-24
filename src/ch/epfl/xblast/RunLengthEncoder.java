@@ -46,6 +46,13 @@ public final class RunLengthEncoder {
                         toReturn.add(b);
                     }
                     
+                    // Si le compteur est à 130, on devra créer une deuxième séquence car on ne
+                    // peut pas représenter un nombre plus petit que -128 sur un entier signé
+                    else if(counter==130){
+                        toReturn.add((byte) (-counter+2));
+                        counter=0;
+                    }
+                    
                     // Si on a plus de 2 éléments, on ajoute le compteur et l'élément en question
                     else{
                         toReturn.add((byte) (-counter+2));
