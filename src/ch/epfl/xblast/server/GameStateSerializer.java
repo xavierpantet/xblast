@@ -48,6 +48,8 @@ public final class GameStateSerializer {
                 encodedGame.add(b.byteForCell(board, c));
         }
         
+        System.out.println("TAILLE DE BOARD"+encodedGame.size());
+        
         //Encodage des bombes et explosions
         for(Cell c : Cell.ROW_MAJOR_ORDER){
             
@@ -60,13 +62,22 @@ public final class GameStateSerializer {
             }
         }
         
+        System.out.println("TAILLE DE BOMB"+(encodedGame.size()-195));
+        encodedGame.add((byte)99);
+        
         //Encodage des players
         
         //VOIR SI IL FAUT PLAYERS OU BIEN ALIVE PLAYERS
         for(Player p: g.players()){
+            encodedGame.add((byte)p.lives());
+            encodedGame.add((byte)p.position().x());
+            encodedGame.add((byte)p.position().y());
             encodedGame.add(PlayerPainter.byteForPlayer(tick, p));
         }
         
+        System.out.println("TAILLE DE PLAYER"+(encodedGame.size()-390));
+        
+        encodedGame.add((byte)99);
         //Encodage du temps restant
         
         encodedGame.add((byte)Math.ceil(g.remainingTime()/2));
