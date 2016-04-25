@@ -3,6 +3,7 @@ package ch.epfl.xblast.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,7 @@ public final class GameStateSerializer {
      */
     public static List<Byte> serialize(BoardPainter b, GameState g){
     
-        List<Byte> encodedGame = new ArrayList<Byte>();
+        List<Byte> encodedGame = new LinkedList<Byte>();
         Board board = g.board();
         Set<Cell> blastedCells = new HashSet<Cell>(g.blastedCells());
         Map<Cell, Bomb> bombedCells = new HashMap<Cell, Bomb>(g.bombedCells());
@@ -48,7 +49,10 @@ public final class GameStateSerializer {
                 encodedGame.add(b.byteForCell(board, c));
         }
         
-        System.out.println("TAILLE DE BOARD"+encodedGame.size());
+        encodedGame = RunLengthEncoder.encode(encodedGame);
+        encodedGame.add(0, (byte)encodedGame.size());
+        System.out.println("Board"+encodedGame);
+         encodedGame.clear();
         
         //Encodage des bombes et explosions
         for(Cell c : Cell.ROW_MAJOR_ORDER){
@@ -62,8 +66,11 @@ public final class GameStateSerializer {
             }
         }
         
-        System.out.println("TAILLE DE BOMB"+(encodedGame.size()-195));
-        encodedGame.add((byte)99);
+        encodedGame = RunLengthEncoder.encode(encodedGame);
+        encodedGame.add(0, (byte)encodedGame.size());
+        System.out.println("Board"+encodedGame);
+         encodedGame.clear();
+
         
         //Encodage des players
         
@@ -73,14 +80,20 @@ public final class GameStateSerializer {
             encodedGame.add((byte)p.position().x());
             encodedGame.add((byte)p.position().y());
             encodedGame.add(PlayerPainter.byteForPlayer(tick, p));
+          
         }
         
-        System.out.println("TAILLE DE PLAYER"+(encodedGame.size()-390));
+        System.out.println("Players"+(encodedGame));
+        encodedGame.clear();
+
         
-        encodedGame.add((byte)99);
+        
         //Encodage du temps restant
         
         encodedGame.add((byte)Math.ceil(g.remainingTime()/2));
+        
+        System.out.println("Time"+RunLengthEncoder.encode(encodedGame));
+        encodedGame.clear();
         
         //Compression et retour
    

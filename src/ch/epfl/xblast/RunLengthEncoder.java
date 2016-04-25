@@ -29,6 +29,7 @@ public final class RunLengthEncoder {
 
             // On parcourt tous les octets du tableau
             for(Byte b : l){
+                b=(byte) (b&0xFF);
                 // On vérifie qu'ils sont positifs ou nuls
                 if((b.compareTo((byte) 0) >= 0)){
 
