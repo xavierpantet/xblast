@@ -170,5 +170,15 @@ public class RunLengthEncoderTest {
         List<Byte> t1 = new LinkedList<>(Arrays.asList((byte) 1, (byte) 0, (byte) -1, (byte) 1, (byte) 0, (byte) 1, (byte) -1, (byte) 0, (byte) 1, (byte) 0, (byte) 1, (byte) 1, (byte) 0, (byte) 1, (byte) 0, (byte) 1, (byte) -2, (byte) 0));
         assertEquals(l1, RunLengthEncoder.decode(t1));
     }
+    
+    @Test
+    public void encodeWorksOnLongArray() {
+        List<Byte> l = new LinkedList<Byte>();
+        for (int i = 0; i < 195; i++) {
+            l.add((byte) 3);
+        }
+        List<Byte> t = new LinkedList<>(Arrays.asList((byte) -128,(byte) 3, (byte) -63, (byte) 3));
+        assertEquals(t, RunLengthEncoder.encode(l));
+    }
 
 }
