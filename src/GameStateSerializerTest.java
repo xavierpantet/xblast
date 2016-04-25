@@ -53,8 +53,7 @@ public class GameStateSerializerTest {
         
         GameState g = new GameState(board, players);
         
-        //System.out.println("RESULTAT"+RunLengthEncoder.encode(GameStateSerializer.serialize(bp, g)));
-        
+
         System.out.println("RESULTAT"+GameStateSerializer.serialize(bp, g));
         List<Integer> givenListI = new ArrayList<Integer>(Arrays.asList(121, -50, 2, 1, -2, 0, 3, 1, 3, 1, -2, 0, 1, 1, 3, 1, 3, 1, 3, 1, 1, -2, 0, 1, 3, 1, 3, -2, 0, -1, 1, 3, 1, 3, 1, 3, 1, 1, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 1, 0, 0, 3, 1, 3, 1, 0, 0, 1, 1, 3, 1, 1, 0, 0, 1, 3, 1, 3, 0, 0, -1, 1, 3, 1, 1, -5, 2, 3, 2, 3, -5, 2, 3, 2, 3, 1, -2, 0, 3, -2, 0, 1, 3, 2, 1, 2, 4, -128, 16, -63, 16, 3, 24, 24, 6, 3, -40, 24, 26, 3, -40, -72, 46, 3, 24, -72, 66, 60));
         List<Byte> givenListB = new ArrayList<Byte>();
@@ -63,7 +62,7 @@ public class GameStateSerializerTest {
             givenListB.add(givenListI.get(i).byteValue());
         }
         
-        System.out.println("ATTENTE"+givenListB.subList(127, givenListB.size()-1));
+        System.out.println("ATTENTEI"+givenListB);
         fail("Not yet implemented");
     }
 

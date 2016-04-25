@@ -42,66 +42,59 @@ public final class GameStateSerializer {
         Set<Cell> blastedCells = new HashSet<Cell>(g.blastedCells());
         Map<Cell, Bomb> bombedCells = new HashMap<Cell, Bomb>(g.bombedCells());
         int tick = g.ticks();
+    
         
-        //UTILISER SPIRAL ORDER !!!!!!!!!
-        
-        //Encodage du board
+        //ENCODAGE DU BOARD
+        List<Byte> encodedBoard = new LinkedList<Byte>();
         for(Cell c : Cell.SPIRAL_ORDER){
-                encodedGame.add(b.byteForCell(board, c));
+            encodedBoard.add(b.byteForCell(board, c));
         }
         
-        encodedGame = RunLengthEncoder.encode(encodedGame);
-        encodedGame.add(0, (byte)encodedGame.size());
-        System.out.println("Board"+encodedGame);
-         encodedGame.clear();
+        //On compresse le board
+        encodedBoard = RunLengthEncoder.encode(encodedBoard);
         
-        //Encodage des bombes et explosions
+        //On ajoute la taille de la liste compressée au début
+        encodedBoard.add(0, (byte)encodedBoard.size());
+        
+        //On ajoute le code du board à la liste finale
+        encodedGame.addAll(encodedBoard);
+        
+
+        //ENCODAGE DES BOMBES ET EXPLOSION
+        List<Byte> encodedBombs = new LinkedList<Byte>();
         for(Cell c : Cell.ROW_MAJOR_ORDER){
             
             if(bombedCells.containsKey(c)){
-                encodedGame.add(ExplosionPainter.byteForBomb(bombedCells.get(c)));
+                encodedBombs.add(ExplosionPainter.byteForBomb(bombedCells.get(c)));
             }else if(blastedCells.contains(c)&&board.blockAt(c).isFree()){
-                encodedGame.add(ExplosionPainter.byteForBlast(blastedCells.contains(c.neighbor(Direction.N)), blastedCells.contains(c.neighbor(Direction.E)), blastedCells.contains(c.neighbor(Direction.S)), blastedCells.contains(c.neighbor(Direction.W))));
+                encodedBombs.add(ExplosionPainter.byteForBlast(blastedCells.contains(c.neighbor(Direction.N)), blastedCells.contains(c.neighbor(Direction.E)), blastedCells.contains(c.neighbor(Direction.S)), blastedCells.contains(c.neighbor(Direction.W))));
             } else {
-                encodedGame.add(ExplosionPainter.BYTE_FOR_EMPTY);
+                encodedBombs.add(ExplosionPainter.BYTE_FOR_EMPTY);
             }
         }
         
-        encodedGame = RunLengthEncoder.encode(encodedGame);
-        encodedGame.add(0, (byte)encodedGame.size());
-        System.out.println("Board"+encodedGame);
-         encodedGame.clear();
-
+        encodedBombs = RunLengthEncoder.encode(encodedBombs);
+        encodedBombs.add(0, (byte)encodedBombs.size());
         
-        //Encodage des players
+        //On ajoute le code des bombs à la liste finale
+        encodedGame.addAll(encodedBombs);
+        
+        //ENCODAGE DES PLAYERS
         
         //VOIR SI IL FAUT PLAYERS OU BIEN ALIVE PLAYERS
         for(Player p: g.players()){
             encodedGame.add((byte)p.lives());
             encodedGame.add((byte)p.position().x());
             encodedGame.add((byte)p.position().y());
-            if(p.lifeState().state()==State.INVULNERABLE){
-                System.out.println("Prout - " + p.id());
-            }
             encodedGame.add(PlayerPainter.byteForPlayer(tick, p));
           
         }
-        
-        System.out.println("Players"+(encodedGame));
-        encodedGame.clear();
 
-        
-        
         //Encodage du temps restant
         
         encodedGame.add((byte)Math.ceil(g.remainingTime()/2));
-        
-        System.out.println("Time"+RunLengthEncoder.encode(encodedGame));
-        encodedGame.clear();
-        
-        //Compression et retour
-   
-        //return RunLengthEncoder.encode(encodedGame);
+
+        //retour
         return (encodedGame);
 
     }
