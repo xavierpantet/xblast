@@ -29,9 +29,12 @@ public final class ImageCollection {
                 .toURI());
         File[] files = dir.listFiles();
         for(File f:files){
-            if(i==Integer.parseInt(f.getName().substring(0, 3))){
-                return ImageIO.read(f);
-            }
+            //try{
+                if(i==Integer.parseInt(f.getName().substring(0, 3))){
+                    return ImageIO.read(f);
+                }
+            //}
+            //catch(Exception e){}
         }
         return null;
     }

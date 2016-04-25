@@ -40,8 +40,17 @@ public class ImageCollectionTest {
                 .toURI());
         File[] files = dir.listFiles();
         
-        for(int i=0; i<6; i++){
+        for(int i=0; i<files.length; i++){
             assertEquals(i, Integer.parseInt(files[i].getName().substring(0, 3)));
+        }
+        
+    }
+    
+    @Test
+    public void imageWithUnapropriateFileName() throws NoSuchElementException, URISyntaxException, IOException{
+        ImageCollection ic = new ImageCollection("block");
+        for(int i=0; i<7; i++){
+            ic.image(i);
         }
     }
 
