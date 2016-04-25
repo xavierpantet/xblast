@@ -93,9 +93,8 @@ public class GraphicsTests {
 
         while(t<32){
             g=g.next(map,set);
-          ++t;
           System.out.println(t);
-          
+          t++;
           if (t%4==1){
             assertEquals(7+4,PlayerPainter.byteForPlayer(t, g.players().get(0))%20);
             assertEquals(7,PlayerPainter.byteForPlayer(t, g.players().get(1))%20);
@@ -109,12 +108,11 @@ public class GraphicsTests {
             assertEquals(6,PlayerPainter.byteForPlayer(t, g.players().get(1))%20);
           }
           
-          if (t%2==0) assertEquals(85, PlayerPainter.byteForPlayer(t, g.players().get(1)),5);
+          if (t%2==1) assertEquals(85, PlayerPainter.byteForPlayer(t, g.players().get(1)),5);
           else assertEquals(25, PlayerPainter.byteForPlayer(t, g.players().get(1)),5);
           
           assertEquals(52, PlayerPainter.byteForPlayer(t, g.players().get(2)));
           assertEquals(73, PlayerPainter.byteForPlayer(t, g.players().get(3)));
-
         }
     }
 

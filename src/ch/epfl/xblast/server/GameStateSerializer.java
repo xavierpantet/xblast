@@ -11,6 +11,7 @@ import java.util.Set;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.RunLengthEncoder;
+import ch.epfl.xblast.server.Player.LifeState.State;
 import ch.epfl.xblast.server.graphics.BoardPainter;
 import ch.epfl.xblast.server.graphics.ExplosionPainter;
 import ch.epfl.xblast.server.graphics.PlayerPainter;
@@ -79,6 +80,9 @@ public final class GameStateSerializer {
             encodedGame.add((byte)p.lives());
             encodedGame.add((byte)p.position().x());
             encodedGame.add((byte)p.position().y());
+            if(p.lifeState().state()==State.INVULNERABLE){
+                System.out.println("Prout - " + p.id());
+            }
             encodedGame.add(PlayerPainter.byteForPlayer(tick, p));
           
         }

@@ -63,7 +63,7 @@ public class GameStateSerializerTest {
             givenListB.add(givenListI.get(i).byteValue());
         }
         
-        System.out.println("ATTENTE"+givenListB);
+        System.out.println("ATTENTE"+givenListB.subList(127, givenListB.size()-1));
         fail("Not yet implemented");
     }
 

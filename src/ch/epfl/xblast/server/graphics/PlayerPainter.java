@@ -4,7 +4,6 @@ import ch.epfl.xblast.Direction;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.SubCell;
 import ch.epfl.xblast.server.Player;
-import ch.epfl.xblast.server.Player.LifeState;
 import ch.epfl.xblast.server.Player.LifeState.State;
 
 /**
@@ -27,7 +26,7 @@ public final class PlayerPainter {
         Direction dir = player.direction();
         SubCell position = player.position();
         
-        if(!(state==State.INVULNERABLE && tick%2==0)){
+        if(!(state==State.INVULNERABLE && tick%2==1)){
             switch(id){
             case PLAYER_2:
                 byteCode+=20;
