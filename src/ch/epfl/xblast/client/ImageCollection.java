@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
@@ -19,8 +20,8 @@ public final class ImageCollection {
      * Constructeur qui permet de construire une collection d'accès aux images en connaissant son nom
      * @param dir   le répertoire de la collection
      */
-    public ImageCollection(String dir){
-        this.collection=dir;
+    public ImageCollection(String dir) throws NullPointerException {
+        this.collection=Objects.requireNonNull(dir);
     }
     
     /**
