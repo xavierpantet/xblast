@@ -55,6 +55,7 @@ public final class GameState {
         this.board=Objects.requireNonNull(board);
 
         if(players.size()==4){
+            Collections.sort(players, (u, v) -> Integer.compare(u.id().ordinal(), v.id().ordinal()));
             this.players = Collections.unmodifiableList(new LinkedList<Player>(players));
         }else{throw new IllegalArgumentException("La liste des joueurs doit contenir 4 éléments");}
 
