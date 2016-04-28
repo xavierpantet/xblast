@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -14,6 +15,11 @@ import javax.imageio.ImageIO;
  * @author Xavier Pantet (260473)
  */
 public final class ImageCollection {
+    private static final ArrayList<Image> imageBlock = new ArrayList<>();
+    private static final ArrayList<Image> imageExplosion = new ArrayList<>();
+    private static final ArrayList<Image> imagePlayer = new ArrayList<>();
+    private static final ArrayList<Image> imageScore = new ArrayList<>();
+    
     private final String collection;
     
     /**
@@ -21,7 +27,38 @@ public final class ImageCollection {
      * @param dir   le répertoire de la collection
      */
     public ImageCollection(String dir) throws NullPointerException {
-        this.collection=Objects.requireNonNull(dir);
+        String[] str = new String[]{"block", "explosion", "player", "score"};
+        for(String s : str){
+            try{
+                File directory = new File(ImageCollection.class
+                    .getClassLoader()
+                    .getResource(s)
+                    .toURI());
+                File[] files = directory.listFiles();
+            
+                for(File f : files){
+                    Image im = ImageIO.read(f);
+                    switch(s){
+                    case "block":
+                        imageBlock.add(im);
+                        break;
+                    
+                    case "explosion":
+                        imageExplosion.add(im);
+                        break;
+                        
+                    case "player":
+                        imagePlayer.add(im);
+                        break;
+                        
+                    default:
+                        imageScore.add(im);
+                    }
+                }
+            }
+            catch(Exception e){}
+        }
+        this.collection = Objects.requireNonNull(dir);
     }
     
     /**
@@ -46,20 +83,40 @@ public final class ImageCollection {
      * si l'index ne correspond à aucune image
      * @param i l'index de l'image
      * @return l'image pour l'index i dans la collection
-     * @throws URISyntaxException
-     * @throws IOException
      */
-    public Image imageOrNull(int i) throws URISyntaxException, IOException{
-        File dir = new File(ImageCollection.class
-                .getClassLoader()
-                .getResource(collection)
-                .toURI());
-        File[] files = dir.listFiles();
-        for(File f:files){
-            if(i==Integer.parseInt(f.getName().substring(0, 3))){
-                return ImageIO.read(f);
-            }      
+    public Image imageOrNull(int i){
+        switch(collection){
+        case "block":
+            if(i<0 || i>imageBlock.size()-1){
+                return null;
+            }
+            else{
+                return imageBlock.get(i);
+            }
+        
+        case "explosion":
+            if(i<0 || i>imageExplosion.size()-1){
+                return null;
+            }
+            else{
+                return imageExplosion.get(i);
+            }
+            
+        case "player":
+            if(i<0 || i>imagePlayer.size()-1){
+                return null;
+            }
+            else{
+                return imagePlayer.get(i);
+            }
+            
+        default:
+            if(i<0 || i>imageScore.size()-1){
+                return null;
+            }
+            else{
+                return imageScore.get(i);
+            }
         }
-        return null;
     }
 }
