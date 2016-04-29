@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.PlayerID;
@@ -88,10 +90,20 @@ public final class GameStateDeserializer {
         
         //Conversion en odre de lecture et retour
          
-        return convertToRowMajorOrder(listImage, Cell.COLUMNS, Cell.ROWS);
+        Map<Cell, Image>map=new HashMap<Cell, Image>();
+        for(int i=0; i<listImage.size(); i++){
+            map.put(Cell.SPIRAL_ORDER.get(i), listImage.get(i));
+        }
+        
+        List<Image> result = new LinkedList<Image>();
+        for(Map.Entry<Cell, Image> e: map.entrySet()){
+            result.add(e.getValue());
+        }
+        
+        return result;
     }
     //Bombes et explosions
-    private static List<Image> listForBombs(List<Byte> givenListSub) throws URISyntaxException, IOException{
+    private static List<Image> listForBombs(List<Byte> givenListSub){
         int givenListSubSize = givenListSub.size();
         boolean nextIsCompressed = false;
         int compressedNumber = 0;
@@ -125,7 +137,7 @@ public final class GameStateDeserializer {
         return listImage;
     }
     //Joueurs
-    private static List<GameStateClient.Player> listForPlayers(List<Byte> givenListSub) throws IllegalArgumentException, URISyntaxException, IOException{
+    private static List<GameStateClient.Player> listForPlayers(List<Byte> givenListSub){
         if(givenListSub.size()!=16){
             throw new IllegalArgumentException("La liste de joueur ne contient pas 16 éléments (4x4)");
         } else {
@@ -134,7 +146,7 @@ public final class GameStateDeserializer {
             for(int i=0; i<4; i++){
                 int lives = givenListSub.get(0+4*i);
                 SubCell position = new SubCell(1+4*i, 2+4*i);
-                Image image = new ImageCollection("player").imageOrNull(3+4*i);
+                Image image = new ImageCollection("player").image(3+4*i);
                 
                 players.add(new GameStateClient.Player(playerIDs[i], lives, position, image));  
             }
@@ -143,7 +155,7 @@ public final class GameStateDeserializer {
         return null;
     }
     //Score 
-    private static List<Image> listForScore(List<Byte> givenListSub) throws URISyntaxException, IOException{
+    private static List<Image> listForScore(List<Byte> givenListSub){
         ImageCollection imageCollection = new ImageCollection("score");
         List<Image> list = new LinkedList<Image>();
         
