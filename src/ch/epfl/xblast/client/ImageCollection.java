@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
@@ -23,11 +22,17 @@ public final class ImageCollection {
     private final String collection;
     
     /**
-     * Constructeur qui permet de construire une collection d'accès aux images en connaissant son nom
+     * Constructeur qui permet de construire une collection d'accès aux images en connaissant son nom.
+     * Il va aussi directement créer les collections dans les attributs statiques correspondants
+     * pour que la récupération d'une image n'implique pas de devoir recréer la liste des fichiers à chaque appel
      * @param dir   le répertoire de la collection
      */
-    public ImageCollection(String dir) throws NullPointerException {
+    public ImageCollection(String dir) {
+        
+        // On fait un tableau contenant les 4 collections possibles
         String[] str = new String[]{"block", "explosion", "player", "score"};
+        
+        // Pour chacune des collections, on crée la liste des images
         for(String s : str){
             try{
                 File directory = new File(ImageCollection.class
@@ -58,7 +63,7 @@ public final class ImageCollection {
             }
             catch(Exception e){}
         }
-        this.collection = Objects.requireNonNull(dir);
+        this.collection = dir;
     }
     
     /**
@@ -70,7 +75,7 @@ public final class ImageCollection {
      * @throws URISyntaxException
      * @throws IOException
      */
-    public Image image(int i) throws NoSuchElementException, URISyntaxException, IOException{
+    public Image image(int i) throws NoSuchElementException {
         Image im = imageOrNull(i);
         if(im!=null){
             return im;
