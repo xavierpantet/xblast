@@ -37,6 +37,11 @@ public final class GameStateClient {
         this.timeLineImages=Collections.unmodifiableList(new LinkedList<>(Objects.requireNonNull(timeLineImages)));
     }
     
+    public List<Player> players(){return players;}
+    public List<Image> boardImages(){return boardImages;}
+    public List<Image> explosivesImages(){return explosivesImages;}
+    public List<Image> scoreImages(){return scoreImages;}
+    
     /**
      * Classe pouvant représenter un joueur pour le client dans le contexte de l'état de jeu
      * @author Xavier Pantet (260473)
