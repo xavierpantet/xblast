@@ -75,16 +75,12 @@ public final class GameStateSerializer {
     
             }
         }
-        
-        System.out.println("encodedBombs Size "+encodedBombs.size());
-        System.out.println("encodedBombs List "+encodedBombs);
-        
-        
+
         encodedBombs = RunLengthEncoder.encode(encodedBombs);
         encodedBombs.add(0, (byte)encodedBombs.size());
         
         //On ajoute le code des bombs à la liste finale
-        System.out.println("encodedBombs EcodedList "+encodedBombs);
+ 
         encodedGame.addAll(encodedBombs);
         
         //ENCODAGE DES PLAYERS

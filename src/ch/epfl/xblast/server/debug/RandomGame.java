@@ -72,8 +72,7 @@ public class RandomGame {
             g=g.next(randomShit.randomSpeedChangeEvents(), randomShit.randomBombDropEvents());
 
             component.setGameState(GameStateDeserializer.deserialize(GameStateSerializer.serialize(bp, g)), PlayerID.PLAYER_1);
-            
-            
+        
             Thread.sleep(60);
             
             /*GameStatePrinter.printGameState(g);

@@ -22,6 +22,11 @@ import ch.epfl.xblast.server.GameState;
  *
  */
 public final class GameStateDeserializer {
+    private static ImageCollection imageCollectionBlock = new ImageCollection("block");
+    private static ImageCollection imageCollectionExplosion = new ImageCollection("explosion");
+    private static ImageCollection imageCollectionPlayer = new ImageCollection("block");
+    private static ImageCollection imageCollectionScore = new ImageCollection("score");
+    
     
     /**
      * Constructeur par défaut privé pour quôn ne puisse pas créer d'instance. La classe est publique, finale et non instanciable.
@@ -34,8 +39,9 @@ public final class GameStateDeserializer {
         int givenListSize = givenList.size();
         List<Byte> bytesForBoard = givenList.subList(1, givenList.get(0)+1);
         int nbOfBoardBytes = givenList.get(0);
-        int nbOfBombBytes = givenList.get(nbOfBoardBytes)+1;
-        List<Byte> bytesForBombs =  givenList.subList(givenList.get(0)+1, nbOfBoardBytes+nbOfBombBytes+3);
+        int indexOfnbOfBombBytes = nbOfBoardBytes+1;
+        int nbOfBombBytes = givenList.get(indexOfnbOfBombBytes);
+        List<Byte> bytesForBombs =  givenList.subList(indexOfnbOfBombBytes, nbOfBoardBytes+1+nbOfBombBytes+1);
         List<Byte> bytesForPlayers = givenList.subList(givenListSize-17, givenListSize-1);
         byte time = givenList.get(givenListSize-1);
         
@@ -63,7 +69,6 @@ public final class GameStateDeserializer {
         boolean nextIsCompressed = false;
         int compressedNumber = 0;
         List<Image> listImage = new LinkedList<Image>();
-        ImageCollection imageCollection = new ImageCollection("block");
         
         for (int i=0; i<givenListSubSize; i++){
             
@@ -77,11 +82,11 @@ public final class GameStateDeserializer {
                    nextIsCompressed = true; 
                 } else {
                     //Le nombre est a prendre tel quel
-                    listImage.add(imageCollection.imageOrNull(number));
+                    listImage.add(imageCollectionBlock.imageOrNull(number));
                 }
             }else{
                 //le nombre est compressé d'une valeur de "compressedNumber"
-                    listImage.addAll(Collections.nCopies(compressedNumber, imageCollection.imageOrNull(number)));
+                    listImage.addAll(Collections.nCopies(compressedNumber, imageCollectionBlock.imageOrNull(number)));
                     compressedNumber=0;
                     nextIsCompressed=false;
                     
@@ -109,9 +114,9 @@ public final class GameStateDeserializer {
         boolean nextIsCompressed = false;
         int compressedNumber = 0;
         List<Image> listImage = new LinkedList<Image>();
-        ImageCollection imageCollection = new ImageCollection("explosion");
         
-        for (int i=0; i<givenListSubSize; i++){
+        
+        for (int i=1; i<givenListSubSize; i++){
             
             byte number = givenListSub.get(i);
             if(!nextIsCompressed){
@@ -123,11 +128,13 @@ public final class GameStateDeserializer {
                    nextIsCompressed = true; 
                 } else {
                     //Le nombre est a prendre tel quel
-                    listImage.add(imageCollection.imageOrNull(number));
+                    listImage.add(imageCollectionExplosion.imageOrNull(number));
+                    System.out.println("Bombe n°"+number);
                 }
             }else{
                 //le nombre est compressé d'une valeur de "compressedNumber"
-                    listImage.addAll(Collections.nCopies(compressedNumber, imageCollection.imageOrNull(number)));
+                    listImage.addAll(Collections.nCopies(compressedNumber, imageCollectionExplosion.imageOrNull(number)));
+                    
                     compressedNumber=0;
                     nextIsCompressed=false;
                     
@@ -135,9 +142,8 @@ public final class GameStateDeserializer {
             
             
         }
-        System.out.println("CAKE"+givenListSub.size());
-        System.out.println(givenListSub);
-        
+ 
+    
         return listImage;
     }
     //Joueurs
@@ -150,7 +156,7 @@ public final class GameStateDeserializer {
             for(int i=0; i<4; i++){
                 int lives = givenListSub.get(0+4*i);
                 SubCell position = new SubCell(1+4*i, 2+4*i);
-                Image image = new ImageCollection("player").image(3+4*i);
+                Image image = imageCollectionPlayer.image(3+4*i);
                 
                 players.add(new GameStateClient.Player(playerIDs[i], lives, position, image)); 
                 
@@ -162,25 +168,25 @@ public final class GameStateDeserializer {
     }
     //Score 
     private static List<Image> listForScore(List<Byte> givenListSub){
-        ImageCollection imageCollection = new ImageCollection("score");
+        
         List<Image> list = new LinkedList<Image>();
         
         for(int i=0; i<4; i++){
            //l'image montrant le visage du joueur, de face, soit vivant soit mort
             if(givenListSub.get(0+4*i)>0){
                 //le joueur est vivant
-                list.add(imageCollection.image(i*2));
+                list.add(imageCollectionScore.image(i*2));
             } else {
-                list.add(imageCollection.image(i*2+1));
+                list.add(imageCollectionScore.image(i*2+1));
             }
            //une image de remplissage qui donne au rectangle correspondant au joueur la taille nécessaire pour qu'il soit possible d'y afficher son nombre de vies
-            list.add(imageCollection.image(10));
+            list.add(imageCollectionScore.image(10));
            //une image terminant ce rectangle
-            list.add(imageCollection.image(11));
+            list.add(imageCollectionScore.image(11));
             
             //Si on est au milieu alors on doit placer l'image de remplissage central
             if(i==1){
-                list.add(imageCollection.image(12));
+                list.add(imageCollectionScore.image(12));
             }
         }
         

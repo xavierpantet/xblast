@@ -49,7 +49,7 @@ public final class ImageCollection {
                         break;
                     
                     case "explosion":
-                        imageExplosion.add(im);
+                        imageExplosion.add(Integer.parseInt(f.getName().substring(0, 3)), im);
                         break;
                         
                     case "player":
