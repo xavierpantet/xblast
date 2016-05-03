@@ -29,7 +29,6 @@ public final class RunLengthEncoder {
 
             // On parcourt tous les octets du tableau
             for(Byte b : l){
-                b=(byte) (b&0xFF);
                 // On vérifie qu'ils sont positifs ou nuls
                 if((b.compareTo((byte) 0) >= 0)){
 
@@ -48,7 +47,7 @@ public final class RunLengthEncoder {
                     else{
 
                         // Sinon, si on a une répétition de 1 ou 2 éléments, on les ajoute tels quels
-                        if(counter>0 && counter<=2){
+                        if(counter==1 || counter==2){
                             toReturn.addAll(Collections.nCopies(counter, lastElement));
                         }
 

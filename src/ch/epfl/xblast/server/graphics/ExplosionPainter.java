@@ -34,11 +34,11 @@ public final class ExplosionPainter {
         //Si la longeur de meche n'est pas une puissance de 2
         if ((b.fuseLength()&1)==1){
            //bombe noir
-            return (byte) BlockImage.BONUS_BOMB.ordinal();
+            return (byte) 20;
         } 
         //Si c'est une puissance de 2
         else {
-            return (byte) BlockImage.BONUS_BOMB.ordinal();
+            return (byte) 21;
         }
         
         

@@ -28,20 +28,21 @@ public final class XBlastComponent extends JComponent {
         Graphics2D g = (Graphics2D) g0;
         Iterator<Image> boardIterator = gameState.boardImages().iterator();
         Iterator<Image> explosionIterator = gameState.explosivesImages().iterator();
+
         
         int idImage=0;
         while(boardIterator.hasNext() && explosionIterator.hasNext()){
             Image currentBoard=boardIterator.next();
             int x=idImage%Cell.COLUMNS*currentBoard.getWidth(null);
-            int y=(int) Math.floor((double) idImage/ (double) Cell.ROWS)*currentBoard.getHeight(null);
+            int y=(int) Math.floor((double) idImage/ (double) Cell.COLUMNS)*currentBoard.getHeight(null);
             g.drawImage(currentBoard, x, y, null);
             
-            Image currentExplosion = boardIterator.next();
+            Image currentExplosion = explosionIterator.next();
             g.drawImage(currentExplosion, x, y, null);
             idImage++;
         }
         
-        for(Image s : gameState.scoreImages()){
+        /*for(Image s : gameState.scoreImages()){
             int x=idImage%Cell.COLUMNS*s.getWidth(null);
             int y=Cell.ROWS+1;
             g.drawImage(s, x, y, null);
@@ -62,7 +63,7 @@ public final class XBlastComponent extends JComponent {
         
         for(Player p: orderedPlayers){
             g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
-        }
+        }*/
         
     }
     

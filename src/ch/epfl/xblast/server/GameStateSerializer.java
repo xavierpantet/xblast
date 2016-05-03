@@ -66,12 +66,19 @@ public final class GameStateSerializer {
             
             if(bombedCells.containsKey(c)){
                 encodedBombs.add(ExplosionPainter.byteForBomb(bombedCells.get(c)));
+              
             }else if(blastedCells.contains(c)&&board.blockAt(c).isFree()){
                 encodedBombs.add(ExplosionPainter.byteForBlast(blastedCells.contains(c.neighbor(Direction.N)), blastedCells.contains(c.neighbor(Direction.E)), blastedCells.contains(c.neighbor(Direction.S)), blastedCells.contains(c.neighbor(Direction.W))));
+          
             } else {
                 encodedBombs.add(ExplosionPainter.BYTE_FOR_EMPTY);
+    
             }
         }
+        
+        System.out.println("encodedBombs Size "+encodedBombs.size());
+        System.out.println("encodedBombs List "+encodedBombs);
+        
         
         encodedBombs = RunLengthEncoder.encode(encodedBombs);
         encodedBombs.add(0, (byte)encodedBombs.size());

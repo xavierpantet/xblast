@@ -65,7 +65,7 @@ public final class GameStateDeserializer {
         List<Image> listImage = new LinkedList<Image>();
         ImageCollection imageCollection = new ImageCollection("block");
         
-        for (int i=1; i<givenListSubSize; i++){
+        for (int i=0; i<givenListSubSize; i++){
             
             byte number = givenListSub.get(i);
             if(!nextIsCompressed){
@@ -111,7 +111,7 @@ public final class GameStateDeserializer {
         List<Image> listImage = new LinkedList<Image>();
         ImageCollection imageCollection = new ImageCollection("explosion");
         
-        for (int i=1; i<givenListSubSize; i++){
+        for (int i=0; i<givenListSubSize; i++){
             
             byte number = givenListSub.get(i);
             if(!nextIsCompressed){
@@ -133,7 +133,10 @@ public final class GameStateDeserializer {
                     
             }
             
+            
         }
+        System.out.println("CAKE"+givenListSub.size());
+        System.out.println(givenListSub);
         
         return listImage;
     }

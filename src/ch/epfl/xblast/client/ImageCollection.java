@@ -100,7 +100,8 @@ public final class ImageCollection {
             }
         
         case "explosion":
-            if(i<0 || i>imageExplosion.size()-1){
+            if(i<0 || (i>15&&i<20) || i>imageExplosion.size()-1){
+                
                 return null;
             }
             else{
