@@ -47,6 +47,7 @@ public final class GameStateDeserializer {
         List<Image> scoreImages = listForScore(bytesForPlayers);
         List<Image> timeLineImages = listForTime(time);
         
+
         return new GameStateClient(players, boardImages, explosivesImages, scoreImages, timeLineImages);
 
         
@@ -148,11 +149,13 @@ public final class GameStateDeserializer {
                 SubCell position = new SubCell(1+4*i, 2+4*i);
                 Image image = new ImageCollection("player").image(3+4*i);
                 
-                players.add(new GameStateClient.Player(playerIDs[i], lives, position, image));  
+                players.add(new GameStateClient.Player(playerIDs[i], lives, position, image)); 
+                
             }
+            return players;
         }
         
-        return null;
+      
     }
     //Score 
     private static List<Image> listForScore(List<Byte> givenListSub){
@@ -178,7 +181,7 @@ public final class GameStateDeserializer {
             }
         }
         
-        return null;
+        return list;
     }
 
     //Temps restant
@@ -192,7 +195,7 @@ public final class GameStateDeserializer {
         //éteind
         list.addAll(Collections.nCopies(60-time, imageCollection.imageOrNull(20)));
         
-        System.out.println(list.size());
+   
         return list;
     }
     

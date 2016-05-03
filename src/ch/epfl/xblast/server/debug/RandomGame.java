@@ -1,21 +1,33 @@
 package ch.epfl.xblast.server.debug;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.JFrame;
 
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.PlayerID;
+import ch.epfl.xblast.client.GameStateClient;
+import ch.epfl.xblast.client.GameStateDeserializer;
+import ch.epfl.xblast.client.XBlastComponent;
 import ch.epfl.xblast.server.Block;
 import ch.epfl.xblast.server.Board;
 import ch.epfl.xblast.server.Bomb;
 import ch.epfl.xblast.server.GameState;
+import ch.epfl.xblast.server.GameStateSerializer;
 import ch.epfl.xblast.server.Player;
+import ch.epfl.xblast.server.graphics.BlockImage;
+import ch.epfl.xblast.server.graphics.BoardPainter;
 
 public class RandomGame {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IllegalArgumentException, URISyntaxException, IOException {
         Block __ = Block.FREE;
         Block XX = Block.INDESTRUCTIBLE_WALL;
         Block xx = Block.DESTRUCTIBLE_WALL;
@@ -40,14 +52,35 @@ public class RandomGame {
         
         //GameState g = new GameState(board, players);
         GameState g = new GameState(0, board, players, new ArrayList<Bomb>(), new ArrayList<Sq<Sq<Cell>>>(), new ArrayList<Sq<Cell>>());
-        GameStatePrinter.printGameState(g);
+        
+        JFrame window = new JFrame("XBlast");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.pack();
+        window.setVisible(true);
+        
+        XBlastComponent component = new XBlastComponent();
+        Map<Block, BlockImage> palette=new HashMap<>();
+        palette.put(Block.FREE, BlockImage.IRON_FLOOR);
+        for(int i=1;i<Block.values().length;i++)
+            palette.put(Block.values()[i], BlockImage.values()[i+1]);
+        
+   
+        BoardPainter bp= new BoardPainter(palette, BlockImage.IRON_FLOOR_S);
+        window.add(component);
+        
         while(!g.isGameOver()){
             g=g.next(randomShit.randomSpeedChangeEvents(), randomShit.randomBombDropEvents());
-            GameStatePrinter.printGameState(g);
+
+            component.setGameState(GameStateDeserializer.deserialize(GameStateSerializer.serialize(bp, g)), PlayerID.PLAYER_1);
+            
+            
+            Thread.sleep(60);
+            
+            /*GameStatePrinter.printGameState(g);
            
                 Thread.sleep(60);
             
-            System.out.println("\u001b[2J");
+            System.out.println("\u001b[2J");*/
         }
     }
 

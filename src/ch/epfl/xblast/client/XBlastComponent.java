@@ -6,7 +6,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JComponent;
 
@@ -54,6 +56,14 @@ public final class XBlastComponent extends JComponent {
             g.drawString(String.valueOf(p.lives()), xPos[idImage], 659);
             idImage++;
         }
+        
+        List<Player> orderedPlayers = gameState.players();
+        //Collections.sort(orderedPlayers, (p1, p2) -> Integer.compare(p1.position().y(), p2.position().y()));
+        
+        for(Player p: orderedPlayers){
+            g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
+        }
+        
     }
     
     public void setGameState(GameStateClient gameState, PlayerID playerId){

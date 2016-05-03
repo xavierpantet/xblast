@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.swing.JFrame;
+
 import org.junit.Test;
 
 import ch.epfl.cs108.Sq;
@@ -80,5 +82,18 @@ public class RandomTestGame {
             }
         }
         player_positions.close();
+    }
+    
+    @Test
+    public void testGraphicPositionsRandomGame() throws InterruptedException, IOException, URISyntaxException {
+        RandomEventGenerator randEvents = new RandomEventGenerator(2016, 30, 100);
+        
+        GameState s = new GameState(createBoard(), createPlayers(3, 2, 3, POS_NW, POS_NE, POS_SE, POS_SW));
+        while (!s.isGameOver()) {
+            s = s.next(randEvents.randomSpeedChangeEvents(), randEvents.randomBombDropEvents());
+            
+            JFrame window = new JFrame("Jeu");
+            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
     }
 }
