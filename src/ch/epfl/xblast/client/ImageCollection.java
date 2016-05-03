@@ -28,22 +28,16 @@ public final class ImageCollection {
      * @param dir   le répertoire de la collection
      */
     public ImageCollection(String dir) {
-        
-        // On fait un tableau contenant les 4 collections possibles
-        String[] str = new String[]{"block", "explosion", "player", "score"};
-        
-        // Pour chacune des collections, on crée la liste des images
-        for(String s : str){
             try{
                 File directory = new File(ImageCollection.class
                     .getClassLoader()
-                    .getResource(s)
+                    .getResource(dir)
                     .toURI());
                 File[] files = directory.listFiles();
             
                 for(File f : files){
                     Image im = ImageIO.read(f);
-                    switch(s){
+                    switch(dir){
                     case "block":
                         imageBlock.add(im);
                         break;
@@ -62,7 +56,6 @@ public final class ImageCollection {
                 }
             }
             catch(Exception e){}
-        }
         this.collection = dir;
     }
     
