@@ -34,8 +34,8 @@ public final class GameStateDeserializer {
         int givenListSize = givenList.size();
         List<Byte> bytesForBoard = givenList.subList(1, givenList.get(0)+1);
         int nbOfBoardBytes = givenList.get(0);
-        int nbOfPlayerbytes = givenList.get(nbOfBoardBytes)+1;
-        List<Byte> bytesForBombs =  givenList.subList(givenList.get(0)+2, nbOfBoardBytes+nbOfPlayerbytes+3);
+        int nbOfBombBytes = givenList.get(nbOfBoardBytes)+1;
+        List<Byte> bytesForBombs =  givenList.subList(givenList.get(0)+1, nbOfBoardBytes+nbOfBombBytes+3);
         List<Byte> bytesForPlayers = givenList.subList(givenListSize-17, givenListSize-1);
         byte time = givenList.get(givenListSize-1);
         
