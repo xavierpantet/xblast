@@ -39,19 +39,19 @@ public final class ImageCollection {
                     Image im = ImageIO.read(f);
                     switch(dir){
                     case "block":
-                        imageBlock.add(im);
+                        imageBlock.add(Integer.parseInt(f.getName().substring(0, 3)), im);
                         break;
                     
                     case "explosion":
-                        imageExplosion.add(im);
+                        imageExplosion.add(Integer.parseInt(f.getName().substring(0, 3)), im);
                         break;
                         
                     case "player":
-                        imagePlayer.add(im);
+                        imagePlayer.add(Integer.parseInt(f.getName().substring(0, 3)), im);
                         break;
                         
                     default:
-                        imageScore.add(im);
+                        imageScore.add(Integer.parseInt(f.getName().substring(0, 3)), im);
                     }
                 }
             }
