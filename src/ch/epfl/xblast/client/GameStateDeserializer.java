@@ -15,6 +15,7 @@ import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.SubCell;
 import ch.epfl.xblast.client.GameStateClient.Player;
 import ch.epfl.xblast.server.GameState;
+import ch.epfl.xblast.server.graphics.PlayerPainter;
 
 /**
  * Représente un désérialiseur d'état. Elle constitue, en quelque sorte, l'inverse de la classe GameStateSerializer
@@ -156,7 +157,7 @@ public final class GameStateDeserializer {
             for(int i=0; i<4; i++){
                 int lives = givenListSub.get(0+4*i);
                 SubCell position = new SubCell(1+4*i, 2+4*i);
-                Image image = imageCollectionPlayer.image(3+4*i);
+                Image image = imageCollectionPlayer.image(1);
                 
                 players.add(new GameStateClient.Player(playerIDs[i], lives, position, image)); 
                 
