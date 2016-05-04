@@ -56,6 +56,8 @@ public class RandomGame {
         JFrame window = new JFrame("XBlast");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.pack();
+        //######## MODIFIER ET UTILISER UNE FONTCTION ET PAS METTRE LES DIMENSIONS EN DUR
+        window.setSize(960, 688);
         window.setVisible(true);
         
         XBlastComponent component = new XBlastComponent();
