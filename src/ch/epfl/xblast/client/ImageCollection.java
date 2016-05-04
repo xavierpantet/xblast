@@ -73,7 +73,7 @@ public final class ImageCollection {
         if(im!=null){
             return im;
         }
-        else{throw new NoSuchElementException("Aucune image trouvée pour l'index " + i + " dans la collection" + collection);}
+        else{throw new NoSuchElementException("Aucune image trouvée pour l'index " + i + " dans la collection " + collection);}
     }
     
     /**
@@ -110,7 +110,7 @@ public final class ImageCollection {
             }
             
         default:
-            if(i<0 || i>imageScore.size()-1){
+            if(i<0 || (i>12 && i<20) || (i>7 && i<10) || i>imageScore.size()-1){
                 return null;
             }
             else{

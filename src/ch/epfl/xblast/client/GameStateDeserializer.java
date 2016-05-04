@@ -129,8 +129,9 @@ public final class GameStateDeserializer {
                    nextIsCompressed = true; 
                 } else {
                     //Le nombre est a prendre tel quel
+              
                     listImage.add(imageCollectionExplosion.imageOrNull(number));
-                    System.out.println("Bombe n°"+number);
+          
                 }
             }else{
                 //le nombre est compressé d'une valeur de "compressedNumber"
@@ -196,14 +197,14 @@ public final class GameStateDeserializer {
 
     //Temps restant
     private static List<Image> listForTime(byte time) throws URISyntaxException, IOException{
-        ImageCollection imageCollection = new ImageCollection("score");
+   
         List<Image> list = new LinkedList<Image>();
         
         //allumé
-        list.addAll(Collections.nCopies(time, imageCollection.imageOrNull(21)));
+        list.addAll(Collections.nCopies(time, imageCollectionScore.imageOrNull(21)));
         
         //éteind
-        list.addAll(Collections.nCopies(60-time, imageCollection.imageOrNull(20)));
+        list.addAll(Collections.nCopies(60-time, imageCollectionScore.imageOrNull(20)));
         
    
         return list;
