@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.omg.Messaging.SyncScopeHelper;
+
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.SubCell;
@@ -25,7 +27,7 @@ import ch.epfl.xblast.server.graphics.PlayerPainter;
 public final class GameStateDeserializer {
     private static ImageCollection imageCollectionBlock = new ImageCollection("block");
     private static ImageCollection imageCollectionExplosion = new ImageCollection("explosion");
-    private static ImageCollection imageCollectionPlayer = new ImageCollection("block");
+    private static ImageCollection imageCollectionPlayer = new ImageCollection("player");
     private static ImageCollection imageCollectionScore = new ImageCollection("score");
     
     
@@ -53,8 +55,7 @@ public final class GameStateDeserializer {
         List<Image> explosivesImages = listForBombs(bytesForBombs);
         List<Image> scoreImages = listForScore(bytesForPlayers);
         List<Image> timeLineImages = listForTime(time);
-        
-
+   
         return new GameStateClient(players, boardImages, explosivesImages, scoreImages, timeLineImages);
 
         
@@ -69,7 +70,7 @@ public final class GameStateDeserializer {
         int givenListSubSize = givenListSub.size();
         boolean nextIsCompressed = false;
         int compressedNumber = 0;
-        List<Image> listImage = new LinkedList<Image>();
+        List<Image> listImage = new ArrayList<Image>();
         
         for (int i=0; i<givenListSubSize; i++){
             
@@ -114,7 +115,7 @@ public final class GameStateDeserializer {
         int givenListSubSize = givenListSub.size();
         boolean nextIsCompressed = false;
         int compressedNumber = 0;
-        List<Image> listImage = new LinkedList<Image>();
+        List<Image> listImage = new ArrayList<Image>();
         
         
         for (int i=1; i<givenListSubSize; i++){
@@ -153,11 +154,11 @@ public final class GameStateDeserializer {
         if(givenListSub.size()!=16){
             throw new IllegalArgumentException("La liste de joueur ne contient pas 16 éléments (4x4)");
         } else {
-            List<GameStateClient.Player> players = new LinkedList<GameStateClient.Player>();
+            List<GameStateClient.Player> players = new ArrayList<GameStateClient.Player>();
             PlayerID playerIDs [] = PlayerID.values();
             for(int i=0; i<4; i++){
                 int lives = givenListSub.get(0+4*i);
-                SubCell position = new SubCell(1+4*i, 2+4*i);
+                SubCell position = new SubCell(givenListSub.get(1+4*i), givenListSub.get(2+4*i));
                 Image image = imageCollectionPlayer.image(1);
                 
                 players.add(new GameStateClient.Player(playerIDs[i], lives, position, image)); 
@@ -171,7 +172,7 @@ public final class GameStateDeserializer {
     //Score 
     private static List<Image> listForScore(List<Byte> givenListSub){
         
-        List<Image> list = new LinkedList<Image>();
+        List<Image> list = new ArrayList<Image>();
         
         for(int i=0; i<4; i++){
            //l'image montrant le visage du joueur, de face, soit vivant soit mort
@@ -186,9 +187,9 @@ public final class GameStateDeserializer {
            //une image terminant ce rectangle
             list.add(imageCollectionScore.image(11));
             
-            //Si on est au milieu alors on doit placer l'image de remplissage central
+            //Si on est au milieu alors on doit placer 8 images de remplissage central
             if(i==1){
-                list.add(imageCollectionScore.image(12));
+                list.addAll(Collections.nCopies(8, imageCollectionScore.image(12)));
             }
         }
         
@@ -198,7 +199,7 @@ public final class GameStateDeserializer {
     //Temps restant
     private static List<Image> listForTime(byte time) throws URISyntaxException, IOException{
    
-        List<Image> list = new LinkedList<Image>();
+        List<Image> list = new ArrayList<Image>();
         
         //allumé
         list.addAll(Collections.nCopies(time, imageCollectionScore.imageOrNull(21)));

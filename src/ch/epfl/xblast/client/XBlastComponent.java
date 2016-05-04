@@ -20,50 +20,62 @@ public final class XBlastComponent extends JComponent {
     GameStateClient gameState=null;
     PlayerID playerId=null;
     
+ 
+    
     public Dimension getPreferredSize(){
         return new Dimension(960, 688);
     }
     
     protected void paintComponent(Graphics g0){
         Graphics2D g = (Graphics2D) g0;
-        Iterator<Image> boardIterator = gameState.boardImages().iterator();
-        Iterator<Image> explosionIterator = gameState.explosivesImages().iterator();
 
-        
-        int idImage=0;
-        while(boardIterator.hasNext() && explosionIterator.hasNext()){
-            Image currentBoard=boardIterator.next();
-            int x=idImage%Cell.COLUMNS*currentBoard.getWidth(null);
-            int y=(int) Math.floor((double) idImage/ (double) Cell.COLUMNS)*currentBoard.getHeight(null);
-            g.drawImage(currentBoard, x, y, null);
+        List<Image> boardImages = gameState.boardImages();
+        List<Image> explosivesImages = gameState.explosivesImages();
+        //Print des blocks, bombes et explosions
+        for (int i = 0; i < boardImages.size(); i++) {
             
-            Image currentExplosion = explosionIterator.next();
-            g.drawImage(currentExplosion, x, y, null);
-            idImage++;
+            //On print le board
+            int x=i%Cell.COLUMNS*boardImages.get(i).getWidth(null);
+            int y=(int) Math.floor((double) i/ (double) Cell.COLUMNS)*boardImages.get(i).getHeight(null);
+            g.drawImage(boardImages.get(i), x, y, null);
+            
+            //On print les epxlosions et bombes
+            g.drawImage(explosivesImages.get(i), x, y, null);
+            
+        }
+
+        //Print du score
+        int scoreX = 0;
+        int scoreY=Cell.ROWS*gameState.boardImages().get(0).getHeight(null);
+        for(Image s : gameState.scoreImages()){
+            g.drawImage(s, scoreX, scoreY, null);
+            scoreX = scoreX+s.getWidth(null);
         }
         
-        for(Image s : gameState.scoreImages()){
-            int x=idImage%Cell.COLUMNS*s.getWidth(null);
-            int y=Cell.ROWS*gameState.boardImages().get(0).getHeight(null);
-            g.drawImage(s, x, y, null);
-            idImage++;
-        }
-        /*
+        //Print du nombre de vie
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 25));
         int[] xPos = new int[]{96, 240, 768, 912};
-        idImage=0;
+        int idImage = 0;
         for(Player p : gameState.players()){
             g.drawString(String.valueOf(p.lives()), xPos[idImage], 659);
             idImage++;
         }
         
+        //Print du temps restant
+        int scoreImageSize = gameState.timeLineImages().get(0).getWidth(null);
+        int idScoreImage = 0;
+        for(Image i:gameState.timeLineImages()){
+            g.drawImage(i, idScoreImage*scoreImageSize, 672, null);
+            idScoreImage++;
+        }
+       
         List<Player> orderedPlayers = gameState.players();
         //Collections.sort(orderedPlayers, (p1, p2) -> Integer.compare(p1.position().y(), p2.position().y()));
         
         for(Player p: orderedPlayers){
             g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
-        }*/
+        }
         
     }
     

@@ -41,6 +41,7 @@ public final class GameStateClient {
     public List<Image> boardImages(){return boardImages;}
     public List<Image> explosivesImages(){return explosivesImages;}
     public List<Image> scoreImages(){return scoreImages;}
+    public List<Image> timeLineImages(){return timeLineImages;}
     
     /**
      * Classe pouvant représenter un joueur pour le client dans le contexte de l'état de jeu

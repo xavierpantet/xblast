@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 
 import javax.imageio.ImageIO;
@@ -35,6 +36,20 @@ public final class ImageCollection {
                     .toURI());
                 File[] files = directory.listFiles();
             
+                //On créer une liste contenu d'éléments vides de la taille du plus grand identifiant d'image de la collection
+                if (imageExplosion.isEmpty()){
+                    //On sait que l'identifiant le plus grand est 21
+                    imageExplosion.addAll(Collections.nCopies(22, null));  
+                }
+                
+                if (imagePlayer.isEmpty()){
+                    //On sait que l'identifiant le plus grand est 21
+                    imagePlayer.addAll(Collections.nCopies(92, null));  
+                }
+                if (imageScore.isEmpty()){
+                    //On sait que l'identifiant le plus grand est 21
+                    imageScore.addAll(Collections.nCopies(22, null));  
+                }
                 for(File f : files){
                     Image im = ImageIO.read(f);
                     switch(dir){
@@ -43,15 +58,16 @@ public final class ImageCollection {
                         break;
                     
                     case "explosion":
-                        imageExplosion.add(Integer.parseInt(f.getName().substring(0, 3)), im);
+                        
+                        imageExplosion.set(Integer.parseInt(f.getName().substring(0, 3)), im);
                         break;
                         
                     case "player":
-                        imagePlayer.add(Integer.parseInt(f.getName().substring(0, 3)), im);
+                        imagePlayer.set(Integer.parseInt(f.getName().substring(0, 3)), im);
                         break;
                         
-                    default:
-                        imageScore.add(im);
+                    case "score":
+                        imageScore.set(Integer.parseInt(f.getName().substring(0, 3)), im);
                     }
                 }
             }
