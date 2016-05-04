@@ -51,7 +51,7 @@ public final class ImageCollection {
                         break;
                         
                     default:
-                        imageScore.add(Integer.parseInt(f.getName().substring(0, 3)), im);
+                        imageScore.add(im);
                     }
                 }
             }
@@ -73,7 +73,7 @@ public final class ImageCollection {
         if(im!=null){
             return im;
         }
-        else{throw new NoSuchElementException("Aucune image trouvé pour l'index " + i);}
+        else{throw new NoSuchElementException("Aucune image trouvée pour l'index " + i + " dans la collection" + collection);}
     }
     
     /**
