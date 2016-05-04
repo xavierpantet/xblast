@@ -42,13 +42,13 @@ public final class XBlastComponent extends JComponent {
             idImage++;
         }
         
-        /*for(Image s : gameState.scoreImages()){
+        for(Image s : gameState.scoreImages()){
             int x=idImage%Cell.COLUMNS*s.getWidth(null);
-            int y=Cell.ROWS+1;
+            int y=Cell.ROWS*gameState.boardImages().get(0).getHeight(null);
             g.drawImage(s, x, y, null);
             idImage++;
         }
-        
+        /*
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 25));
         int[] xPos = new int[]{96, 240, 768, 912};
