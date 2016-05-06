@@ -37,15 +37,15 @@ public final class GameStateDeserializer {
     private GameStateDeserializer(){};
     
     public static GameStateClient deserialize(List<Byte> givenList) throws IllegalArgumentException, URISyntaxException, IOException{
-        
         //Création des différentes sublists
         int givenListSize = givenList.size();
         List<Byte> bytesForBoard = givenList.subList(1, givenList.get(0)+1);
         int nbOfBoardBytes = givenList.get(0);
         int indexOfnbOfBombBytes = nbOfBoardBytes+1;
         int nbOfBombBytes = givenList.get(indexOfnbOfBombBytes);
+   
         List<Byte> bytesForBombs =  givenList.subList(indexOfnbOfBombBytes, nbOfBoardBytes+1+nbOfBombBytes+1);
-        List<Byte> bytesForPlayers = givenList.subList(givenListSize-17, givenListSize-1);
+        List<Byte> bytesForPlayers = givenList.subList(nbOfBoardBytes+1+nbOfBombBytes+1, givenListSize-1);
         byte time = givenList.get(givenListSize-1);
         
         //GameState(List<Player> players, List<Image> boardImages, List<Image> explosivesImages, List<Image> scoreImages, List<Image> timeLineImages)
@@ -151,13 +151,11 @@ public final class GameStateDeserializer {
     }
     //Joueurs
     private static List<GameStateClient.Player> listForPlayers(List<Byte> givenListSub){
-        if(givenListSub.size()!=16){
-            throw new IllegalArgumentException("La liste de joueur ne contient pas 16 éléments (4x4)");
-        } else {
+        if(givenListSub.size()%4==0){
             List<GameStateClient.Player> players = new ArrayList<GameStateClient.Player>();
             PlayerID playerIDs [] = PlayerID.values();
-            for(int i=0; i<4; i++){
-                int lives = givenListSub.get(0+4*i);
+            for(int i=0; i<givenListSub.size()/4; i++){
+                int lives = givenListSub.get(4*i);
                 SubCell position = new SubCell(Byte.toUnsignedInt(givenListSub.get(1+4*i)), Byte.toUnsignedInt(givenListSub.get(2+4*i)));
                 Image image = imageCollectionPlayer.image(givenListSub.get(3+4*i));
                 
@@ -166,6 +164,7 @@ public final class GameStateDeserializer {
             }
             return players;
         }
+        else{throw new IllegalArgumentException("La liste ne possède pas le bon nombre d'éléments");}
         
       
     }

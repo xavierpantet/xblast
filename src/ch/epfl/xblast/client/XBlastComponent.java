@@ -73,7 +73,9 @@ public final class XBlastComponent extends JComponent {
         //Collections.sort(orderedPlayers, (p1, p2) -> Integer.compare(p1.position().y(), p2.position().y()));
         
         for(Player p: orderedPlayers){
-            g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
+            if(p.lives()!=0){
+                g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
+            }
         }
         
     }
