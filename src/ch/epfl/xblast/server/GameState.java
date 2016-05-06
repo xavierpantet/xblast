@@ -387,6 +387,13 @@ public final class GameState {
                         if(b.ownerId().equals(p.id())){nbBombs++;}
                         if(p.position().containingCell().equals(b.position())){cellAlreadyOccupied=true;}
                     }
+                    
+                    // On vérifie qu'un joueur n'a pas déjà déposé une bombe
+                    for(Bomb b : bombs1){
+                        if(p.position().containingCell().equals(b.position())){
+                            cellAlreadyOccupied=true;
+                        }
+                    }
 
                     // Si c'est tout bon
                     if(nbBombs<p.maxBombs() && !cellAlreadyOccupied){
@@ -541,6 +548,6 @@ public final class GameState {
         for(Sq<Sq<Cell>> s:explosions0){
             blasts1.add(s.head());
         }
-        return blasts1;
+        return Collections.unmodifiableList(blasts1);
     }
 }
