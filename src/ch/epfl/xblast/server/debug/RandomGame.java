@@ -59,28 +59,34 @@ public class RandomGame {
         
        
         
+        // XBlast Component
         XBlastComponent component = new XBlastComponent();
-        
         Map<Integer, PlayerAction> kb = new HashMap<>();
         kb.put(KeyEvent.VK_UP, PlayerAction.MOVE_N);
+        kb.put(KeyEvent.VK_DOWN, PlayerAction.MOVE_S);
+        kb.put(KeyEvent.VK_LEFT, PlayerAction.MOVE_W);
+        kb.put(KeyEvent.VK_RIGHT, PlayerAction.MOVE_E);
+        kb.put(KeyEvent.VK_SPACE, PlayerAction.DROP_BOMB);
+        kb.put(KeyEvent.VK_SHIFT, PlayerAction.STOP);
         Consumer<PlayerAction> c = System.out::println;
-        component.addKeyListener(new KeyboardEventHandler(kb, c));
-        component.requestFocusInWindow();
         
+        
+        // Palette de blocks
         Map<Block, BlockImage> palette=new HashMap<>();
         palette.put(Block.FREE, BlockImage.IRON_FLOOR);
         for(int i=1;i<Block.values().length;i++)
             palette.put(Block.values()[i], BlockImage.values()[i+1]);
-        
-   
         BoardPainter bp= new BoardPainter(palette, BlockImage.IRON_FLOOR_S);
         component.setGameState(GameStateDeserializer.deserialize(GameStateSerializer.serialize(bp, g)), PlayerID.PLAYER_1);
+        
+        // Fenêtre
         JFrame window = new JFrame("XBlast");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.add(component);
-        
         window.pack();
         window.setVisible(true);
+        component.addKeyListener(new KeyboardEventHandler(kb, c));
+        component.requestFocusInWindow();
         
         while(!g.isGameOver()){
             g=g.next(randomShit.randomSpeedChangeEvents(), randomShit.randomBombDropEvents());
