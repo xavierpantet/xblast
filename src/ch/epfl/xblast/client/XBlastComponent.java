@@ -6,8 +6,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -16,6 +14,7 @@ import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.client.GameStateClient.Player;
 
+@SuppressWarnings("serial")
 public final class XBlastComponent extends JComponent {
     GameStateClient gameState=null;
     PlayerID playerId=null;

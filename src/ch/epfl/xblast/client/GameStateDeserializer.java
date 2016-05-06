@@ -158,8 +158,8 @@ public final class GameStateDeserializer {
             PlayerID playerIDs [] = PlayerID.values();
             for(int i=0; i<4; i++){
                 int lives = givenListSub.get(0+4*i);
-                SubCell position = new SubCell(givenListSub.get(1+4*i), givenListSub.get(2+4*i));
-                Image image = imageCollectionPlayer.image(1);
+                SubCell position = new SubCell(Byte.toUnsignedInt(givenListSub.get(1+4*i)), Byte.toUnsignedInt(givenListSub.get(2+4*i)));
+                Image image = imageCollectionPlayer.image(givenListSub.get(3+4*i));
                 
                 players.add(new GameStateClient.Player(playerIDs[i], lives, position, image)); 
                 

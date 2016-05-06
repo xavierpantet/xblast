@@ -31,15 +31,7 @@ public final class ExplosionPainter {
          * auquel cas il s'agit de l'image de la bombe blanche
          */
         
-        //Si la longeur de meche n'est pas une puissance de 2
-        if ((b.fuseLength()&1)==1){
-           //bombe noir
-            return 0b10100;
-        } 
-        //Si c'est une puissance de 2
-        else {
-            return 0b10101;
-        }
+        return (byte) (((b.fuseLength()&(b.fuseLength()-1))==0) ? 21:20);
         
         
     }

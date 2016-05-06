@@ -53,14 +53,10 @@ public class RandomGame {
         //GameState g = new GameState(board, players);
         GameState g = new GameState(0, board, players, new ArrayList<Bomb>(), new ArrayList<Sq<Sq<Cell>>>(), new ArrayList<Sq<Cell>>());
         
-        JFrame window = new JFrame("XBlast");
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.pack();
-        //######## MODIFIER ET UTILISER UNE FONTCTION ET PAS METTRE LES DIMENSIONS EN DUR
-        window.setSize(960, 688);
-        window.setVisible(true);
+       
         
         XBlastComponent component = new XBlastComponent();
+        
         Map<Block, BlockImage> palette=new HashMap<>();
         palette.put(Block.FREE, BlockImage.IRON_FLOOR);
         for(int i=1;i<Block.values().length;i++)
@@ -68,7 +64,12 @@ public class RandomGame {
         
    
         BoardPainter bp= new BoardPainter(palette, BlockImage.IRON_FLOOR_S);
+        component.setGameState(GameStateDeserializer.deserialize(GameStateSerializer.serialize(bp, g)), PlayerID.PLAYER_1);
+        JFrame window = new JFrame("XBlast");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.add(component);
+        window.pack();
+        window.setVisible(true);
         
         while(!g.isGameOver()){
             g=g.next(randomShit.randomSpeedChangeEvents(), randomShit.randomBombDropEvents());
