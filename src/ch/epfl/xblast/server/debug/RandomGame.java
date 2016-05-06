@@ -1,5 +1,6 @@
 package ch.epfl.xblast.server.debug;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -7,14 +8,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
+import ch.epfl.xblast.PlayerAction;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.client.GameStateClient;
 import ch.epfl.xblast.client.GameStateDeserializer;
+import ch.epfl.xblast.client.KeyboardEventHandler;
 import ch.epfl.xblast.client.XBlastComponent;
 import ch.epfl.xblast.server.Block;
 import ch.epfl.xblast.server.Board;
@@ -57,6 +61,12 @@ public class RandomGame {
         
         XBlastComponent component = new XBlastComponent();
         
+        Map<Integer, PlayerAction> kb = new HashMap<>();
+        kb.put(KeyEvent.VK_UP, PlayerAction.MOVE_N);
+        Consumer<PlayerAction> c = System.out::println;
+        component.addKeyListener(new KeyboardEventHandler(kb, c));
+        component.requestFocusInWindow();
+        
         Map<Block, BlockImage> palette=new HashMap<>();
         palette.put(Block.FREE, BlockImage.IRON_FLOOR);
         for(int i=1;i<Block.values().length;i++)
@@ -68,6 +78,7 @@ public class RandomGame {
         JFrame window = new JFrame("XBlast");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.add(component);
+        
         window.pack();
         window.setVisible(true);
         
