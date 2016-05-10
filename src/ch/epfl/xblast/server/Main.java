@@ -92,15 +92,15 @@ public final class Main {
                 // On prépare les variables et on reçoit les actions des joueurs
                 speedChangeEvents.clear();
                 bombDropEvents.clear();
-                receive(playersMap, channel, receivingBuffer, speedChangeEvents, bombDropEvents);
                 
-                // On calcul le temps qui a été nécessaire pour le traitement
+                // On calcule le temps qui a été nécessaire pour le traitement
                 long sleepTime = Ticks.TICK_NANOSECOND_DURATION-(System.nanoTime()-startTime);
                 
                 // Si ce temps est de plus de 50ms, on continue sans plus attendre
                 if(sleepTime>0){
-                    Thread.sleep(sleepTime/Time.MS_PER_S, (int) sleepTime%Time.MS_PER_S);
+                    Thread.sleep(0, (int) sleepTime);
                 }
+                receive(playersMap, channel, receivingBuffer, speedChangeEvents, bombDropEvents);
                 
                 // On calcule le prochain état de jeu
                 g=g.next(speedChangeEvents, bombDropEvents);
@@ -135,7 +135,7 @@ public final class Main {
                 speedChangeEvents.put(playersMap.get(senderAddress), Optional.empty());
             }
             else{
-                speedChangeEvents.put(playersMap.get(senderAddress), Optional.of(Direction.values()[receivingBuffer.get(0)+1]));
+                speedChangeEvents.put(playersMap.get(senderAddress), Optional.of(Direction.values()[receivingBuffer.get(0)-1]));
             }
             receivingBuffer.clear();
         }

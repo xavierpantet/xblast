@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -69,10 +72,16 @@ public final class XBlastComponent extends JComponent {
             idScoreImage++;
         }
        
-        List<Player> orderedPlayers = gameState.players();
-        //Collections.sort(orderedPlayers, (p1, p2) -> Integer.compare(p1.position().y(), p2.position().y()));
+        List<Player> players = new LinkedList<>(gameState.players());
+        Comparator<Player> yPositionComparator = (p1, p2) -> Integer.compare(p1.position().y(), p2.position().y());
+        Comparator<Player> idComparator = (p1, p2) -> {
+            int val1 = Math.floorMod(p1.id().ordinal()-playerId.ordinal()-1, 4);
+            int val2 = Math.floorMod(p2.id().ordinal()-playerId.ordinal()-1, 4);
+            return Integer.compare(val1, val2);
+        };
+        Collections.sort(players, yPositionComparator.thenComparing(idComparator));
         
-        for(Player p: orderedPlayers){
+        for(Player p: players){
             if(p.lives()!=0){
                 g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
             }
