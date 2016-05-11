@@ -52,7 +52,7 @@ public final class Player {
      */
     public Player(PlayerID id, int lives, Cell position, int maxBombs, int bombRange) throws NullPointerException, IllegalArgumentException{
         this(id, createStateSequence(lives),
-                Sq.constant(new DirectedPosition(SubCell.centralSubCellOf(position), Direction.S)), maxBombs, bombRange);
+                DirectedPosition.stopped(new DirectedPosition(SubCell.centralSubCellOf(position), Direction.S)), maxBombs, bombRange);
     }
 
     /**
@@ -100,7 +100,7 @@ public final class Player {
      * @return vrai <=> le joueur est encore vivant (boolean)
      */
     public boolean isAlive(){
-        return (lives()>0)? true:false;
+        return lives()>0;
     }
 
     /**

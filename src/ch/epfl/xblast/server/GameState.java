@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.ArgumentChecker;
@@ -35,6 +36,7 @@ public final class GameState {
 
     private static final List<List<PlayerID>> PERMUTATIONS = Collections.unmodifiableList(Lists.permutations(Arrays.asList(PlayerID.values())));
     private static final Random RANDOM = new Random(2016);
+    private static final int PLAYERS_NUMBER=4;
 
 
     /**
@@ -54,7 +56,7 @@ public final class GameState {
         this.ticks = ArgumentChecker.requireNonNegative(ticks);
         this.board=Objects.requireNonNull(board);
 
-        if(players.size()==4){
+        if(players.size()==PLAYERS_NUMBER){
             Collections.sort(players, (u, v) -> Integer.compare(u.id().ordinal(), v.id().ordinal()));
             this.players = Collections.unmodifiableList(new LinkedList<Player>(players));
         }else{throw new IllegalArgumentException("La liste des joueurs doit contenir 4 éléments");}
@@ -92,13 +94,7 @@ public final class GameState {
             return true;
         }
 
-        // Check du nombre de joueurs vivants
-        int nbOfAlivePlayers = 0;
-        for(Player p : players()){
-            if(p.isAlive()){nbOfAlivePlayers++;}
-        }
-
-        return nbOfAlivePlayers<=1;
+        return alivePlayers().size()<=1;
     }
 
     /**
@@ -144,14 +140,9 @@ public final class GameState {
      * @return les joueurs vivants (List<Player>)
      */
     public List<Player> alivePlayers(){
-        List<Player> alivePlayers = new LinkedList<Player>();
-
-        for(Player p: players()){
-            if(p.isAlive()){
-                alivePlayers.add(p); 
-            }
-        }
-        return alivePlayers;
+        return players.stream()
+                .filter(Player::isAlive)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -159,12 +150,8 @@ public final class GameState {
      * @return une table associative position-bombe (Map<Cell, Bomb>)
      */
     public Map<Cell, Bomb> bombedCells(){
-        Map<Cell, Bomb> bombMap=new HashMap<>();
-
-        for(Bomb b:bombs){
-            bombMap.put(b.position(), b);
-        }
-        return bombMap;
+        return bombs.stream()
+                .collect(Collectors.toMap(Bomb::position, x -> x));
     }
 
     /**
@@ -172,12 +159,9 @@ public final class GameState {
      * @return les cases sur lesquelles se trouvent une particule d'explosion (Set<Cell>)
      */
     public Set<Cell> blastedCells(){
-        Set<Cell> cellSet = new HashSet<>();
-
-        for (Sq<Cell> cell : blasts){
-            cellSet.add(cell.head());
-        }
-        return cellSet;
+        return blasts.stream()
+                .map(Sq::head)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -221,12 +205,14 @@ public final class GameState {
             playerID = p.id();
 
 
-            if(p.position().isCentral() && board().blockAt(playerCell)==Block.BONUS_BOMB && !consumedBonuses.contains(playerCell)){
+            if(p.position().isCentral() && board().blockAt(playerCell).isBonus() && !consumedBonuses.contains(playerCell)){
                 consumedBonuses.add(playerCell);
-                playerBonuses.put(playerID, Bonus.INC_BOMB);
-            }else if (p.position().isCentral() && board().blockAt(playerCell)==Block.BONUS_RANGE && !consumedBonuses.contains(playerCell)){
-                consumedBonuses.add(playerCell);
-                playerBonuses.put(playerID, Bonus.INC_RANGE);
+                if(board().blockAt(playerCell)==Block.BONUS_BOMB){
+                    playerBonuses.put(playerID, Bonus.INC_BOMB);
+                }
+                else{
+                    playerBonuses.put(playerID, Bonus.INC_RANGE);
+                }
             }
         }
 
@@ -255,7 +241,7 @@ public final class GameState {
 
         // (5) Bombes
         for (Bomb b : newBombs){
-            if(b.fuseLength()==1 || blastedCells.contains(b.position())){
+            if(b.fuseLengths().tail().isEmpty() || blastedCells.contains(b.position())){
                 nextExplosion.addAll(b.explosion());
             }else{
                 nextBombs.add(new Bomb(b.ownerId(), b.position(), b.fuseLengths().tail(), b.range()));
@@ -328,28 +314,7 @@ public final class GameState {
 
             // Si on est sur un bonus atteint par une explosion
             else if(currentCell.isBonus() && blastedCells1.contains(c)){
-
-                // On parcourt les Ticks.BONUS_DISAPPEARING_TICKS premiers éléments de la séquence pour
-                // savoir si le bonus a déjà été touché par une particule auparavent
-                boolean foundFree=false;
-                Sq<Block> tmpBlock=board0.blocksAt(c);
-
-                // On pourrait utiliser un while à la place du for + break,
-                // mais on devrait initialiser et gérer manuellement un compteur
-                for(int i=0; i<Ticks.BONUS_DISAPPEARING_TICKS; i++){
-                    if(tmpBlock.head()==Block.FREE){
-                        foundFree=true;
-                        break;
-                    }
-                    tmpBlock = tmpBlock.tail();
-                }
-
-                if(!foundFree){
-                    board1.add(Sq.constant(currentCell).limit(Ticks.BONUS_DISAPPEARING_TICKS)
-                            .concat(Sq.constant(Block.FREE)));
-                }else{
-                    board1.add(board0.blocksAt(c).tail());
-                }
+                board1.add(board0.blocksAt(c).limit(Ticks.BONUS_DISAPPEARING_TICKS).concat(Sq.constant(Block.FREE)));
             }
 
             // Si on a rien de spécial, on ne change rien

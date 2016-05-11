@@ -17,8 +17,10 @@ public final class SubCell {
     public final static int ROWS=16;
 
     // Deux variables utiles au fonctionnement de la classe
-    private final static int midCaseX = (int) Math.floor(COLUMNS/2);
-    private final static int midCaseY = (int) Math.floor(ROWS/2);
+    private final static int midCaseX = COLUMNS/2;
+    private final static int midCaseY = ROWS/2;
+    private final static int TOTAL_COLUMNS=240;
+    private final static int TOTAL_ROWS=208;
 
     // Attributs privés
     private final int x;
@@ -30,8 +32,8 @@ public final class SubCell {
      * @param y (int) l'ordonnée
      */
     public SubCell(int x, int y){
-        this.x=Math.floorMod(x, 240);
-        this.y=Math.floorMod(y, 208);
+        this.x=Math.floorMod(x, TOTAL_COLUMNS);
+        this.y=Math.floorMod(y, TOTAL_ROWS);
     }
 
     /**
@@ -120,8 +122,8 @@ public final class SubCell {
      */
     public Cell containingCell(){
         // Nombre de cases en largeur et longueur
-        int numeroColonne = (int) Math.ceil(x()/16);
-        int numeroLigne = (int) Math.ceil(y()/16);
+        int numeroColonne = x()/COLUMNS;
+        int numeroLigne = y()/ROWS;
 
         return new Cell(numeroColonne, numeroLigne);
     }

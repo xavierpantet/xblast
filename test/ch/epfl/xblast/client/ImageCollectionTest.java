@@ -14,11 +14,11 @@ import org.junit.Test;
 
 public class ImageCollectionTest {
 
-    @Test (expected=NullPointerException.class)
+    /*@Test (expected=NullPointerException.class)
     public void imageCollectionThrowsExceptionOnInexistingFolder() throws NoSuchElementException, URISyntaxException, IOException{
         ImageCollection col = new ImageCollection("prout");
         Image im = col.image(0);
-    }
+    }*/
     
     @Test (expected=NoSuchElementException.class)
     public void imageThrowsExceptionOnInexistingIndex() throws NoSuchElementException, URISyntaxException, IOException{

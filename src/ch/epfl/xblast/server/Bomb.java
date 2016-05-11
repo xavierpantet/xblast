@@ -116,7 +116,7 @@ public final class Bomb {
      */
     private Sq<Sq<Cell>> explosionArmTowards(Direction dir){
         Sq<Cell> singleParticle = Sq.iterate(position, c -> c.neighbor(dir)).limit(range);
-        Sq<Sq<Cell>> explosionArm=Sq.constant(singleParticle).limit(Ticks.EXPLOSION_TICKS);
+        Sq<Sq<Cell>> explosionArm=Sq.repeat(Ticks.EXPLOSION_TICKS, singleParticle);
         return explosionArm;
     }
 }

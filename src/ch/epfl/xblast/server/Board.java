@@ -97,7 +97,7 @@ public final class Board {
         // On ajoute la première ligne de blocs indestructibles
         tmpBlocks.addAll(Collections.nCopies(Cell.COLUMNS, Sq.constant(Block.INDESTRUCTIBLE_WALL)));
 
-        List<Sq<Block>> tmpLine = new LinkedList<>();
+        List<Sq<Block>> tmpLine = new ArrayList<>();
         // Pour chaque ligne de la matrice d'entrée
         for(List<Block> l : quadrantNWBlocks){
 

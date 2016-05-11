@@ -5,6 +5,7 @@ package ch.epfl.xblast.server;
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public enum Bonus {
+    
     /**
      * Définition concrète de applyTo. Retourne un joueur à qui l'on a fait consommer un bonus INC_BOMB, s'il en a le droit.
      * @param player (Player) le joueur qui consomme un bonus
@@ -14,7 +15,7 @@ public enum Bonus {
         @Override
         public Player applyTo(Player player) {
             int nbBombs=player.maxBombs();
-            return (nbBombs<9)? player.withMaxBombs(nbBombs+1) : player;
+            return (nbBombs<MAX_BOMBS)? player.withMaxBombs(nbBombs+1) : player;
         }
     },
 
@@ -27,9 +28,11 @@ public enum Bonus {
         @Override
         public Player applyTo(Player player) {
             int bombRange=player.bombRange();
-            return (bombRange<9)? player.withBombRange(bombRange+1) : player;
+            return (bombRange<MAX_BOMBS)? player.withBombRange(bombRange+1) : player;
         }
     };
+    
+    private static final int MAX_BOMBS = 9;
 
     abstract public Player applyTo(Player player);
 

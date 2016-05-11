@@ -39,7 +39,7 @@ public enum Block {
      * @return vrai <=> le bloc peut contenir un joueur (boolean)
      */
     public boolean canHostPlayer(){
-        return (this == Block.FREE || this.isBonus());
+        return (this.isFree() || this.isBonus());
     }
 
     /**

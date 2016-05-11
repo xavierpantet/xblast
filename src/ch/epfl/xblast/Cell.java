@@ -141,41 +141,21 @@ public final class Cell {
      * @return la case voisine dans la direction d (Cell)
      */
     public Cell neighbor(Direction d){
-        // On détecte les éventuels problèmes liés au tore
-        boolean leftProblem=(x()==0 && d.equals(Direction.W));
-        boolean rightProblem=(x()==COLUMNS-1 && d.equals(Direction.E));
-        boolean topProblem=(y()==0 && d.equals(Direction.N));
-        boolean bottomProblem=(y()==ROWS-1 && d.equals(Direction.S));
-        int indexOfThisCell=rowMajorIndex();
+        switch(d){
+        case E:
+            return new Cell(x()+1, y());
 
-        // Si on est dans un cas problématique
-        if(leftProblem){
-            return ROW_MAJOR_ORDER.get(indexOfThisCell+COLUMNS-1);
-        }
-        else if(rightProblem){
-            return ROW_MAJOR_ORDER.get(indexOfThisCell-COLUMNS+1);
-        }
-        else if(topProblem){
-            return ROW_MAJOR_ORDER.get(indexOfThisCell+(ROWS-1)*COLUMNS);
-        }
-        else if(bottomProblem){
-            return ROW_MAJOR_ORDER.get(indexOfThisCell-(ROWS-1)*COLUMNS);
-        }
+        case W:
+            return new Cell(x()-1, y());
 
-        // Si on se trouve au milieu du plateau
-        else{
-            switch(d){
-            case E:
-                return ROW_MAJOR_ORDER.get(indexOfThisCell+1);
-            case W:
-                return ROW_MAJOR_ORDER.get(indexOfThisCell-1);
-            case S:
-                return ROW_MAJOR_ORDER.get(indexOfThisCell+COLUMNS);
-            case N:
-                return ROW_MAJOR_ORDER.get(indexOfThisCell-COLUMNS);
-            default:
-                return null;
-            }
+        case N:
+            return new Cell(x(), y()-1);
+
+        case S:
+            return new Cell(x(), y()+1);
+
+        default:
+            return null;
         }
     }
 
