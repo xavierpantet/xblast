@@ -70,6 +70,7 @@ public class Main {
               //channel.configureBlocking(true);
 
               do{
+                  receivingBuffer.flip();
                   System.out.println("OK"+receivingBuffer.remaining());
                   List<Byte> toDeserialize = new ArrayList<Byte>();
               
@@ -79,6 +80,7 @@ public class Main {
                       System.out.println("K");
                   }
               
+                  System.out.println(toDeserialize);
                   PlayerID playerID = PlayerID.values()[toDeserialize.remove(0)];
                   GameStateClient deserializedGame = GameStateDeserializer.deserialize(toDeserialize);
               
