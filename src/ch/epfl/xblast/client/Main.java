@@ -60,7 +60,7 @@ public class Main {
                   Thread.sleep(1000);
               }while(channel.receive(receivingBuffer)==null);
               
-              System.out.println("VOILA JE TE PRINT LE BUFFER JUSTE APRES LE WHILE CONNARD "+sendingBuffer);
+              System.out.println("VOILA JE TE PRINT LE BUFFER JUSTE APRES LE WHILE CONNARD "+receivingBuffer);
 
               // XBlast Component
               XBlastComponent component = new XBlastComponent();

@@ -94,16 +94,18 @@ public final class Main {
                 bombDropEvents.clear();
                 
                 // On calcule le temps qui a été nécessaire pour le traitement
-                long sleepTime = Ticks.TICK_NANOSECOND_DURATION-(System.nanoTime()-startTime);
+                
                 
                 // Si ce temps est de plus de 50ms, on continue sans plus attendre
-                if(sleepTime>0){
-                    Thread.sleep(sleepTime);
-                }
+                
                 receive(playersMap, channel, receivingBuffer, speedChangeEvents, bombDropEvents);
                 
                 // On calcule le prochain état de jeu
                 g=g.next(speedChangeEvents, bombDropEvents);
+                long sleepTime = Ticks.TICK_NANOSECOND_DURATION-(System.nanoTime()-startTime);
+                if(sleepTime>0){
+                    Thread.sleep(sleepTime);
+                }
             }
         }catch (Exception e) {
             System.out.println(e.getMessage());
@@ -115,13 +117,12 @@ public final class Main {
         for(Byte b : gameState){
             sendingBuffer.put(b);
         }
+        sendingBuffer.put(0, (byte) 0);
         sendingBuffer.flip();
 
         for(Entry<SocketAddress, PlayerID> e : playersMap.entrySet()){
-            ByteBuffer sendingBufferPerPlayer = sendingBuffer.duplicate();
-            sendingBufferPerPlayer.put(0, (byte) e.getValue().ordinal());
-            sendingBufferPerPlayer.flip();
-            channel.send(sendingBufferPerPlayer, e.getKey());
+            //sendingBuffer.put(byte) e.getValue().ordinal());
+            channel.send(sendingBuffer, e.getKey());
         }
     }
     
