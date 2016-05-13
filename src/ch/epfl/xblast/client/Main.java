@@ -68,9 +68,8 @@ public class Main {
               //409 octets au maximum pour l'état sérialisé + 1 byte qui indique quel jouer on est 
               
               //channel.configureBlocking(true);
-              
+
               do{
-                  receivingBuffer.flip();
                   System.out.println("OK"+receivingBuffer.remaining());
                   List<Byte> toDeserialize = new ArrayList<Byte>();
               
