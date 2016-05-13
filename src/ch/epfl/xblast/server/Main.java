@@ -35,7 +35,7 @@ public final class Main {
         /*
          * Définition du nombre de joueurs
          */
-        int nbOfPlayers=4;
+        int nbOfPlayers=1;
         int nextPlayerID=0;
         
         Map<SocketAddress, PlayerID> playersMap = new HashMap<>();
@@ -98,7 +98,7 @@ public final class Main {
                 
                 // Si ce temps est de plus de 50ms, on continue sans plus attendre
                 if(sleepTime>0){
-                    Thread.sleep(0, (int) sleepTime);
+                    Thread.sleep(sleepTime);
                 }
                 receive(playersMap, channel, receivingBuffer, speedChangeEvents, bombDropEvents);
                 
