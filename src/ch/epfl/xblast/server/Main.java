@@ -121,8 +121,9 @@ public final class Main {
         sendingBuffer.flip();
 
         for(Entry<SocketAddress, PlayerID> e : playersMap.entrySet()){
-            //sendingBuffer.put(byte) e.getValue().ordinal());
-            channel.send(sendingBuffer, e.getKey());
+            ByteBuffer sendingBufferPerClient=sendingBuffer;
+            sendingBufferPerClient.put(0, (byte) e.getValue().ordinal());
+            channel.send(sendingBufferPerClient, e.getKey());
         }
     }
     
