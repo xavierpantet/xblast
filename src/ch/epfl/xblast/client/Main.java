@@ -75,12 +75,13 @@ public class Main {
                   List<Byte> toDeserialize = new ArrayList<Byte>();
               
                   System.out.println("OK has remaining ????"+receivingBuffer.hasRemaining()+" pourtant position "+receivingBuffer.position());
-                  while(receivingBuffer.hasRemaining()){
+                  do {
                       toDeserialize.add(receivingBuffer.get());
                       System.out.println("K");
-                  }
-              
+                  }while(receivingBuffer.hasRemaining());
+                  System.out.println("A DESERIALISER A"+toDeserialize);
                   PlayerID playerID = PlayerID.values()[toDeserialize.remove(0)];
+                  System.out.println("A DESERIALISER B"+toDeserialize);
                   GameStateClient deserializedGame = GameStateDeserializer.deserialize(toDeserialize);
               
                   // SetGameState 
