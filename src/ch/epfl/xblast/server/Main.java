@@ -6,7 +6,6 @@ import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,9 +21,8 @@ import ch.epfl.xblast.Time;
 import ch.epfl.xblast.server.graphics.BoardPainter;
 
 /**
- * Classe principale du programme serveur.
- * Le serveur commence par attendre les connexions des joueurs, puis il va calculer les états de jeu pour les renvoyer.
- * @author Xavier Pantet (260473)
+ * Programme principal du serveur.
+ * @author Xavier Pantet (260473) & Timothée Duran (258683)
  */
 public final class Main {
     /**
@@ -32,31 +30,29 @@ public final class Main {
      * @param args  un tableau pouvant contenir le nombre de joueurs effectifs qui prendront part à la partie
      */
     public static void main(String[] args) {
-        /*
-         * Définition du nombre de joueurs
-         */
-        int nbOfPlayers=4;
-        int nextPlayerID=0;
+        int nbOfPlayers=4; // Nombre de joueurs par défaut
         
-        Map<SocketAddress, PlayerID> playersMap = new HashMap<>();
+        // On met éventuellement à jour le nombre de joueurs
         if(args.length==1){
             nbOfPlayers=Integer.parseInt(args[0]);
         }
         
-        /*
-         * Programme principal
-         */
+        // Table associtative SocketAddress -> PlayerID
+        Map<SocketAddress, PlayerID> playersMap = new HashMap<>();
+
         try {
             // Création du channel et liaison avec le port 2016
             DatagramChannel channel;
             channel = DatagramChannel.open(StandardProtocolFamily.INET);
             channel.bind(new InetSocketAddress(2016));
 
+            // Création du buffer de réception
             ByteBuffer receivingBuffer = ByteBuffer.allocate(1);
             
             /*
              * Phase 1: on attend les connexions des joueurs
              */
+            int nextPlayerID=0; // id du prochain joueur à ajouter à la partie
             while(playersMap.size()!=nbOfPlayers){
                 SocketAddress senderAddress = channel.receive(receivingBuffer);
                 
@@ -81,7 +77,8 @@ public final class Main {
             Map<PlayerID, Optional<Direction>> speedChangeEvents = new HashMap<>();
             Set<PlayerID> bombDropEvents = new HashSet<>();
             channel.configureBlocking(false);
-            long startTime = System.nanoTime();
+            
+            long startTime = System.nanoTime(); // Temps du début de la partie
             
             while(!g.isGameOver()){
                 // On sérialise le gameState et on l'envoie
@@ -92,22 +89,23 @@ public final class Main {
                 speedChangeEvents.clear();
                 bombDropEvents.clear();
                 
-                // On calcule le temps qui a été nécessaire pour le traitement
-                
-                
-                // Si ce temps est de plus de 50ms, on continue sans plus attendre
-                
+                // On reçoit les actions des joueurs
                 receive(playersMap, channel, receivingBuffer, speedChangeEvents, bombDropEvents);
                 
                 // On calcule le prochain état de jeu
                 g=g.next(speedChangeEvents, bombDropEvents);
                 
+                // On calcule le temps du prochain coup d'horloge
                 long nextTickTime=startTime + (long)Ticks.TICK_NANOSECOND_DURATION*g.ticks();
+                
+                // On calcule le temps pendant lequel le serveur doit "dormir"
                 long sleepTime = (long) (nextTickTime-System.nanoTime());
-                if(sleepTime>0){
+                if(sleepTime>0){ // S'il ne faut pas dormir, on ne s'arrête pas
                     Thread.sleep((long) (sleepTime*Time.MS_PER_S/Time.NS_PER_S), (int) (sleepTime%(Time.NS_PER_S/Time.MS_PER_S)));
                 }
             }
+            
+            // On affiche à l'écran l'identité du joueur qui a gagné la partie 
             if(g.winner().isPresent()){
                 System.out.println(g.winner().get());
             }
@@ -116,30 +114,58 @@ public final class Main {
         }
     }
     
+    /**
+     * Permet d'envoyer les données aux joueurs.
+     * @param gameState le GameState sérialisé à envoyer
+     * @param playersMap    la table associative des joueurs avec leur SocketAddress
+     * @param channel   le canal d'envoi
+     * @throws IOException
+     */
     private static void send(List<Byte> gameState, Map<SocketAddress, PlayerID> playersMap, DatagramChannel channel) throws IOException{
+        // On crée un buffer d'envoi
         ByteBuffer sendingBuffer = ByteBuffer.allocate(gameState.size()+1);
+        
+        // On prévoit une place pour l'identité du joueur au début
         sendingBuffer.put((byte) 0);
+        
+        // On remplit le buffer avec les données du GameState
         for(Byte b : gameState){
             sendingBuffer.put(b);
         }
         sendingBuffer.flip();
 
-
+        // Pour chacun des joueurs...
         for(Entry<SocketAddress, PlayerID> e : playersMap.entrySet()){
+            // ... on ajoute son identité et on envoie
             sendingBuffer.put(0, (byte) e.getValue().ordinal());
             channel.send(sendingBuffer, e.getKey());
         }
     }
     
+    /**
+     * Permet de recevoir les actions des joueurs pour les traiter
+     * @param playersMap    la table associative des joueurs et de leur SocketAddres
+     * @param channel   le canal de communication
+     * @param receivingBuffer   le buffer de réception
+     * @param speedChangeEvents le tableau des événements de changement de direction
+     * @param bombDropEvents    le tableau des demandes de dépôt de bombes
+     * @throws IOException
+     */
     private static void receive(Map<SocketAddress, PlayerID> playersMap,  DatagramChannel channel, ByteBuffer receivingBuffer, Map<PlayerID, Optional<Direction>> speedChangeEvents, Set<PlayerID> bombDropEvents) throws IOException{
         SocketAddress senderAddress;
         while((senderAddress = channel.receive(receivingBuffer)) !=null){
+            
+            // Si le joueur veut déposer une bombe, on remplit bombDropEvents
             if(receivingBuffer.get(0)==PlayerAction.DROP_BOMB.ordinal()){
                 bombDropEvents.add(playersMap.get(senderAddress));
             }
+            
+            // Si le joueur veut s'arrêter, on met un Optional vide dans speedChangeEvents
             else if(receivingBuffer.get(0)==PlayerAction.STOP.ordinal()){
                 speedChangeEvents.put(playersMap.get(senderAddress), Optional.empty());
             }
+            
+            // Sinon, on ajoute la direction qu'il veut emprunter
             else{
                 speedChangeEvents.put(playersMap.get(senderAddress), Optional.of(Direction.values()[receivingBuffer.get(0)-1]));
             }
