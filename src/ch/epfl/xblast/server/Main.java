@@ -58,8 +58,12 @@ public final class Main {
                 
                 // On teste que le joueur désire bien rejoindre la partie
                 if(receivingBuffer.get(0)==PlayerAction.JOIN_GAME.ordinal()){
-                    playersMap.put(senderAddress, PlayerID.values()[nextPlayerID]);
-                    nextPlayerID++;
+                    if(!playersMap.containsKey(senderAddress)){
+                        playersMap.put(senderAddress, PlayerID.values()[nextPlayerID]);
+                        System.out.println(playersMap);
+                        nextPlayerID++;
+                    }
+                    
                     receivingBuffer.clear();
                 }
             }
@@ -110,7 +114,7 @@ public final class Main {
                 System.out.println(g.winner().get());
             }
         }catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur sur le serveur: " +e.getMessage());
         }
     }
     
@@ -139,6 +143,7 @@ public final class Main {
             // ... on ajoute son identité et on envoie
             sendingBuffer.put(0, (byte) e.getValue().ordinal());
             channel.send(sendingBuffer, e.getKey());
+            sendingBuffer.rewind();
         }
     }
     
