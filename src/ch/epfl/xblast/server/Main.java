@@ -35,7 +35,7 @@ public final class Main {
         /*
          * Définition du nombre de joueurs
          */
-        int nbOfPlayers=1;
+        int nbOfPlayers=4;
         int nextPlayerID=0;
         
         Map<SocketAddress, PlayerID> playersMap = new HashMap<>();
@@ -81,10 +81,9 @@ public final class Main {
             Map<PlayerID, Optional<Direction>> speedChangeEvents = new HashMap<>();
             Set<PlayerID> bombDropEvents = new HashSet<>();
             channel.configureBlocking(false);
+            long startTime = System.nanoTime();
             
             while(!g.isGameOver()){
-                long startTime = System.nanoTime();
-                
                 // On sérialise le gameState et on l'envoie
                 List<Byte> gameState = GameStateSerializer.serialize(boardPainter, g);
                 send(gameState, playersMap, channel);
@@ -102,10 +101,15 @@ public final class Main {
                 
                 // On calcule le prochain état de jeu
                 g=g.next(speedChangeEvents, bombDropEvents);
-                long sleepTime = Ticks.TICK_NANOSECOND_DURATION-(System.nanoTime()-startTime);
+                
+                long nextTickTime=startTime + (long)Ticks.TICK_NANOSECOND_DURATION*g.ticks();
+                long sleepTime = (long) (nextTickTime-System.nanoTime());
                 if(sleepTime>0){
-                    Thread.sleep(sleepTime);
+                    Thread.sleep((long) (sleepTime*Time.MS_PER_S/Time.NS_PER_S), (int) (sleepTime%(Time.NS_PER_S/Time.MS_PER_S)));
                 }
+            }
+            if(g.winner().isPresent()){
+                System.out.println(g.winner().get());
             }
         }catch (Exception e) {
             System.out.println(e.getMessage());
@@ -114,16 +118,16 @@ public final class Main {
     
     private static void send(List<Byte> gameState, Map<SocketAddress, PlayerID> playersMap, DatagramChannel channel) throws IOException{
         ByteBuffer sendingBuffer = ByteBuffer.allocate(gameState.size()+1);
+        sendingBuffer.put((byte) 0);
         for(Byte b : gameState){
             sendingBuffer.put(b);
         }
-        sendingBuffer.put(0, (byte) 0);
         sendingBuffer.flip();
 
+
         for(Entry<SocketAddress, PlayerID> e : playersMap.entrySet()){
-            ByteBuffer sendingBufferPerClient=sendingBuffer;
-            sendingBufferPerClient.put(0, (byte) e.getValue().ordinal());
-            channel.send(sendingBufferPerClient, e.getKey());
+            sendingBuffer.put(0, (byte) e.getValue().ordinal());
+            channel.send(sendingBuffer, e.getKey());
         }
     }
     

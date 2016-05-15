@@ -47,7 +47,6 @@ public class Main {
         try {
               channel = DatagramChannel.open(StandardProtocolFamily.INET);
               SocketAddress socketAddress = new InetSocketAddress(host, 2016);
-              //channel.bind(socketAddress);
               channel.configureBlocking(false);
               
               ByteBuffer sendingBuffer = ByteBuffer.allocate(1);
@@ -59,28 +58,32 @@ public class Main {
                   channel.send(sendingBuffer, socketAddress);
                   Thread.sleep(1000);
               }while(channel.receive(receivingBuffer)==null);
-              
-              System.out.println("VOILA JE TE PRINT LE BUFFER JUSTE APRES LE WHILE CONNARD "+receivingBuffer);
 
               // XBlast Component
               XBlastComponent component = new XBlastComponent();
+              sendingBuffer.clear();
+              receivingBuffer.flip();
+              List<Byte> toDeserialize = new ArrayList<Byte>();
+              while(receivingBuffer.hasRemaining()){
+                  toDeserialize.add(receivingBuffer.get());
+              }
+              PlayerID playerID1 = PlayerID.values()[toDeserialize.remove(0)];
+              component.setGameState(GameStateDeserializer.deserialize(toDeserialize), playerID1);
+              receivingBuffer.clear();
+              toDeserialize.clear();
               
               //409 octets au maximum pour l'état sérialisé + 1 byte qui indique quel jouer on est 
               
-              //channel.configureBlocking(true);
+              SwingUtilities.invokeAndWait(() -> createUI(component, channel, sendingBuffer, socketAddress));
+              channel.configureBlocking(true);
 
-              do{
+              while(channel.receive(receivingBuffer)!=null){
                   receivingBuffer.flip();
-                  System.out.println("OK"+receivingBuffer.remaining());
-                  List<Byte> toDeserialize = new ArrayList<Byte>();
-              
-                  System.out.println("OK has remaining ????"+receivingBuffer.hasRemaining()+" pourtant position "+receivingBuffer.position());
+                 
                   while(receivingBuffer.hasRemaining()){
                       toDeserialize.add(receivingBuffer.get());
-                      System.out.println("K");
                   }
               
-                  System.out.println(toDeserialize);
                   PlayerID playerID = PlayerID.values()[toDeserialize.remove(0)];
                   GameStateClient deserializedGame = GameStateDeserializer.deserialize(toDeserialize);
               
@@ -88,20 +91,16 @@ public class Main {
                   component.setGameState(deserializedGame, playerID);
                  
                   receivingBuffer.clear();
-              }while(channel.receive(receivingBuffer)!=null);
+                  toDeserialize.clear();
+              }
           
-              SwingUtilities.invokeAndWait(() -> createUI(component));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-             
-      
-
     }
     
-    private static void createUI(XBlastComponent component){
+    private static void createUI(XBlastComponent component, DatagramChannel channel, ByteBuffer sendingBuffer, SocketAddress socketAddress){
         Map<Integer, PlayerAction> kb = new HashMap<>();
         kb.put(KeyEvent.VK_UP, PlayerAction.MOVE_N);
         kb.put(KeyEvent.VK_DOWN, PlayerAction.MOVE_S);
@@ -109,7 +108,16 @@ public class Main {
         kb.put(KeyEvent.VK_RIGHT, PlayerAction.MOVE_E);
         kb.put(KeyEvent.VK_SPACE, PlayerAction.DROP_BOMB);
         kb.put(KeyEvent.VK_SHIFT, PlayerAction.STOP);
-        Consumer<PlayerAction> c = System.out::println;
+        
+        Consumer<PlayerAction> c = k -> {
+            sendingBuffer.put((byte) k.ordinal());
+            sendingBuffer.flip();
+            try {
+                channel.send(sendingBuffer, socketAddress);
+            } catch (Exception e) {
+            }
+            sendingBuffer.clear();
+        };
         
         JFrame window = new JFrame("XBlast");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
