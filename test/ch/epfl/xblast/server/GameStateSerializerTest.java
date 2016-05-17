@@ -1,3 +1,4 @@
+package ch.epfl.xblast.server;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
