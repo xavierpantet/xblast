@@ -113,10 +113,10 @@ public final class Main {
             
             // On affiche à l'écran l'identité du joueur qui a gagné la partie 
             if(g.winner().isPresent()){
-                System.out.println(g.winner().get());
+                System.out.println("Vainqueur: " + g.winner().get());
             }
         }catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
     
