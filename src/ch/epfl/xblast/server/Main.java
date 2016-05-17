@@ -116,7 +116,7 @@ public final class Main {
                 System.out.println(g.winner().get());
             }
         }catch (Exception e) {
-            System.out.println("Erreur sur le serveur: " +e.getMessage());
+            e.printStackTrace();
         }
     }
     
@@ -174,7 +174,9 @@ public final class Main {
             
             // Sinon, on ajoute la direction qu'il veut emprunter
             else{
-                speedChangeEvents.put(playersMap.get(senderAddress), Optional.of(Direction.values()[receivingBuffer.get(0)-1]));
+                if(receivingBuffer.get(0)!=0){
+                    speedChangeEvents.put(playersMap.get(senderAddress), Optional.of(Direction.values()[receivingBuffer.get(0)-1]));
+                }
             }
             receivingBuffer.clear();
         }
