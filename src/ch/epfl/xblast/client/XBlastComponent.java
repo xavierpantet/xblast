@@ -113,9 +113,7 @@ public final class XBlastComponent extends JComponent {
         
         // On affiche
         for(Player p: players){
-            if(p.lives()!=0){
-                g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
-            }
+            g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
         }
         
     }

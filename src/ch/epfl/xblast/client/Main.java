@@ -58,6 +58,7 @@ public class Main {
             sendingBuffer.flip();
 
             // On envoie toutes les secondes, tant qu'on n'a pas de réponse du serveur
+            System.out.println("Connexion au serveur en cours...");
             do{
                 channel.send(sendingBuffer, socketAddress);
                 Thread.sleep(1000);
@@ -73,6 +74,7 @@ public class Main {
             sendingBuffer.clear();
             
             // On traite la réception du GameState
+            System.out.println("Connecté au serveur");
             receive(receivingBuffer, component);
             
             // On crée le fil Swing
@@ -85,7 +87,7 @@ public class Main {
             }
 
         } catch (Exception e) {
-            System.out.println("Erreur client: " +e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 

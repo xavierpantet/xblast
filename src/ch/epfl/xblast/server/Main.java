@@ -53,6 +53,7 @@ public final class Main {
              * Phase 1: on attend les connexions des joueurs
              */
             int nextPlayerID=0; // id du prochain joueur à ajouter à la partie
+            System.out.println("En attente de joueurs...");
             while(playersMap.size()!=nbOfPlayers){
                 SocketAddress senderAddress = channel.receive(receivingBuffer);
                 
@@ -60,7 +61,7 @@ public final class Main {
                 if(receivingBuffer.get(0)==PlayerAction.JOIN_GAME.ordinal()){
                     if(!playersMap.containsKey(senderAddress)){
                         playersMap.put(senderAddress, PlayerID.values()[nextPlayerID]);
-                        System.out.println(playersMap);
+                        System.out.println(playersMap.size() + "/" + nbOfPlayers + " trouvés");
                         nextPlayerID++;
                     }
                     
@@ -82,6 +83,7 @@ public final class Main {
             Set<PlayerID> bombDropEvents = new HashSet<>();
             channel.configureBlocking(false);
             
+            System.out.println("Début de la partie...");
             long startTime = System.nanoTime(); // Temps du début de la partie
             
             while(!g.isGameOver()){

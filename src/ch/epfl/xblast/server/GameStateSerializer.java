@@ -84,8 +84,6 @@ public final class GameStateSerializer {
         encodedGame.addAll(encodedBombs);
         
         //ENCODAGE DES PLAYERS
-        
-        //VOIR SI IL FAUT PLAYERS OU BIEN ALIVE PLAYERS
         for(Player p: g.players()){
             encodedGame.add((byte)p.lives());
             encodedGame.add((byte)p.position().x());

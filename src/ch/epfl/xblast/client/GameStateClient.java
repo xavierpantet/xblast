@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import ch.epfl.xblast.ArgumentChecker;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.SubCell;
 
@@ -62,11 +63,9 @@ public final class GameStateClient {
          */
         public Player(PlayerID id, int lives, SubCell position, Image image) throws NullPointerException, IllegalArgumentException {
             this.id=Objects.requireNonNull(id);
-            if(lives>=0){
-                this.lives=lives;
-            }else{throw new IllegalArgumentException("Le nombre de vie ne peut pas être négatif");}
+            this.lives=ArgumentChecker.requireNonNegative(lives);
             this.position=Objects.requireNonNull(position);
-            this.image=Objects.requireNonNull(image);
+            this.image=image;
         }
         
         /**
