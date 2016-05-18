@@ -22,13 +22,13 @@ import ch.epfl.xblast.PlayerID;
 
 /**
  * Programme principal du client.
- * @author Xavier Pantet (260473) & Timothée Duran (258683)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public class Main {
 
     /**
      * Classe principale chargée de lancer le programme
-     * @param args  un tableau pouvant contenir le nom d'hôte du serveur de la partie
+     * @param args (String[]) un tableau pouvant contenir le nom d'hôte du serveur de la partie
      */
     public static void main(String[] args) {
         String host = "localhost"; // Hôte par défaut

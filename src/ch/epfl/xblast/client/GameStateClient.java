@@ -13,7 +13,7 @@ import ch.epfl.xblast.SubCell;
 
 /**
  * Classe permettant de représenter un état de jeu mais adopté du point de vue du client
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class GameStateClient {
     private final List<Player> players;
@@ -24,11 +24,11 @@ public final class GameStateClient {
     
     /**
      * Constructeur
-     * @param players   la liste des joueurs
-     * @param boardImages   la liste les images pour représenter le plateau de jeu
-     * @param explosivesImages  la liste des images pour représenter les bombes et les explosions
-     * @param scoreImages   la liste des images pour représenter les scores
-     * @param timeLineImages    la liste des images pour représenter les données temporelles
+     * @param players (List<GameStateClient.Player>) la liste des joueurs
+     * @param boardImages (List<Image>) la liste les images pour représenter le plateau de jeu
+     * @param explosivesImages (List<Image>) la liste des images pour représenter les bombes et les explosions
+     * @param scoreImages (List<Image>) la liste des images pour représenter les scores
+     * @param timeLineImages (List<Image>) la liste des images pour représenter les données temporelles
      */
     public GameStateClient(List<GameStateClient.Player> players, List<Image> boardImages, List<Image> explosivesImages, List<Image> scoreImages, List<Image> timeLineImages) throws NullPointerException {
         this.players=Collections.unmodifiableList(new LinkedList<>(Objects.requireNonNull(players)));
@@ -46,7 +46,7 @@ public final class GameStateClient {
     
     /**
      * Classe pouvant représenter un joueur pour le client dans le contexte de l'état de jeu
-     * @author Xavier Pantet (260473)
+     * @author Xavier Pantet (260473), Timothée Duran (258683)
      */
     public final static class Player{
         private final PlayerID id;
@@ -56,10 +56,12 @@ public final class GameStateClient {
         
         /**
          * Constructeur
-         * @param id    l'identifiant
-         * @param lives le nombre de vies
-         * @param position  la position
-         * @param image l'image représentant le joueur
+         * @param id (PlayerID) l'identifiant
+         * @param lives (int) le nombre de vies
+         * @param position (SubCell) la position
+         * @param image (Image) l'image représentant le joueur
+         * @throws NullPointerException
+         * @throws IllegalArgumentException
          */
         public Player(PlayerID id, int lives, SubCell position, Image image) throws NullPointerException, IllegalArgumentException {
             this.id=Objects.requireNonNull(id);

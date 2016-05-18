@@ -6,15 +6,15 @@ import java.util.List;
 
 /**
  * Classe utilitaire permettant de compresser et décompresser une liste d'octets.
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class RunLengthEncoder {
     private RunLengthEncoder(){}
 
     /**
      * Méthode de compression.
-     * @param l la liste d'octets à compresser
-     * @return une liste des octets de l compressés
+     * @param l (List<Byte>) la liste d'octets à compresser
+     * @return Une liste des octets de "l" compressés
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
@@ -43,8 +43,7 @@ public final class RunLengthEncoder {
                             toReturn.add(lastElement);
                             counter=0;
                         }
-                    }
-                    else{
+                    }else{
 
                         // Sinon, si on a une répétition de 1 ou 2 éléments, on les ajoute tels quels
                         if(counter==1 || counter==2){
@@ -66,8 +65,7 @@ public final class RunLengthEncoder {
                         counter=1;
                         lastElement=b;
                     }
-                }
-                else{throw new IllegalArgumentException("Il ne peut pas y avoir de valeur négative");}
+                }else{throw new IllegalArgumentException("Il ne peut pas y avoir de valeur négative");}
             }
 
             // On doit encore gérer les derniers cas que la boucle aurait pu oublier
@@ -133,5 +131,4 @@ public final class RunLengthEncoder {
         }
         else{throw new NullPointerException("La liste ne peut pas être vide");}
     }
-
 }

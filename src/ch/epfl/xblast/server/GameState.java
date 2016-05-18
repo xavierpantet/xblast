@@ -25,6 +25,11 @@ import ch.epfl.xblast.server.Player.DirectedPosition;
 import ch.epfl.xblast.server.Player.LifeState;
 import ch.epfl.xblast.server.Player.LifeState.State;
 
+/**
+ * Calsse représentant une GameState
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
+ *
+ */
 public final class GameState {
 
     private final int ticks;

@@ -4,7 +4,7 @@ import ch.epfl.xblast.Time;
 
 /**
  * Interface décrivant le nombre de pas de différents éléments du jeu
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public interface Ticks {
     static final int PLAYER_DYING_TICKS=8;

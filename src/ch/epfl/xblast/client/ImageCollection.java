@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 
 /**
  * Classe qui permet d'accéder à un élément d'un répertoire en connaissant son index
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class ImageCollection {
     private final Map<Byte, Image> collectionMap;

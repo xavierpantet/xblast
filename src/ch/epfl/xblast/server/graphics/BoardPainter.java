@@ -12,7 +12,7 @@ import ch.epfl.xblast.server.Board;
 
 /**
  * Classe permettant de peindre le plateau de jeu en fonction des images que l'on a pour représenter chaque case.
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class BoardPainter {
     private final Map<Block, BlockImage> pallet;
@@ -20,7 +20,7 @@ public final class BoardPainter {
     
     /**
      * Constructeur de BoardPainter
-     * @param pallet    (Map<Block, BlockImage>) une palette établissant la correspondance entre les blocks et leurs images respectives
+     * @param pallet (Map<Block, BlockImage>) une palette établissant la correspondance entre les blocks et leurs images respectives
      * @param shadowedBlock (BlockImage) le bloc-image à utiliser pour les ombres projetées
      */
     public BoardPainter(Map<Block, BlockImage> pallet, BlockImage shadowedBlock) throws NullPointerException{

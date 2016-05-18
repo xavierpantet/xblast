@@ -18,7 +18,7 @@ import ch.epfl.xblast.server.graphics.PlayerPainter;
 
 /**
  * Représente un sérialiseur d'état de jeu
- * @author timotheedu
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  *
  */
 public final class GameStateSerializer {

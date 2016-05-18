@@ -22,7 +22,7 @@ import ch.epfl.xblast.server.graphics.BoardPainter;
 
 /**
  * Programme principal du serveur.
- * @author Xavier Pantet (260473) & Timothée Duran (258683)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class Main {
     /**

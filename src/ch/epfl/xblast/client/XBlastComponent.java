@@ -20,7 +20,7 @@ import ch.epfl.xblast.client.GameStateClient.Player;
 
 /**
  * Classe décrivant un composant XBlast, notamment permettra son affichage avec Swing
- * @author Xavier Pantet (260473) & Timothée Duran (258683)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 @SuppressWarnings("serial")
 public final class XBlastComponent extends JComponent {

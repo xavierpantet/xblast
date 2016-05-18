@@ -18,7 +18,7 @@ import ch.epfl.xblast.server.Player;
  * représente un niveau de jeu XBlast. 
  * Un niveau n'est rien d'autre qu'une paire composée d'un peintre de plateau qui donne le style graphique du niveau 
  * et d'un état de jeu initial — qui donne ses autres paramètres : positions et capacités initiales des joueurs, etc.
- * @author timotheedu
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  *
  */
 public final class Level {

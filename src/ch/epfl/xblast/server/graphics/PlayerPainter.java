@@ -8,7 +8,7 @@ import ch.epfl.xblast.server.Player.LifeState.State;
 
 /**
  * Classe permettant de peindre les joueurs selon leurs caractéristiques.
- * @author Xavier Pantet (260473)
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class PlayerPainter {
     private PlayerPainter(){}
