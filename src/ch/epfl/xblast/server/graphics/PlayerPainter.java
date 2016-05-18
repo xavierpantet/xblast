@@ -74,6 +74,9 @@ public final class PlayerPainter {
                 byteCode+=2;
             }
         }
+        else{
+            byteCode=15;
+        }
         
         return (byte) byteCode;
     }
