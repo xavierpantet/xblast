@@ -34,7 +34,7 @@ public final class GameStateDeserializer {
     /**
      * Méthode qui permet de deserializé une liste donnée
      * @param givenList (List<Byte>) la liste à déserialiser
-     * @return GameStateClient 
+     * @return GameStateClient
      * @throws IllegalArgumentException
      * @throws URISyntaxException
      * @throws IOException
@@ -65,7 +65,7 @@ public final class GameStateDeserializer {
     /**
      * Permet de décoder la sous-liste représentant le Board
      * @param givenListSub (List<Byte>) la liste à décoder
-     * @return (List<Image>) une liste des image à utiliser
+     * @return une liste des image à utiliser(List<Image>) 
      * @throws URISyntaxException
      * @throws IOException
      */
@@ -92,14 +92,12 @@ public final class GameStateDeserializer {
                     //Le nombre est a prendre tel quel
                     listImage.add(imageCollectionBlock.imageOrNull(number));
                 }
-            }else{
+            } else {
                 //le nombre est compressé d'une valeur de "compressedNumber"
                 listImage.addAll(Collections.nCopies(compressedNumber, imageCollectionBlock.imageOrNull(number)));
                 compressedNumber=0;
                 nextIsCompressed=false;
-
             }
-
         }
 
         //Conversion en odre de lecture
@@ -112,14 +110,13 @@ public final class GameStateDeserializer {
         for(Map.Entry<Cell, Image> e: map.entrySet()){
             result.add(e.getValue());
         }
-
         return result;
     }
 
     /**
      * Permet de décoder la sous-liste représentant les bombes et explosions
      * @param givenListSub (List<Byte>) la liste à décoder
-     * @return (List<Image>) une liste des image à utiliser
+     * @return une liste des image à utiliser (List<Image>) 
      * @return
      */
     private static List<Image> listForBombs(List<Byte> givenListSub){
@@ -127,7 +124,6 @@ public final class GameStateDeserializer {
         boolean nextIsCompressed = false;
         int compressedNumber = 0;
         List<Image> listImage = new ArrayList<Image>();
-
 
         for (int i=1; i<givenListSubSize; i++){
 
@@ -145,23 +141,21 @@ public final class GameStateDeserializer {
                     listImage.add(imageCollectionExplosion.imageOrNull(number));
 
                 }
-            }else{
+            } else {
                 //le nombre est compressé d'une valeur de "compressedNumber"
                 listImage.addAll(Collections.nCopies(compressedNumber, imageCollectionExplosion.imageOrNull(number)));
 
                 compressedNumber=0;
                 nextIsCompressed=false;
-
             }
         }
-
         return listImage;
     }
 
     /**
      * Permet de décoder la sous-liste représentant les joueurs
      * @param givenListSub (List<Byte>) la liste à décoder
-     * @return (List<GameStateClient.Player>) une liste de Player Client
+     * @return une liste de Player Client (List<GameStateClient.Player>) 
      */
     private static List<GameStateClient.Player> listForPlayers(List<Byte> givenListSub){
         if(givenListSub.size()%4==0){
@@ -171,9 +165,7 @@ public final class GameStateDeserializer {
                 int lives = givenListSub.get(4*i);
                 SubCell position = new SubCell(Byte.toUnsignedInt(givenListSub.get(1+4*i)), Byte.toUnsignedInt(givenListSub.get(2+4*i)));
                 Image image = imageCollectionPlayer.imageOrNull(givenListSub.get(3+4*i));
-
                 players.add(new GameStateClient.Player(playerIDs[i], lives, position, image)); 
-
             }
             return players;
         }
@@ -185,7 +177,7 @@ public final class GameStateDeserializer {
     /**
      * Permet de décoder la sous-liste représentant le score
      * @param givenListSub (List<Byte>) la liste à décoder
-     * @return (List<Image>) une liste des image à utiliser
+     * @return une liste des image à utiliser (List<Image>) 
      */
     private static List<Image> listForScore(List<Byte> givenListSub){
 
@@ -209,19 +201,17 @@ public final class GameStateDeserializer {
                 list.addAll(Collections.nCopies(8, imageCollectionScore.image(12)));
             }
         }
-
         return list;
     }
 
     /**
      * Permet de décoder la sous-liste représentant le temps
      * @param givenListSub (List<Byte>) la liste à décoder
-     * @return (List<Image>) une liste des image à utiliser
+     * @return une liste des image à utiliser (List<Image>) 
      * @throws URISyntaxException
      * @throws IOException
      */
     private static List<Image> listForTime(byte time) throws URISyntaxException, IOException{
-
         List<Image> list = new ArrayList<Image>();
 
         //allumé
@@ -229,7 +219,6 @@ public final class GameStateDeserializer {
 
         //éteind
         list.addAll(Collections.nCopies(60-time, imageCollectionScore.imageOrNull(20)));
-
 
         return list;
     }

@@ -17,7 +17,7 @@ import ch.epfl.xblast.server.Board;
 public final class BoardPainter {
     private final Map<Block, BlockImage> pallet;
     private final BlockImage shadowedBlock;
-    
+
     /**
      * Constructeur de BoardPainter
      * @param pallet (Map<Block, BlockImage>) une palette établissant la correspondance entre les blocks et leurs images respectives
@@ -27,21 +27,21 @@ public final class BoardPainter {
         this.pallet=Objects.requireNonNull(Collections.unmodifiableMap(new HashMap<>(pallet)));
         this.shadowedBlock=shadowedBlock;
     }
-    
+
     /**
      * Retourne l'octet correspondant à une case donnée du plateau de jeu.
-     * @param board le plateau de jeu
-     * @param cell  la case dont on veut l'octet
-     * @return l'octet de cell pour le plateau board
+     * @param board (Board) le plateau de jeu
+     * @param cell (Cell) la case dont on veut l'octet
+     * @return l'octet de cell pour le plateau board (byte)
      */
     public byte byteForCell(Board board, Cell cell){
         int id=0;
         Block block = board.blockAt(cell);
-        
+
         // Si le bloc est libre, on doit savoir si le bloc à gauche projette une ombre ou pas
         if(block==Block.FREE){
             if(!board.blockAt(cell.neighbor(Direction.W)).castsShadow()){
-               id=pallet.get(Block.FREE).ordinal(); 
+                id=pallet.get(Block.FREE).ordinal(); 
             }
             else{
                 id=shadowedBlock.ordinal();

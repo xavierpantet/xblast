@@ -26,7 +26,7 @@ import ch.epfl.xblast.client.GameStateClient.Player;
 public final class XBlastComponent extends JComponent {
     GameStateClient gameState=null;
     PlayerID playerId=null;
-    
+
     @Override
     /**
      * Redéfinition de getPreferredSize.
@@ -35,27 +35,27 @@ public final class XBlastComponent extends JComponent {
     public Dimension getPreferredSize(){
         return new Dimension(960, 688);
     }
-    
+
     @Override
     /**
      * Redéfinition de paintComponent
      * Permet de peindre le composant (l'afficher à l'écran)
-     * @param g0    le contexte graphique de l'affichage
+     * @param g0 (Graphics) le contexte graphique de l'affichage
      */
     protected void paintComponent(Graphics g0){
         Graphics2D g = (Graphics2D) g0;
-        
+
         /*
          * Affichage des blocs et des explosions
          */
         Iterator<Image> boardImagesIterator=gameState.boardImages().iterator();
         Iterator<Image> explosiveImagesIterator=gameState.explosivesImages().iterator();
         int loopCounter=0;
-        
+
         while(boardImagesIterator.hasNext() && explosiveImagesIterator.hasNext()){
             Image boardImage = boardImagesIterator.next();
             Image explosiveImage = explosiveImagesIterator.next();
-            
+
             int x = loopCounter%Cell.COLUMNS*boardImage.getWidth(null);
             int y=(int) Math.floor((double) loopCounter / (double) Cell.COLUMNS)*boardImage.getHeight(null);
             g.drawImage(boardImage, x, y, null);
@@ -72,7 +72,7 @@ public final class XBlastComponent extends JComponent {
             g.drawImage(s, scoreX, scoreY, null);
             scoreX = scoreX+s.getWidth(null);
         }
-        
+
         /*
          * Affichage du nombre de vies des joueurs
          */
@@ -84,7 +84,7 @@ public final class XBlastComponent extends JComponent {
             g.drawString(String.valueOf(p.lives()), xPos[idImage], 659);
             idImage++;
         }
-        
+
         /*
          * Affichage de la barre temporelle
          */
@@ -94,14 +94,14 @@ public final class XBlastComponent extends JComponent {
             g.drawImage(i, idScoreImage*scoreImageSize, 672, null);
             idScoreImage++;
         }
-       
+
         /*
          * Affichage des joueurs
          */
-        
+
         // On récupère les joueurs et on les stocke dans un nouveau tableau modifiable
         List<Player> players = new LinkedList<>(gameState.players());
-        
+
         // On crée un comparateur qui va trier les joueurs selon leur position y, puis si nécessaire selon leur identifiant
         Comparator<Player> yPositionComparator = (p1, p2) -> Integer.compare(p1.position().y(), p2.position().y());
         Comparator<Player> idComparator = (p1, p2) -> {
@@ -110,18 +110,18 @@ public final class XBlastComponent extends JComponent {
             return Integer.compare(val1, val2);
         };
         Collections.sort(players, yPositionComparator.thenComparing(idComparator)); // On trie
-        
+
         // On affiche
         for(Player p: players){
-                g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
+            g.drawImage(p.image(), 4*p.position().x()-24, 3*p.position().y()-52, null);
         }
-        
+
     }
-    
+
     /**
      * Permet de mettre à jour le GameState et de le redessiner
-     * @param gameState le nouveau GameState
-     * @param playerId  l'identifiant du joueur pour lequel on affiche
+     * @param gameState (GameStateClient) le nouveau GameState
+     * @param playerId (PlayerID) l'identifiant du joueur pour lequel on affiche
      */
     public void setGameState(GameStateClient gameState, PlayerID playerId){
         this.gameState=gameState;

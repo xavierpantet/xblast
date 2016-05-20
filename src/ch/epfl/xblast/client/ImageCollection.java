@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -18,36 +17,36 @@ import javax.imageio.ImageIO;
  */
 public final class ImageCollection {
     private final Map<Byte, Image> collectionMap;
-    
+
     /**
      * Constructeur qui permet de construire une collection d'accès aux images en connaissant son nom.
      * Il va aussi directement créer les collections dans les attributs statiques correspondants
      * pour que la récupération d'une image n'implique pas de devoir recréer la liste des fichiers à chaque appel
-     * @param dir   le répertoire de la collection
+     * @param dir (String) le répertoire de la collection
      */
     public ImageCollection(String dir) {
         Map<Byte, Image> temp = new TreeMap<>();
-            try{
-                File directory = new File(ImageCollection.class
+        try{
+            File directory = new File(ImageCollection.class
                     .getClassLoader()
                     .getResource(dir)
                     .toURI());
-                File[] files = directory.listFiles();
-                
-                for(File f : files){
-                    Image im = ImageIO.read(f);
-                    temp.put(Byte.parseByte(f.getName().substring(0, 3)), im);
-                }
+            File[] files = directory.listFiles();
+
+            for(File f : files){
+                Image im = ImageIO.read(f);
+                temp.put(Byte.parseByte(f.getName().substring(0, 3)), im);
             }
-            catch(Exception e){}
-            this.collectionMap=Collections.unmodifiableMap(temp);
+        }
+        catch(Exception e){}
+        this.collectionMap=Collections.unmodifiableMap(temp);
     }
-    
+
     /**
      * Retourne une image dans la collection d'après son index ou lève NoSuchElementException
      * si l'index ne correspond à aucune image
-     * @param i l'index de l'image
-     * @return l'image pour l'index i dans la collection
+     * @param i (int) l'index de l'image
+     * @return l'image pour l'index i dans la collection (Image)
      * @throws NoSuchElementException
      * @throws URISyntaxException
      * @throws IOException
@@ -59,12 +58,12 @@ public final class ImageCollection {
         }
         else{throw new NoSuchElementException("Aucune image trouvée pour l'index " + i + " dans la collection");}
     }
-    
+
     /**
      * Retourne une image dans la collection d'après son index ou null
      * si l'index ne correspond à aucune image
-     * @param i l'index de l'image
-     * @return l'image pour l'index i dans la collection
+     * @param i (int) l'index de l'image
+     * @return l'image pour l'index i dans la collection (Image)
      */
     public Image imageOrNull(int i){
         if(collectionMap.containsKey((byte) i)){

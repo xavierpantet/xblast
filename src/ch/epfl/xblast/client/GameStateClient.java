@@ -1,7 +1,6 @@
 package ch.epfl.xblast.client;
 
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,7 @@ public final class GameStateClient {
     private final List<Image> explosivesImages;
     private final List<Image> scoreImages;
     private final List<Image> timeLineImages;
-    
+
     /**
      * Constructeur
      * @param players (List<GameStateClient.Player>) la liste des joueurs
@@ -37,13 +36,13 @@ public final class GameStateClient {
         this.scoreImages=Collections.unmodifiableList(new LinkedList<>(Objects.requireNonNull(scoreImages)));
         this.timeLineImages=Collections.unmodifiableList(new LinkedList<>(Objects.requireNonNull(timeLineImages)));
     }
-    
+
     public List<Player> players(){return players;}
     public List<Image> boardImages(){return boardImages;}
     public List<Image> explosivesImages(){return explosivesImages;}
     public List<Image> scoreImages(){return scoreImages;}
     public List<Image> timeLineImages(){return timeLineImages;}
-    
+
     /**
      * Classe pouvant représenter un joueur pour le client dans le contexte de l'état de jeu
      * @author Xavier Pantet (260473), Timothée Duran (258683)
@@ -53,7 +52,7 @@ public final class GameStateClient {
         private final int lives;
         private final SubCell position;
         private final Image image;
-        
+
         /**
          * Constructeur
          * @param id (PlayerID) l'identifiant
@@ -69,28 +68,28 @@ public final class GameStateClient {
             this.position=Objects.requireNonNull(position);
             this.image=image;
         }
-        
+
         /**
          * Retourne l'identifiant du joueur
-         * @return l'identifiant
+         * @return l'identifiant (PlayerID)
          */
         public PlayerID id(){return id;}
-        
+
         /**
          * Retourne le nombre de vies du joueur
-         * @return le nombre de vies
+         * @return le nombre de vies (int)
          */
         public int lives(){return lives;}
-        
+
         /**
          * Retourne la position du joueur
-         * @return la position
+         * @return la position (SubCell)
          */
         public SubCell position(){return position;}
-        
+
         /**
          * Retourne l'image à afficher pour le joueur
-         * @return l'image à afficher
+         * @return l'image à afficher (Image)
          */
         public Image image(){return image;}
     }

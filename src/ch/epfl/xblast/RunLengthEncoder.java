@@ -125,10 +125,9 @@ public final class RunLengthEncoder {
                         }
                     }
                 }
-            }else{throw new IllegalArgumentException("La liste ne peut pas se terminer par une valeur négative");}
-
+            } else {throw new IllegalArgumentException("La liste ne peut pas se terminer par une valeur négative");}
             return toReturn;
         }
-        else{throw new NullPointerException("La liste ne peut pas être vide");}
+        else {throw new NullPointerException("La liste ne peut pas être vide");}
     }
 }

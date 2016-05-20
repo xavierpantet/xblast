@@ -24,7 +24,7 @@ import ch.epfl.xblast.PlayerID;
  * Programme principal du client.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
-public class Main {
+public class MainClient{
 
     /**
      * Classe principale chargée de lancer le programme
@@ -42,7 +42,7 @@ public class Main {
          * Phase 1:
          * Envoyer toutes les secondes une demande au serveur pour joindre la partie,
          * tant que le serveur ne renvoie pas de GameState
-        */
+         */
 
         try {
             // Ouverture et configuration du canal avec UDP
@@ -68,18 +68,18 @@ public class Main {
              * Phase 2:
              * Le serveur a renvoyé une identité ainsi qu'un GameState
              */
-            
+
             // On crée le composant Xblast et on configure les buffers
             XBlastComponent component = new XBlastComponent();
             sendingBuffer.clear();
-            
+
             // On traite la réception du GameState
             System.out.println("Connecté au serveur");
             receive(receivingBuffer, component);
-            
+
             // On crée le fil Swing
             SwingUtilities.invokeAndWait(() -> createUI(component, channel, sendingBuffer, socketAddress));
-            
+
             // Pour la suite, on passe le canal en mode bloquant, et on fait de même
             channel.configureBlocking(true);
             while(channel.receive(receivingBuffer)!=null){
@@ -93,10 +93,10 @@ public class Main {
 
     /**
      * Ouverture du fil Swing
-     * @param component le composant XBlast
-     * @param channel   le canal de communication
-     * @param sendingBuffer le buffer d'envoi
-     * @param socketAddress le socketAddress pour l'envoi
+     * @param component (XBlastComponent) le composant XBlast
+     * @param channel (DatagramChannel) le canal de communication
+     * @param sendingBuffer (ByteBuffer) le buffer d'envoi
+     * @param socketAddress (SocketAddress) le socketAddress pour l'envoi
      */
     private static void createUI(XBlastComponent component, DatagramChannel channel, ByteBuffer sendingBuffer, SocketAddress socketAddress){
         // On crée la table associative touche -> action
@@ -115,6 +115,7 @@ public class Main {
             try {
                 channel.send(sendingBuffer, socketAddress);
             } catch (Exception e) {
+                //On ignore l'erreur
             }
             sendingBuffer.clear();
         };
@@ -128,23 +129,23 @@ public class Main {
         component.addKeyListener(new KeyboardEventHandler(kb, c));
         component.requestFocusInWindow();
     }
-    
+
     /**
      * Permet le traitement des données reçues par le serveur
-     * @param receivingBuffer   le buffer de réception
-     * @param component le composant XBlast 
+     * @param receivingBuffer (ByteBuffer) le buffer de réception
+     * @param component (XBlastComponent) le composant XBlast 
      * @throws IllegalArgumentException
      * @throws URISyntaxException
      * @throws IOException
      */
     private static void receive(ByteBuffer receivingBuffer, XBlastComponent component) throws IllegalArgumentException, URISyntaxException, IOException{
         receivingBuffer.flip();
-   
+
         List<Byte> toDeserialize = new ArrayList<Byte>(); // La liste qui contiendra le GameState à Déserialiser
         while(receivingBuffer.hasRemaining()){
             toDeserialize.add(receivingBuffer.get());
         }
-        
+
         // Définition de l'identité du joueur et mise à jour du GameState et affichage
         PlayerID playerID = PlayerID.values()[toDeserialize.remove(0)];
         component.setGameState(GameStateDeserializer.deserialize(toDeserialize), playerID);

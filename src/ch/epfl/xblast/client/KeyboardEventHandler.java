@@ -18,7 +18,7 @@ import ch.epfl.xblast.PlayerAction;
 public final class KeyboardEventHandler extends KeyAdapter implements KeyListener {
     private final Map<Integer, PlayerAction> keyMap;
     private final Consumer<PlayerAction> consumer;
-    
+
     /**
      * Constructeur
      * @param keyMap (Map<Integer, PlayerAction>) une table associative faisant correspondre un code clavier à chaque action de joueur
@@ -28,7 +28,7 @@ public final class KeyboardEventHandler extends KeyAdapter implements KeyListene
         this.keyMap=Collections.unmodifiableMap(new HashMap<>(Objects.requireNonNull(keyMap)));
         this.consumer=Objects.requireNonNull(consumer);
     }
-    
+
     @Override
     /**
      * Redéfiniiton de keyPressed
