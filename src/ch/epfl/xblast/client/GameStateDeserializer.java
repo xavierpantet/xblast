@@ -32,7 +32,7 @@ public final class GameStateDeserializer {
     private GameStateDeserializer(){};
 
     /**
-     * Méthode qui permet de deserializé une liste donnée
+     * Méthode qui permet de déserialiser une liste donnée
      * @param givenList (List<Byte>) la liste à déserialiser
      * @return GameStateClient
      * @throws IllegalArgumentException
@@ -158,13 +158,14 @@ public final class GameStateDeserializer {
      * @return une liste de Player Client (List<GameStateClient.Player>) 
      */
     private static List<GameStateClient.Player> listForPlayers(List<Byte> givenListSub){
-        if(givenListSub.size()%4==0){
+        int nbOfPlayers=PlayerID.values().length;
+        if(givenListSub.size()%nbOfPlayers==0){
             List<GameStateClient.Player> players = new ArrayList<GameStateClient.Player>();
             PlayerID playerIDs [] = PlayerID.values();
-            for(int i=0; i<givenListSub.size()/4; i++){
-                int lives = givenListSub.get(4*i);
-                SubCell position = new SubCell(Byte.toUnsignedInt(givenListSub.get(1+4*i)), Byte.toUnsignedInt(givenListSub.get(2+4*i)));
-                Image image = imageCollectionPlayer.imageOrNull(givenListSub.get(3+4*i));
+            for(int i=0; i<givenListSub.size()/nbOfPlayers; i++){
+                int lives = givenListSub.get(nbOfPlayers*i);
+                SubCell position = new SubCell(Byte.toUnsignedInt(givenListSub.get(1+nbOfPlayers*i)), Byte.toUnsignedInt(givenListSub.get(2+nbOfPlayers*i)));
+                Image image = imageCollectionPlayer.imageOrNull(givenListSub.get(3+nbOfPlayers*i));
                 players.add(new GameStateClient.Player(playerIDs[i], lives, position, image)); 
             }
             return players;
@@ -180,12 +181,12 @@ public final class GameStateDeserializer {
      * @return une liste des image à utiliser (List<Image>) 
      */
     private static List<Image> listForScore(List<Byte> givenListSub){
-
+        int nbOfPlayers=PlayerID.values().length;
         List<Image> list = new ArrayList<Image>();
 
-        for(int i=0; i<4; i++){
+        for(int i=0; i<nbOfPlayers; i++){
             //l'image montrant le visage du joueur, de face, soit vivant soit mort
-            if(givenListSub.get(0+4*i)>0){
+            if(givenListSub.get(0+nbOfPlayers*i)>0){
                 //le joueur est vivant
                 list.add(imageCollectionScore.image(i*2));
             } else {
@@ -217,27 +218,26 @@ public final class GameStateDeserializer {
         //allumé
         list.addAll(Collections.nCopies(time, imageCollectionScore.imageOrNull(21)));
 
-        //éteind
+        //éteint
         list.addAll(Collections.nCopies(60-time, imageCollectionScore.imageOrNull(20)));
 
         return list;
     }
 
 
-    /*INFORMATION : J'ai trouvé un moyen beaucoup plus simple de résalier cette transforamtion
+    /*INFORMATION :
+     * J'ai trouvé un moyen beaucoup plus simple de réaliser cette transformation.
      * Elle est déjà appliquée dans la méthode ListForBoard. Simplement j'ai passé beaucoup trop de temps
-     * à me creuser la tête et à créer cet algorythme pour la supprimer ! Cette méthode est donc encore ici
-     * pour "décoration".
+     * à me creuser la tête et à créer cet algorithme pour la supprimer !
+     * Cette méthode est donc encore ici à titre honorifique.
+     * Tim
+     * 
      * 
      * 
      * Cette méthode tranforme une liste qui décrit un tableau décrit d'un ordre en spirale (en partant du coin en haut a gauche) en un tableau décrit en ordre de lecture 
      * @param givenList (List<Integer>) la liste a convertir
      * @param width (int) la largeur du tableau décrit
      * @param height (int) la longeur du tableau décrit
-     * @return convertedList (List<Integer>) le tableau converti
-     *
-     *
-
     private static List<Image> convertToRowMajorOrder(List<Image> givenList, int width, int height){
         int NextOp = 0;
         int i = 0;
@@ -317,7 +317,5 @@ public final class GameStateDeserializer {
             }
         }
         return result;
-    }
-     */
-
+    }*/
 }

@@ -17,7 +17,7 @@ public final class PlayerPainter {
      * Retourne l'octet correspondant à l'image qui doit être utilisée pour peindre le joueur.
      * @param tick (int) le tick
      * @param player (Player) le joueur
-     * @return
+     * @return l'octet de l'image correspondant au joueur
      */
     public static byte byteForPlayer(int tick, Player player){
         int byteCode=0;
@@ -26,6 +26,7 @@ public final class PlayerPainter {
         Direction dir = player.direction();
         SubCell position = player.position();
 
+        // Si le personnage ne clignotte pas, on commence dans la rangée de 20 correspondant au joueur
         if(!(state==State.INVULNERABLE && tick%2==1)){
             switch(id){
             case PLAYER_2:
@@ -42,8 +43,11 @@ public final class PlayerPainter {
 
             default:
             }
-        } else { byteCode+=80; }
+        }
+        // Si le personnage doit clignotter, on passe directement dans les 80
+        else { byteCode+=80; }
 
+        // On gère le cas où il est DYING
         if(state==State.DYING){
             if(player.statesForNextLife().head().lives()>1){
                 byteCode+=12;
@@ -52,14 +56,17 @@ public final class PlayerPainter {
             }
             
         } else if(state==State.VULNERABLE || state==State.INVULNERABLE){
+            // On sélectionne la bonne direction
             byteCode+=dir.ordinal()*3;
 
+            // On sélectionne la bonne image pour les jambes
             int remainder=0;
+            int nbOfPossibleStates=4;
             if(dir.isHorizontal()){
-                remainder=position.x()%4;
+                remainder=position.x()%nbOfPossibleStates;
             }
             else{
-                remainder=position.y()%4;
+                remainder=position.y()%nbOfPossibleStates;
             }
 
             if(remainder==1){

@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import ch.epfl.xblast.PlayerAction;
 
 /**
- * Classe permettant de gérer les actions des joueurs en fonction des appuis sur les touches du clavier
+ * Classe permettant de gérer les actions des joueurs en fonction des appuis sur les touches du clavier.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class KeyboardEventHandler extends KeyAdapter implements KeyListener {
@@ -20,7 +20,7 @@ public final class KeyboardEventHandler extends KeyAdapter implements KeyListene
     private final Consumer<PlayerAction> consumer;
 
     /**
-     * Constructeur
+     * Constructeur.
      * @param keyMap (Map<Integer, PlayerAction>) une table associative faisant correspondre un code clavier à chaque action de joueur
      * @param consumer (Consumer<PlayerAction>) un consommateur qui consommera les appuis sur les touches de clavier
      */

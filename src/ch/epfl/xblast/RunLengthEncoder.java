@@ -14,7 +14,7 @@ public final class RunLengthEncoder {
     /**
      * Méthode de compression.
      * @param l (List<Byte>) la liste d'octets à compresser
-     * @return Une liste des octets de "l" compressés
+     * @return la liste l compressée
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
@@ -86,8 +86,8 @@ public final class RunLengthEncoder {
 
     /**
      * Méthode de décompression.
-     * @param l la liste à décompresser
-     * @return  une liste des éléments de l décompressés
+     * @param l (List<Byte>) la liste à décompresser
+     * @return  la liste l décompressée
      * @throws IllegalArgumentException
      */
     public static List<Byte> decode(List<Byte> l) throws IllegalArgumentException {
