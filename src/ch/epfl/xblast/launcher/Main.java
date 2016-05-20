@@ -18,7 +18,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import ch.epfl.xblast.client.MainClient;
+import ch.epfl.xblast.client.Main;
 
 /**
  * Cette classe lance une fenêtre java qui permet de lancer le jeu
@@ -41,8 +41,8 @@ public class Main {
         Label titre = new Label("XBLast");
         titre.setAlignment(Label.CENTER);
         
-        String tableauChaine[] = {"192.169.01.01"};
-        startButton.addActionListener(e ->MainClient.main(tableauChaine));
+        String tableauChaine[] = {"128.179.190.79"};
+        startButton.addActionListener(e ->Main.main(tableauChaine));
         
         
         

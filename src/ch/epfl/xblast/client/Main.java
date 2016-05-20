@@ -24,7 +24,7 @@ import ch.epfl.xblast.PlayerID;
  * Programme principal du client.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
-public class MainClient{
+public class Main{
 
     /**
      * Classe principale chargée de lancer le programme
