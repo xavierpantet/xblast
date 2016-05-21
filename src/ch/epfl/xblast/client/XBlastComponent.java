@@ -30,7 +30,7 @@ public final class XBlastComponent extends JComponent {
     @Override
     /**
      * Redéfinition de getPreferredSize.
-     * Retourne les dimensions de la fenètre
+     * Retourne les dimensions de la fenêtre
      */
     public Dimension getPreferredSize(){
         return new Dimension(960, 688);

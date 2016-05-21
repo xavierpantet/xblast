@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import javax.imageio.ImageIO;
 
 /**
- * Classe qui permet d'accéder à un élément d'un répertoire en connaissant son index
+ * Classe qui permet d'accéder à un élément d'un répertoire en connaissant son index.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public final class ImageCollection {
@@ -20,25 +20,28 @@ public final class ImageCollection {
 
     /**
      * Constructeur qui permet de construire une collection d'accès aux images en connaissant son nom.
-     * Il va aussi directement créer les collections dans les attributs statiques correspondants
-     * pour que la récupération d'une image n'implique pas de devoir recréer la liste des fichiers à chaque appel
+     * On ne créera qu'une collection par répertoire pour ne pas les recharger à chaque tour de boucle.
      * @param dir (String) le répertoire de la collection
      */
     public ImageCollection(String dir) {
         Map<Byte, Image> temp = new TreeMap<>();
         try{
+            // On ouvre le répertoire et on récupère la liste des fichiers
             File directory = new File(ImageCollection.class
                     .getClassLoader()
                     .getResource(dir)
                     .toURI());
             File[] files = directory.listFiles();
 
+            // Pour chacun des fichiers...
             for(File f : files){
-                Image im = ImageIO.read(f);
-                temp.put(Byte.parseByte(f.getName().substring(0, 3)), im);
+                Image im = ImageIO.read(f); // ... on le lit ...
+                temp.put(Byte.parseByte(f.getName().substring(0, 3)), im); // ... et on ajoute son numéro dans la collection
             }
         }
         catch(Exception e){}
+        
+        // On rend la collection immuable
         this.collectionMap=Collections.unmodifiableMap(temp);
     }
 

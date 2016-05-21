@@ -15,7 +15,7 @@ import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.server.Player;
 
 /**
- * représente un niveau de jeu XBlast. 
+ * Représente un niveau de jeu XBlast. 
  * Un niveau n'est rien d'autre qu'une paire composée d'un peintre de plateau qui donne le style graphique du niveau 
  * et d'un état de jeu initial — qui donne ses autres paramètres : positions et capacités initiales des joueurs, etc.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
@@ -60,9 +60,7 @@ public final class Level {
      * @return Level (Level) Level par défaut
      */
     private static Level createDefaultLevel(){
-        //Création du BoardPainter
-
-        //Création de la pallet (Map<Block, BlockImage>)
+        //Création de la palète (Map<Block, BlockImage>)
         Map<Block, BlockImage> pallet = new HashMap<Block, BlockImage>();
 
         //Ajout du lien entre l'image en le bloc dans la map pallet
@@ -73,10 +71,8 @@ public final class Level {
         pallet.put(Block.BONUS_BOMB, BlockImage.BONUS_BOMB);
         pallet.put(Block.BONUS_RANGE, BlockImage.BONUS_RANGE);
 
-        //Instenciation de BoardPainter
+        //Instanciation de BoardPainter
         BoardPainter b = new BoardPainter(pallet, BlockImage.IRON_FLOOR_S);
-
-        //Création du GameState initial
 
         //Création de la liste de Players
         List<Player> players = new ArrayList<>();
