@@ -30,6 +30,12 @@ public class Main{
      * Classe principale chargée de lancer le programme
      * @param args (String[]) un tableau pouvant contenir le nom d'hôte du serveur de la partie
      */
+    
+    private final static int PORT = 2016;
+    private final static int RECEIVING_BUFFER_ALLOC = 410;
+    private final static int SENDING_BUFFER_ALLOC = 1;
+    private final static int JOIN_GAME_SLEEP_TIME = 1000;
+    
     public static void main(String[] args) {
         String host = "localhost"; // Hôte par défaut
 
@@ -48,12 +54,12 @@ public class Main{
             // Ouverture et configuration du canal avec UDP
             DatagramChannel channel;
             channel = DatagramChannel.open(StandardProtocolFamily.INET);
-            SocketAddress socketAddress = new InetSocketAddress(host, 2016);
+            SocketAddress socketAddress = new InetSocketAddress(host, PORT);
             channel.configureBlocking(false); // on le passe en non bloquant pour la première phase
 
             // Définition des buffers de réception et d'envoi
-            ByteBuffer sendingBuffer = ByteBuffer.allocate(1);
-            ByteBuffer receivingBuffer = ByteBuffer.allocate(410);
+            ByteBuffer sendingBuffer = ByteBuffer.allocate(SENDING_BUFFER_ALLOC);
+            ByteBuffer receivingBuffer = ByteBuffer.allocate(RECEIVING_BUFFER_ALLOC);
             sendingBuffer.put((byte) PlayerAction.JOIN_GAME.ordinal());
             sendingBuffer.flip();
 
@@ -61,7 +67,7 @@ public class Main{
             System.out.println("Connexion au serveur en cours...");
             do{
                 channel.send(sendingBuffer, socketAddress);
-                Thread.sleep(1000);
+                Thread.sleep(JOIN_GAME_SLEEP_TIME);
             }while(channel.receive(receivingBuffer)==null);
 
             /*

@@ -29,6 +29,10 @@ public final class Main {
      * Classe principale, chargée de lancer le programme.
      * @param args (String[]) un tableau pouvant contenir le nombre de joueurs effectifs qui prendront part à la partie
      */
+    
+    private static final int PORT = 2016;
+    private final static int RECEIVING_BUFFER_ALLOC = 1;
+    
     public static void main(String[] args) {
         int nbOfPlayers=4; // Nombre de joueurs par défaut
 
@@ -44,10 +48,10 @@ public final class Main {
             // Création du channel et liaison avec le port 2016
             DatagramChannel channel;
             channel = DatagramChannel.open(StandardProtocolFamily.INET);
-            channel.bind(new InetSocketAddress(2016));
+            channel.bind(new InetSocketAddress(PORT));
 
             // Création du buffer de réception
-            ByteBuffer receivingBuffer = ByteBuffer.allocate(1);
+            ByteBuffer receivingBuffer = ByteBuffer.allocate(RECEIVING_BUFFER_ALLOC);
 
             /*
              * Phase 1: on attend les connexions des joueurs
@@ -114,6 +118,9 @@ public final class Main {
             // On affiche à l'écran l'identité du joueur qui a gagné la partie 
             if(g.winner().isPresent()){
                 System.out.println("Vainqueur: " + g.winner().get());
+            }
+            else{
+                System.out.println("Pas de vainqueur");
             }
         }catch (Exception e) {
             System.out.println(e.getMessage());
