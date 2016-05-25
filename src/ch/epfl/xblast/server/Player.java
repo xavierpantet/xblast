@@ -168,6 +168,17 @@ public final class Player {
     public Bomb newBomb(){
         return new Bomb(id(), position().containingCell(), Ticks.BOMB_FUSE_TICKS, bombRange());
     }
+    
+    /**
+     * BONUS
+     * Permet de dériver un joueur en modifiant le nombre de vies du joueur.
+     * @param lives (int) le nouveau nombre de vies
+     * @return  un joueur identique ayant le nombre de vies donné (Player)
+     */
+    public Player withLives(int lives){
+        Sq<LifeState> newLifeState=Sq.constant(new LifeState(lives, lifeState().state()));
+        return new Player(id(), newLifeState, directedPositions(), maxBombs(), bombRange());
+    }
 
     /**
      * Permet de créer une séquence d'états de vie en connaissant le nombre de vies initial.

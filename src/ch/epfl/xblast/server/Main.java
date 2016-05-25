@@ -19,7 +19,7 @@ import ch.epfl.xblast.PlayerAction;
 import ch.epfl.xblast.PlayerID;
 import ch.epfl.xblast.Time;
 import ch.epfl.xblast.server.graphics.BoardPainter;
-
+ 
 /**
  * Programme principal du serveur.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
@@ -123,7 +123,8 @@ public final class Main {
                 System.out.println("Pas de vainqueur");
             }
         }catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            //System.out.println("Erreur sur le serveur: " + e.getMessage());
         }
     }
 

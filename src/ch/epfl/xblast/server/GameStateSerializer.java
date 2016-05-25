@@ -59,19 +59,23 @@ public final class GameStateSerializer {
         //ENCODAGE DES BOMBES ET EXPLOSION
         List<Byte> encodedBombs = new LinkedList<Byte>();
         for(Cell c : Cell.ROW_MAJOR_ORDER){
+            if(g.board().blockAt(c).isFree()){
+                if(bombedCells.containsKey(c)){
+                    encodedBombs.add(ExplosionPainter.byteForBomb(bombedCells.get(c)));
 
-            if(bombedCells.containsKey(c)){
-                encodedBombs.add(ExplosionPainter.byteForBomb(bombedCells.get(c)));
+                } else if(blastedCells.contains(c)){
+                    encodedBombs.add(ExplosionPainter.byteForBlast(
+                            blastedCells.contains(c.neighbor(Direction.N)), 
+                            blastedCells.contains(c.neighbor(Direction.E)), 
+                            blastedCells.contains(c.neighbor(Direction.S)), 
+                            blastedCells.contains(c.neighbor(Direction.W))));
+                } else {
+                    encodedBombs.add(ExplosionPainter.BYTE_FOR_EMPTY);
 
-            } else if(blastedCells.contains(c)&&board.blockAt(c).isFree()){
-                encodedBombs.add(ExplosionPainter.byteForBlast(
-                        blastedCells.contains(c.neighbor(Direction.N)), 
-                        blastedCells.contains(c.neighbor(Direction.E)), 
-                        blastedCells.contains(c.neighbor(Direction.S)), 
-                        blastedCells.contains(c.neighbor(Direction.W))));
-            } else {
+                }
+            }
+            else{
                 encodedBombs.add(ExplosionPainter.BYTE_FOR_EMPTY);
-
             }
         }
 

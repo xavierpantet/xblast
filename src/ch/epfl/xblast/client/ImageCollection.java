@@ -11,6 +11,8 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
+import ch.epfl.xblast.server.Bonus;
+
 /**
  * Classe qui permet d'accéder à un élément d'un répertoire en connaissant son index.
  * @author Xavier Pantet (260473), Timothée Duran (258683)
@@ -36,7 +38,10 @@ public final class ImageCollection {
             // Pour chacun des fichiers...
             for(File f : files){
                 Image im = ImageIO.read(f); // ... on le lit ...
-                temp.put(Byte.parseByte(f.getName().substring(0, 3)), im); // ... et on ajoute son numéro dans la collection
+                try{
+                    temp.put(Byte.parseByte(f.getName().substring(0, 3)), im); // ... et on ajoute son numéro dans la collection
+                }
+                catch(Exception e){}
             }
         }
         catch(Exception e){}

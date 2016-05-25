@@ -70,6 +70,9 @@ public final class Level {
         pallet.put(Block.CRUMBLING_WALL, BlockImage.EXTRA_O);
         pallet.put(Block.BONUS_BOMB, BlockImage.BONUS_BOMB);
         pallet.put(Block.BONUS_RANGE, BlockImage.BONUS_RANGE);
+        pallet.put(Block.BONUS_LIFE, BlockImage.BONUS_LIFE);
+        pallet.put(Block.POW, BlockImage.POW);
+        pallet.put(Block.BONUS_MOVE_BOMB, BlockImage.MOVE_BOMB);
 
         //Instanciation de BoardPainter
         BoardPainter b = new BoardPainter(pallet, BlockImage.IRON_FLOOR_S);

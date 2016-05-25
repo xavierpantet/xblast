@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
  * @author Xavier Pantet (260473), Timothée Duran (258683)
  */
 public enum Block {
-    FREE, INDESTRUCTIBLE_WALL, DESTRUCTIBLE_WALL, CRUMBLING_WALL, BONUS_BOMB(Bonus.INC_BOMB), BONUS_RANGE(Bonus.INC_RANGE);
+    FREE, INDESTRUCTIBLE_WALL, DESTRUCTIBLE_WALL, CRUMBLING_WALL, BONUS_BOMB(Bonus.INC_BOMB), BONUS_RANGE(Bonus.INC_RANGE), BONUS_LIFE(Bonus.INC_LIFE), POW, BONUS_MOVE_BOMB;
 
     private Bonus maybeAssociatedBonus;
 
@@ -39,7 +39,7 @@ public enum Block {
      * @return vrai <=> le bloc peut contenir un joueur (boolean)
      */
     public boolean canHostPlayer(){
-        return (this.isFree() || this.isBonus());
+        return (this.isFree() || this.isBonus() || this==Block.POW || this==Block.BONUS_MOVE_BOMB);
     }
 
     /**
@@ -55,7 +55,7 @@ public enum Block {
      * @return vrai <=> le bloc est un bonus (boolean)
      */
     public boolean isBonus(){
-        return (this == Block.BONUS_BOMB || this == Block.BONUS_RANGE);
+        return (this == Block.BONUS_BOMB || this == Block.BONUS_RANGE || this == Block.BONUS_LIFE);
     }
 
     /**

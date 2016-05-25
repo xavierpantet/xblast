@@ -30,6 +30,21 @@ public enum Bonus {
             int bombRange=player.bombRange();
             return (bombRange<MAX_BOMBS)? player.withBombRange(bombRange+1) : player;
         }
+    },
+    
+    /**
+     * BONUS
+     * Définition concrète de applyTo.
+     * Retourne un joueur ayant une vie de plus.
+     * @param player (Player) le joueur qui consomme le bonus
+     * @return un nouveau joueur ayant une vie supplémentaire
+     */
+    INC_LIFE {
+        @Override
+        public Player applyTo(Player player){
+            return player.withLives(player.lives()+1);
+        }
+        
     };
     
     private static final int MAX_BOMBS = 9;

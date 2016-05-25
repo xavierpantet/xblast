@@ -94,6 +94,16 @@ public final class Bomb {
     public int range(){
         return range;
     }
+    
+    /**
+     * BONUS
+     * Permet de déplacer une bombe sur le plateau
+     * @param c (Cell) la nouvelle position de la bombe
+     * @return  une nouvelle bombe à la position donnée
+     */
+    public Bomb withPosition(Cell c){
+        return new Bomb(ownerId, c, fuseLengths, range);
+    }
 
     /**
      * Retourne l'explosion de la bombe.
