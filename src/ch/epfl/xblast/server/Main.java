@@ -123,8 +123,7 @@ public final class Main {
                 System.out.println("Pas de vainqueur");
             }
         }catch (Exception e) {
-            e.printStackTrace();
-            //System.out.println("Erreur sur le serveur: " + e.getMessage());
+            System.out.println("Erreur sur le serveur: " + e.getMessage());
         }
     }
 
