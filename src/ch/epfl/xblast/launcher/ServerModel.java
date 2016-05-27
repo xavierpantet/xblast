@@ -1,8 +1,12 @@
 package ch.epfl.xblast.launcher;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import ch.epfl.xblast.client.ImageCollection;
@@ -36,5 +40,21 @@ public final class ServerModel {
     
     public String getFileAtPosition(int pos){
         return filesList.get(pos);
+    }
+    
+    
+    public String getIP() throws SocketException{
+        // Code largement inspiré de http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+        Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+        while(e.hasMoreElements()){
+            NetworkInterface n = (NetworkInterface) e.nextElement();
+            Enumeration<InetAddress> ee = n.getInetAddresses();
+            while (ee.hasMoreElements()){
+                InetAddress i = (InetAddress) ee.nextElement();
+                if(!i.isLoopbackAddress() && !i.isSiteLocalAddress() && !i.isAnyLocalAddress() && !i.isLinkLocalAddress())
+                    return i.getHostAddress();
+            }
+        }
+        return null;
     }
 }

@@ -1,11 +1,10 @@
 package ch.epfl.xblast.launcher;
 
-import java.util.Objects;
+import java.net.SocketException;
 
 public final class ServerController {
-    private final ServerModel model;
-    
-    public ServerController(ServerModel model){
-        this.model=Objects.requireNonNull(model);
+    public static void main(String[] args) throws SocketException{
+        ServerModel model = new ServerModel();
+        System.out.println(model.getIP());
     }
 }
