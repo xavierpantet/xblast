@@ -53,13 +53,18 @@ public class LauncherModel extends Observable {
     }
     
     public void setConnectingState(){
-        etatText = "Connexion en cours à:"+IP;
+        
+        
         stateColor = Color.orange;
         buttonState = ButtonState.CANCEL;
         buttonText = "ANNULER";
         textFieldIsVisible = false;
         checkBoxIsVisible = false;
-        serverMode=false;
+        if(serverMode){
+            etatText = "Attente des joueurs";
+        } else {
+            etatText = "Connexion en cours à:"+IP;
+        }
         setChanged();
         notifyObservers();
     }
@@ -98,10 +103,12 @@ public class LauncherModel extends Observable {
         textFieldIsVisible = true;
         checkBoxIsVisible = true;
         serverMode=false;
+        
 
         setChanged();
         notifyObservers();
     }
+
 
     public String getButtonText(){
         return buttonText;

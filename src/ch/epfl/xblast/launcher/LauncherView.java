@@ -127,6 +127,11 @@ public class LauncherView implements Observer {
         stateBackground.setBackground(model.getStateColor());
         textField.setVisible(model.getTextFieldIsVisible());
         localCheck.setVisible(model.getCheckBoxIsVisible());
+        if(model.getServerMode()){
+            localCheck.setSelected(true);
+        } else {
+            localCheck.setSelected(false);
+        }
         
         if(model.getButtonState() == ButtonState.START){
             startButton.setText("START");
