@@ -1,4 +1,4 @@
-ekkkpackage ch.epfl.xblast.server;
+package ch.epfl.xblast.server;
 
 import java.util.ArrayList;
 import java.util.Arrays;
