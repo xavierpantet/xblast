@@ -2,8 +2,6 @@ package ch.epfl.xblast.launcher;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -21,43 +19,43 @@ import javax.swing.JLabel;
 
 /**
  * Cette classe représente tout ce qui est en rapport avec l'interface graphique, sur le modèle MWC
- * @author timotheedu
+ * @author Xavier Pantet (260473), Timothée Duran (258683)
  *
  */
 public class LauncherView implements Observer {
 
-    LauncherModel model;
+    protected LauncherModel model;
     
     //bouton start
-    JButton startButton = new JButton();
+    protected JButton startButton = new JButton();
     
     //Text field (le texte pour entrer l'adresse IP)
-    JFormattedTextField textField = new JFormattedTextField();
+    protected JFormattedTextField textField = new JFormattedTextField();
     
     //Label qui représente le titre
-    Label titre = new Label();
+    protected Label titre = new Label();
     
     //Label qui indique l'état du launcher
-    Label etat = new Label();
+    protected Label etat = new Label();
     
   //Label qui indique l'état du launcher
-    JCheckBox localCheck = new JCheckBox("J'utilise cet ordinateur comme serveur");
+    protected JCheckBox localCheck = new JCheckBox("J'utilise cet ordinateur comme serveur");
     
     //Image qui représente le logo
-    ImageIcon logo = new ImageIcon(new ImageIcon("images/icon.png").getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT)); 
-    JLabel image = new JLabel(logo);
+    protected ImageIcon logo = new ImageIcon(new ImageIcon("images/icon.png").getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT)); 
+    protected JLabel image = new JLabel(logo);
     
     //Panel (contient les éléments de toute la fenetre)
-    Panel panel = new Panel();
+    protected Panel panel = new Panel();
     
     //Panel (contient les éléments de toute la fenetre)
-    Panel stateBackground = new Panel();
+    protected Panel stateBackground = new Panel();
     
     //Contient une barre de texte et le bouton start
-    Panel container = new Panel();
+    protected Panel container = new Panel();
     
     //La fenêtre
-    JFrame window = new JFrame("XBlast");
+    protected JFrame window = new JFrame("XBlast");
 
     public LauncherView(LauncherModel model){
         
@@ -78,7 +76,6 @@ public class LauncherView implements Observer {
         panel.setLayout(new BorderLayout());
         stateBackground.setLayout(new BorderLayout());
         
-      
         //Taille du champs 
         textField.setColumns(10);
         
@@ -108,7 +105,7 @@ public class LauncherView implements Observer {
         
         // On créer la fenêtre
         
-        //Définit sa taille : 400 pixels de large et 100 pixels de haut
+        //Définit sa taille : 400 pixels de large et 400 pixels de haut
         window.setSize(400, 400);
         //Nous demandons maintenant à notre objet de se positionner au centre
         window.setLocationRelativeTo(null);
@@ -121,25 +118,24 @@ public class LauncherView implements Observer {
     }
 
     @Override
+    /**
+     * Méthode qui met à jour les composants
+     */
     public void update(Observable o, Object arg) {
        
         etat.setText(model.getEtatText());
         stateBackground.setBackground(model.getStateColor());
         textField.setVisible(model.getTextFieldIsVisible());
         localCheck.setVisible(model.getCheckBoxIsVisible());
+        startButton.setText(model.getButtonText());
+        
         if(model.getServerMode()){
+            //Si on est en mode serveur alors la checkBox est cochée
             localCheck.setSelected(true);
         } else {
+            //Sinon, la case n'est pas cochée
             localCheck.setSelected(false);
         }
-        
-        if(model.getButtonState() == ButtonState.START){
-            startButton.setText("START");
-        } else if (model.getButtonState() == ButtonState.CANCEL){
-            startButton.setText("ANNULER");
-        }
-   
     }
-    
     
 }

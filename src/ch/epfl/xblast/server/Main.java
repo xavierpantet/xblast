@@ -34,7 +34,7 @@ public final class Main {
     private final static int RECEIVING_BUFFER_ALLOC = 1;
     
     public static void main(String[] args) {
-        int nbOfPlayers=2; // Nombre de joueurs par défaut
+        int nbOfPlayers=1; // Nombre de joueurs par défaut
 
         // On met éventuellement à jour le nombre de joueurs
         if(args.length==1){
