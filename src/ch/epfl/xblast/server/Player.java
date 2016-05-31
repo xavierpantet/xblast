@@ -176,7 +176,7 @@ public final class Player {
      * @return  un joueur identique ayant le nombre de vies donné (Player)
      */
     public Player withLives(int lives){
-        Sq<LifeState> newLifeState=Sq.constant(new LifeState(lives, lifeState().state()));
+        Sq<LifeState> newLifeState=createStateSequenceForLifeBonus(lives);
         return new Player(id(), newLifeState, directedPositions(), maxBombs(), bombRange());
     }
 
@@ -188,7 +188,6 @@ public final class Player {
      * @throws IllegalArgumentException
      */
     private static Sq<LifeState> createStateSequence(int lives) throws IllegalArgumentException{
-
         if(lives==0){
             return Sq.constant(new LifeState(lives, State.DEAD));
         } else if(lives>0) {
@@ -200,6 +199,25 @@ public final class Player {
 
             return lifeState;
         } else {throw new IllegalArgumentException("Le nombre de vie doit être non négatif");}
+    }
+    
+    /**
+     * BONUS
+     * Permet de recréer une séquence de vie à la suite de la prise d'un bonus vie
+     * @param lives (int) le nouveau nombre de vies
+     * @return  une séquence de vie après prise du bonus vie
+     */
+    private Sq<LifeState> createStateSequenceForLifeBonus(int lives){
+        switch(lifeState().state()){
+        case VULNERABLE:
+            return Sq.constant(new LifeState(lives, State.VULNERABLE));
+          
+        case DEAD:
+            return createStateSequence(0);
+         
+        default:
+            return lifeStates.takeWhile(l -> l.state!=State.VULNERABLE).concat(Sq.constant(new LifeState(lives, State.VULNERABLE)));
+        }
     }
 
     /**
@@ -313,7 +331,7 @@ public final class Player {
          * Methode qui retourne le nombre de vie restantes.
          * @return le nombre de vies restantes (int)
          */
-        public int lives (){
+        public int lives(){
             return this.lives;
         }
 
