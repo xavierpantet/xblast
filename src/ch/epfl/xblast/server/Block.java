@@ -68,4 +68,27 @@ public enum Block {
             return maybeAssociatedBonus;
         }else{throw new NoSuchElementException("Aucun bonus correspondant");}
     }
+    
+    /**
+     * Retourne le block coorespondant pour une chaine de caractère donnée. (EX: __ = Block.FREE)
+     * @param block (String) la string a analyser
+     * @return Block le block corepsondant 
+     */
+    public static Block getcorrespondingWord(String block){
+    Block r = null;
+    
+    switch(block) {
+        case "__": r= Block.FREE;
+        break;
+        case "XX": r= Block.INDESTRUCTIBLE_WALL;
+        break;
+        case "xx": r= Block.DESTRUCTIBLE_WALL;
+        break;
+        case "pp": r= Block.POW;  
+        break;
+        default : throw new IllegalArgumentException();
+     
+    }
+    return r;
+}
 }

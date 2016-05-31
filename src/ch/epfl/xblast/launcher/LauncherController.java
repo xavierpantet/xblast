@@ -42,6 +42,7 @@ public class LauncherController implements ActionListener, KeyListener {
 
         vue.startButton.addActionListener(this);
         vue.textField.addKeyListener(this);
+        vue.localCheck.addActionListener(this);
         
         modele.setInitialState();
         
@@ -58,6 +59,15 @@ public class LauncherController implements ActionListener, KeyListener {
             }
            
         }
+        
+        if(e.getSource() == vue.localCheck){
+            if(modele.getServerMode()){
+                modele.setInitialState();
+            } else {
+                modele.setServerMode();
+            }
+        }
+      
         
     }
 
@@ -91,11 +101,21 @@ public class LauncherController implements ActionListener, KeyListener {
     
     public void start(){
         modele.setIP(vue.textField.getText());
-        if(IPseemsCoorect()){
-            fetchIPandWait();
+        
+        if(modele.getServerMode()){
+            
+            fetchIPandWait("localhost");
+            
         } else {
-            modele.setNotCorrectState();
+            
+            if(IPseemsCoorect()){
+                fetchIPandWait(modele.getIP());
+                
+            } else {
+                modele.setNotCorrectState();
+            } 
         }
+        
     }
     
     public void cancel(){
@@ -103,8 +123,8 @@ public class LauncherController implements ActionListener, KeyListener {
         t1.interrupt();
     }
     
-    public void fetchIPandWait(){
-        String host = modele.getIP(); // Hôte par défaut
+    public void fetchIPandWait(String adress){
+        String host = adress; // Hôte par défaut
 
         /*
          * Phase 1:

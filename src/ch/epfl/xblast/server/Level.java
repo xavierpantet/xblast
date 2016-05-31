@@ -1,6 +1,15 @@
 package ch.epfl.xblast.server;
 
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,6 +64,58 @@ public final class Level {
     }
 
 
+    public static Level createLevelWithBoardID(String file){
+        try(InputStreamReader r = new InputStreamReader(new FileInputStream("levels/"+file))){
+            int b = 0;
+            Block[][] board = new Block[7][6];
+            int x = 0;
+            int y = 0;
+            String toAnalyse = "";
+            
+            //Tant que le fichier contient des éléments
+            while((b = r.read())!=-1){
+                
+                if(toAnalyse.length()==2){
+                    board[x][y]=Block.getcorrespondingWord(toAnalyse);
+                    toAnalyse="";
+                    x++;
+                }
+                //Si c'est un retour à la ligne
+                if((char)b=='\n'){
+                    y++;
+                    x=0;
+                } 
+                //Si c'est un espace
+                else if ((char)b == ' '){
+                    
+                } 
+                
+                else {
+                    toAnalyse+=(char)b;
+                    System.out.print((char)b);
+                }
+                
+            }
+            
+            for(int i=0; i<7; i++){
+                for(int j=0; j<6; j++){
+                    System.out.print(board[i][j]+" ");
+                }
+                System.out.println("\n");
+                
+            }
+          
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+        return null;
+    }
+    
+
     /**
      * Méthode qui créer du Level par défaut
      * @return Level (Level) Level par défaut
@@ -97,7 +158,6 @@ public final class Level {
                         Arrays.asList(xx, XX, __, XX, XX, XX, XX),
                         Arrays.asList(__, xx, __, xx, __, __, __),
                         Arrays.asList(xx, XX, xx, XX, xx, XX, __)));
-
         GameState g = new GameState(board, players);
 
         //Création du level
