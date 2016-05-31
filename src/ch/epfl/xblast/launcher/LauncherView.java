@@ -14,6 +14,7 @@ import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,8 +37,11 @@ public class LauncherView implements Observer {
     //Label qui représente le titre
     Label titre = new Label();
     
-  //Label qui indique l'état du launcher
+    //Label qui indique l'état du launcher
     Label etat = new Label();
+    
+  //Label qui indique l'état du launcher
+    JCheckBox localCheck = new JCheckBox("J'utilise cet ordinateur comme serveur");
     
     //Image qui représente le logo
     ImageIcon logo = new ImageIcon(new ImageIcon("images/icon.png").getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT)); 
@@ -64,13 +68,15 @@ public class LauncherView implements Observer {
         
         //etatText
         etat.setText(model.getEtatText());
-        
+        etat.setAlignment(Label.LEFT);
+       
         //Observeur
         model.addObserver(this);
         
         //On créer les layouts
         container.setLayout(new BorderLayout());
         panel.setLayout(new BorderLayout());
+        stateBackground.setLayout(new BorderLayout());
         
       
         //Taille du champs 
@@ -86,14 +92,16 @@ public class LauncherView implements Observer {
         
         //Le stateBackground
         stateBackground.setBackground(Color.BLUE);
-        stateBackground.add(etat);
+        stateBackground.add(etat, BorderLayout.WEST);
 
         /*
          * AJOUTS DES ELEMENTS DANS LES CONTENEURS
          */
         container.add(startButton, BorderLayout.EAST);
         container.add(textField, BorderLayout.WEST);
-        container.add(stateBackground, BorderLayout.PAGE_START);
+        container.add(stateBackground, BorderLayout.NORTH);
+        container.add(localCheck, BorderLayout.PAGE_END);
+        
         panel.add(container, BorderLayout.SOUTH);
         panel.add(titre, BorderLayout.NORTH);
         panel.add(image, BorderLayout.CENTER);
@@ -118,6 +126,7 @@ public class LauncherView implements Observer {
         etat.setText(model.getEtatText());
         stateBackground.setBackground(model.getStateColor());
         textField.setVisible(model.getTextFieldIsVisible());
+        localCheck.setVisible(model.getCheckBoxIsVisible());
         
         if(model.getButtonState() == ButtonState.START){
             startButton.setText("START");

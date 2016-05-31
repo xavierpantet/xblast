@@ -10,99 +10,99 @@ public class LauncherModel extends Observable {
     private String buttonText;
     private Color stateColor;
     private ButtonState buttonState = ButtonState.START;
-    private boolean textFieldIsVisible;
-    
+    private boolean textFieldIsVisible; 
+    private boolean checkBoxIsVisible; 
     private final String titleText = "XBlast";
-    
-    private final String initialButtonText = "START";
-    private final String initialEtatText = "Entrez une adresse IP";
-    private final Color initialEtatColor = Color.CYAN;
-    private final ButtonState initialButtonState = ButtonState.START;
-    private boolean initialTextFieldIsVisible = true;
-    
-    private final String connectingButtonText = "ANNULER";
-    private final String connectingEtatText = "Connexion en cours à:";
-    private final Color connectingEtatColor = Color.orange;
-    private final ButtonState connectingButtonState = ButtonState.CANCEL;
-    private boolean connectingTextFieldIsVisible = false;
-    
-    private final String connectedButtonText = "START";
-    private final String connectedEtatText = "Partie en cours";
-    private final Color connectedEtatColor = Color.green;
-    private final ButtonState connectedButtonState = ButtonState.START;
-    private boolean connectedTextFieldIsVisible = false;
-    
-    private final String errorButtonText = "START";
-    private final String errorEtatText = "Erreur, réessayez";
-    private final Color errorEtatColor = Color.red;
-    private final ButtonState errorButtonState = ButtonState.START;
-    private boolean errorTextFieldIsVisible = true;
-    
-    private final String notCorrectButtonText = "START";
-    private final String notCorrectEtatText = "L'adresse IP n'est pas coorecte, réessayez";
-    private final Color notCorrectEtatColor = Color.yellow;
-    private final ButtonState notCorrectButtonState = ButtonState.START;
-    private boolean notCorrectTextFieldIsVisible = true;
+    private boolean serverMode;
     
     public String getTitleText(){
         return titleText;
+
     }
+    
+    public boolean getServerMode(){
+        return serverMode;
+    };
+    
+    
+    public void setServerMode(){
+        etatText = "Le serveur est sur cet ordianteur";
+        stateColor = Color.CYAN;
+        buttonState = ButtonState.START;
+        buttonText = "START";
+        textFieldIsVisible = false;
+        checkBoxIsVisible = true;
+        serverMode = true;
+        
+        
+        setChanged();
+        notifyObservers();
+    }
+    
     public void setInitialState(){
-        etatText = initialEtatText;
-        stateColor = initialEtatColor;
-        buttonState = initialButtonState;
-        buttonText = initialButtonText;
-        textFieldIsVisible = initialTextFieldIsVisible;
-        
-        
+        etatText = "Entrez une adresse IP";
+        stateColor = Color.CYAN;
+        buttonState = ButtonState.START;
+        buttonText = "START";
+        textFieldIsVisible = true;
+        checkBoxIsVisible = true;
+        serverMode=false;
+
         setChanged();
         notifyObservers();
     }
     
     public void setConnectingState(){
-        etatText = connectingEtatText+IP;
-        stateColor = connectingEtatColor;
-        buttonState = connectingButtonState;
-        buttonText = connectingButtonText;
-        textFieldIsVisible = connectingTextFieldIsVisible;
-        
+        etatText = "Connexion en cours à:"+IP;
+        stateColor = Color.orange;
+        buttonState = ButtonState.CANCEL;
+        buttonText = "ANNULER";
+        textFieldIsVisible = false;
+        checkBoxIsVisible = false;
+        serverMode=false;
         setChanged();
         notifyObservers();
     }
     
     public void setConnectedState(){
-        etatText = connectedEtatText;
-        stateColor = connectedEtatColor;
-        buttonState = connectedButtonState;
-        buttonText = connectedButtonText;
-        textFieldIsVisible = connectedTextFieldIsVisible;
+        etatText = "Partie en cours";
+        stateColor = Color.green;
+        buttonState = ButtonState.START;
+        buttonText = "START";
+        textFieldIsVisible = false;
+        checkBoxIsVisible = false;
+        serverMode=false;
         
         setChanged();
         notifyObservers();
     }
     
     public void setErrorState(){
-        etatText = errorEtatText;
-        stateColor = errorEtatColor;
-        buttonState = errorButtonState;;
-        buttonText = errorButtonText;
-        textFieldIsVisible = errorTextFieldIsVisible;
+        etatText = "Erreur, réessayez";
+        stateColor = Color.red;
+        buttonState = ButtonState.START;
+        buttonText = "START";
+        textFieldIsVisible = true;
+        checkBoxIsVisible = true;
+        serverMode=false;
         
         setChanged();
         notifyObservers();
     }
     
     public void setNotCorrectState(){
-        etatText = notCorrectEtatText;
-        stateColor = notCorrectEtatColor;
-        buttonState = notCorrectButtonState;
-        buttonText = notCorrectButtonText;
-        textFieldIsVisible = notCorrectTextFieldIsVisible;
-        
+        etatText = "L'adresse IP n'est pas coorecte, réessayez";
+        stateColor = Color.yellow;
+        buttonState = ButtonState.START;
+        buttonText = "START";
+        textFieldIsVisible = true;
+        checkBoxIsVisible = true;
+        serverMode=false;
+
         setChanged();
         notifyObservers();
     }
-    
+
     public String getButtonText(){
         return buttonText;
     }
@@ -124,6 +124,11 @@ public class LauncherModel extends Observable {
     
     public boolean getTextFieldIsVisible(){
         return textFieldIsVisible;
+        
+    }
+    
+    public boolean getCheckBoxIsVisible(){
+        return checkBoxIsVisible;
         
     }
     

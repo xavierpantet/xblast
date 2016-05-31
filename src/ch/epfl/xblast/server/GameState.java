@@ -1,4 +1,4 @@
-package ch.epfl.xblast.server;
+ekkkpackage ch.epfl.xblast.server;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public final class GameState {
     private final List<Sq<Cell>> blasts;
 
     private static final List<List<PlayerID>> PERMUTATIONS = Collections.unmodifiableList(Lists.permutations(Arrays.asList(PlayerID.values())));
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new Random(2016);
     private static final int PLAYERS_NUMBER=4;
 
 
@@ -56,7 +56,6 @@ public final class GameState {
      * @param bombs (List<Bomb>) la liste des bombes
      * @param explosions (List<Sq<Sq<Cell>>>) la liste des explosions
      * @param blasts (List<Sq<Cell>>) la liste des particules d'explosion
-     * @param bombMove (Map<PlayerID, Integer>) l'ensemble du nombre de fois que chaque joueur peut déplacer une bombe
      */
     public GameState(int ticks, Board board, List<Player> players, List<Bomb> bombs, List<Sq<Sq<Cell>>> explosions, List<Sq<Cell>> blasts) throws IllegalArgumentException, NullPointerException{
         this.ticks = ArgumentChecker.requireNonNegative(ticks);
@@ -69,7 +68,7 @@ public final class GameState {
 
         this.bombs = Collections.unmodifiableList(new LinkedList<Bomb>(bombs));
         this.explosions = Collections.unmodifiableList(new LinkedList<Sq<Sq<Cell>>>(explosions));
-        this.blasts = Collections.unmodifiableList(new LinkedList<Sq<Cell>>(blasts));
+        this.blasts = Collections.unmodifiableList(new LinkedList<Sq<Cell>>(blasts));   
     }
 
     /**
@@ -205,13 +204,6 @@ public final class GameState {
 
         Cell playerCell;
         PlayerID playerID;
-        
-        /*
-         * BONUS
-         * Permet le cas échéant de tout faire péter
-         */
-        boolean powActivated=false;
-        boolean changeBomb=false;
 
         for(Player p : playersPermut){
             playerCell = p.position().containingCell();
@@ -223,29 +215,9 @@ public final class GameState {
                 if(board().blockAt(playerCell)==Block.BONUS_BOMB){
                     playerBonuses.put(playerID, Bonus.INC_BOMB);
                 }
-                else if(board().blockAt(playerCell)==Block.BONUS_RANGE){
+                else{
                     playerBonuses.put(playerID, Bonus.INC_RANGE);
                 }
-                else{
-                    playerBonuses.put(playerID, Bonus.INC_LIFE);
-                }
-            }
-            /*
-             * BONUS
-             * On détecte si un joueur se trouve sur une case POW. Si c'est le cas, on fera tout péter :D
-             */
-            else if(p.position().isCentral() && board().blockAt(playerCell)==Block.POW){
-                powActivated=true;
-                consumedBonuses.add(playerCell);
-            }
-            
-            /*
-             * BONUS
-             * On détecte si un joueur déplace une bombe aléatoirement
-             */
-            else if(p.position().isCentral() && board.blockAt(playerCell)==Block.BONUS_MOVE_BOMB){
-                changeBomb=true;
-                consumedBonuses.add(playerCell);
             }
         }
 
@@ -253,28 +225,17 @@ public final class GameState {
         Board nextBoard = nextBoard(board(), consumedBonuses, blastedCells);
 
         // (3) Explosions
+
+        // Explosions dues à d'autres explosions
         List<Sq<Sq<Cell>>> nextExplosion = new LinkedList<>();
-
-        /*
-         * BONUS
-         * On teste si quelqu'un a marché sur un POW
-         */
-        if(!powActivated){
-            // Explosions dues à d'autres explosions
-            for(Bomb b:bombs){
-                if(blastedCells.contains(b.position())){
-                    nextExplosion.addAll(b.explosion());
-                }
-            }
-
-            // nextExpolosions
-            nextExplosion.addAll(nextExplosions(explosions));
-        }
-        else{
-            for(Bomb b:bombs){
+        for(Bomb b:bombs){
+            if(blastedCells.contains(b.position())){
                 nextExplosion.addAll(b.explosion());
             }
         }
+
+        // nextExpolosions
+        nextExplosion.addAll(nextExplosions(explosions));
 
 
         // Newly dropped Bombs
@@ -290,9 +251,6 @@ public final class GameState {
             }else{
                 nextBombs.add(new Bomb(b.ownerId(), b.position(), b.fuseLengths().tail(), b.range()));
             }
-        }
-        if(changeBomb){
-            changeRandomBombToRandomFreeCell(nextBombs);
         }
 
         // Pour 6, on créé un set contenant les cellules portant une bombe
@@ -339,7 +297,7 @@ public final class GameState {
                 Block b;
 
                 // On calcule le bloc qui remplacera la case
-                int prob = RANDOM.nextInt(6);
+                int prob = RANDOM.nextInt(3);
                 switch (prob){
                 case 0: b=Block.BONUS_BOMB;
                 break;
@@ -347,15 +305,6 @@ public final class GameState {
                 case 1: b=Block.BONUS_RANGE;
                 break;
 
-                case 2: b=Block.BONUS_LIFE;
-                break;
-                
-                case 3: b=Block.POW;
-                break;
-                
-                case 4: b=Block.BONUS_MOVE_BOMB;
-                break;
-                
                 default: b=Block.FREE;
                 }
 
@@ -570,20 +519,5 @@ public final class GameState {
             blasts1.add(s.head());
         }
         return Collections.unmodifiableList(blasts1);
-    }
-    
-    private void changeRandomBombToRandomFreeCell(List<Bomb> bombs){
-        if(bombs.size()>0){
-            int idBomb=RANDOM.nextInt(bombs.size());
-            
-            List<Cell> freeCells = new ArrayList<Cell>();
-            for(Cell c : Cell.ROW_MAJOR_ORDER){
-                if(board.blockAt(c).isFree()){
-                    freeCells.add(c);
-                }
-            }
-            int idCell = RANDOM.nextInt(freeCells.size());
-            bombs.set(idBomb, bombs.get(idBomb).withPosition(freeCells.get(idCell)));
-        }
     }
 }
