@@ -152,12 +152,12 @@ public final class Level {
         Block xx = Block.DESTRUCTIBLE_WALL;
         Board board = Board.ofQuadrantNWBlocksWalled(
                 Arrays.asList(
-                        Arrays.asList(__, __, __, __, __, xx, __),
-                        Arrays.asList(__, XX, xx, XX, xx, XX, xx),
-                        Arrays.asList(__, xx, __, __, __, xx, __),
-                        Arrays.asList(xx, XX, __, XX, XX, XX, XX),
-                        Arrays.asList(__, xx, __, xx, __, __, __),
-                        Arrays.asList(xx, XX, xx, XX, xx, XX, __)));
+                        Arrays.asList(__, xx, xx, xx, xx, xx, xx),
+                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx),
+                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx),
+                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx),
+                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx),
+                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx)));
         GameState g = new GameState(board, players);
 
         //Création du level
