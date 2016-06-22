@@ -44,10 +44,8 @@ public final class Main {
         // Table associtative SocketAddress -> PlayerID
         Map<SocketAddress, PlayerID> playersMap = new HashMap<>();
 
-        try {
+        try (DatagramChannel channel = DatagramChannel.open(StandardProtocolFamily.INET)) {
             // Création du channel et liaison avec le port 2016
-            DatagramChannel channel;
-            channel = DatagramChannel.open(StandardProtocolFamily.INET);
             channel.bind(new InetSocketAddress(PORT));
 
             // Création du buffer de réception
