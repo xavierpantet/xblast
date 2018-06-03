@@ -34,6 +34,14 @@ public final class Level {
     private final BoardPainter b;
     private final GameState g;
     public static final Level DEFAULT_LEVEL = createDefaultLevel();
+    
+    public final static int NUMBER_OF_LIVES = 3;
+    public final static int MAX_BOMBS = 2;
+    public final static int BOMB_RANGE = 3;
+    public final static Cell POSITION_PLAYER_1 = new Cell(1, 1);
+    public final static Cell POSITION_PLAYER_2 = new Cell(13, 1);
+    public final static Cell POSITION_PLAYER_3 = new Cell(13, 11);
+    public final static Cell POSITION_PLAYER_4 = new Cell(1, 11);
 
 
     /**
@@ -71,10 +79,10 @@ public final class Level {
             int x = 0;
             int y = 0;
             String toAnalyse = "";
-            
+
             //Tant que le fichier contient des éléments
             while((b = r.read())!=-1){
-                
+
                 if(toAnalyse.length()==2){
                     board[x][y]=Block.getcorrespondingWord(toAnalyse);
                     toAnalyse="";
@@ -87,24 +95,24 @@ public final class Level {
                 } 
                 //Si c'est un espace
                 else if ((char)b == ' '){
-                    
+
                 } 
-                
+
                 else {
                     toAnalyse+=(char)b;
                     System.out.print((char)b);
                 }
-                
+
             }
-            
+
             for(int i=0; i<7; i++){
                 for(int j=0; j<6; j++){
                     System.out.print(board[i][j]+" ");
                 }
                 System.out.println("\n");
-                
+
             }
-          
+
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -114,7 +122,7 @@ public final class Level {
         } 
         return null;
     }
-    
+
 
     /**
      * Méthode qui créer du Level par défaut
@@ -152,16 +160,38 @@ public final class Level {
         Block xx = Block.DESTRUCTIBLE_WALL;
         Board board = Board.ofQuadrantNWBlocksWalled(
                 Arrays.asList(
-                        Arrays.asList(__, xx, xx, xx, xx, xx, xx),
-                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx),
-                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx),
-                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx),
-                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx),
-                        Arrays.asList(xx, xx, xx, xx, xx, xx, xx)));
+                        Arrays.asList(__, __, __, __, __, xx, __),
+                        Arrays.asList(__, XX, xx, XX, xx, XX, xx),
+                        Arrays.asList(__, xx, __, __, __, xx, __),
+                        Arrays.asList(xx, XX, __, XX, XX, XX, XX),
+                        Arrays.asList(__, xx, __, xx, __, __, __),
+                        Arrays.asList(xx, XX, xx, XX, xx, XX, __)));
         GameState g = new GameState(board, players);
 
         //Création du level
         return new Level(b, g);
 
+    }
+    
+    /**
+     * Return a list of n alive players and 4-n dead players
+     * 
+     * @param n
+     *      Number of players
+     *      
+     * @return
+     *      A list of players
+     */
+    public final static List<Player> createPlayers(int n){
+        List<Player> players = new ArrayList<>();
+        players.add(new Player(PlayerID.PLAYER_1,PlayerID.PLAYER_1.ordinal()<n ? NUMBER_OF_LIVES:0,
+                POSITION_PLAYER_1, MAX_BOMBS, BOMB_RANGE));
+        players.add(new Player(PlayerID.PLAYER_2,PlayerID.PLAYER_2.ordinal()<n ? NUMBER_OF_LIVES:0,
+                POSITION_PLAYER_2, MAX_BOMBS, BOMB_RANGE));
+        players.add(new Player(PlayerID.PLAYER_3,PlayerID.PLAYER_3.ordinal()<n ? NUMBER_OF_LIVES:0,
+                POSITION_PLAYER_3, MAX_BOMBS, BOMB_RANGE));
+        players.add(new Player(PlayerID.PLAYER_4,PlayerID.PLAYER_4.ordinal()<n ? NUMBER_OF_LIVES:0,
+                POSITION_PLAYER_4, MAX_BOMBS, BOMB_RANGE));
+        return players;
     }
 }

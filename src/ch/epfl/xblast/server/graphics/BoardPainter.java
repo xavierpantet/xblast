@@ -52,4 +52,18 @@ public final class BoardPainter {
         }
         return (byte) id;
     }
+    
+    /**
+     * Returns the corresponding block image's ordinal of a given block
+     * 
+     * @param b
+     *      The block 
+     *      
+     * @return
+     *      The corresponding block image's ordinal of the given block
+     * 
+     */
+    public byte correspondingBlockImageOf(Block b){
+        return (byte) pallet.get(b).ordinal();
+    }
 }

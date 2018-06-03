@@ -19,6 +19,12 @@ import ch.epfl.xblast.server.Bonus;
  */
 public final class ImageCollection {
     private final Map<Byte, Image> collectionMap;
+    
+    public static ImageCollection IMAGE_COLLECTION_BLOCK = new ImageCollection("block");
+    public static ImageCollection IMAGE_COLLECTION_EXPLOSION = new ImageCollection("explosion");
+    public static ImageCollection IMAGE_COLLECTION_PLAYER = new ImageCollection("player");
+    public static ImageCollection IMAGE_COLLECTION_SCORE = new ImageCollection("score");
+    public static ImageCollection IMAGE_COLLECTION_MAPS = new ImageCollection("samplemaps");
 
     /**
      * Constructeur qui permet de construire une collection d'accès aux images en connaissant son nom.

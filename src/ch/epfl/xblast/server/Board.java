@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import ch.epfl.cs108.Sq;
 import ch.epfl.xblast.Cell;
 import ch.epfl.xblast.Lists;
@@ -168,6 +170,16 @@ public final class Board {
         } else {
             throw new IllegalArgumentException("La matrice fournie contient "+matrixHeight+" lignes alors qu'on en attend "+rows);
         }
+    }
+    
+    /**
+     * Returns a representation of this board in the form of a list of bytes, where a byte is the ordinal of a block
+     * 
+     * @return
+     *      A representation of this board in the form of a list of bytes
+     */
+    public List<Byte> toListOfBytes(){
+        return blocks.stream().map(s -> s.head()).map(block -> (byte)block.ordinal()).collect(Collectors.toList());
     }
 
 }
